@@ -150,8 +150,6 @@ AutoSuggest.prototype.handleKeyDown = function(event){
 	    var newLoc = this.textbox.value.replace(/\s+/g, '-');
         window.location = 'https://www.budvibes.com/tags/'+newLoc;
       }
-
-      //window.location = 'http://www.budmapz.com/tags.php?word=weed';
     break;
   }
 }

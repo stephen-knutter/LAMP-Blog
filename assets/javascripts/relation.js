@@ -7,13 +7,6 @@ $(function(){
       var dshStart = relationType.indexOf("-");
       relationType = relationType.slice(0,dshStart);
       var small = true;
-      /*BIG BUTTON TYPE
-      var curPage = $("span#relationLink").attr("class").split(' ')[0]; //PAGE TYPE
-      var pageStart = curPage.indexOf("-")+1;
-      var pageEnd = curPage.length;
-      var curPageId = curPage.slice(pageStart,pageEnd); //PAGE ID
-      var pageRelation = $("span#relationLink").parent("div").attr("id");
-	  */
     } else {
 	  /*BIG BUTTON TYPE*/
       var curPage = $("span#relationLink").attr("class").split(' ')[0]; //PAGE TYPE

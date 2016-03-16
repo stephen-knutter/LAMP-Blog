@@ -14,7 +14,6 @@ $(function(){
 			var username = $link.text();
 			username = username.replace(/\&/g, 'and');
 			username = username.replace(/\'/g, '');
-			//console.log(username)
 			if(linkClass.indexOf("-") > 0){
 				url = 'https://www.budvibes.com/prod-tooltip.php?user='+username;
 			} else {
@@ -23,7 +22,6 @@ $(function(){
 			$.ajax({
 				url: url,
 				success: function(result){
-					//console.log(result);
 					$("body").append(result);
 					var offset = $link.offset();
 					var iTop = offset.top;
@@ -44,16 +42,6 @@ $(function(){
 			timeoutID = setTimeout(function(){
 				$(".userToolTip").remove();
 			},250)
-			//timeoutID = setTimeout(function(){
-			//	if($(".userToolTip").is(":hover")){
-			//		//DO NOTHING
-			//		clearTimeout(timeoutID);
-			//	} else {
-			//		$(".userToolTip").remove();
-			//		clearTimeout(timeoutID);
-			//	}
-			//},200)
-			
 	});
 	
 	$("body").on("mouseenter", ".userToolTip", function(){
