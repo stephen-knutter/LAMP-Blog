@@ -4,7 +4,7 @@
 		private $mMysql;
 		
 		public function db_conn(){
-			$this->mMysql = new mysqli('localhost', 'root', 'root', 'budvibes');
+			$this->mMysql = new mysqli('localhost', 'root', '', 'budvibes');
 			if($this->mMysql){
 				return $this->mMysql;
 			} else {

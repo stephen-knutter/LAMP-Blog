@@ -27,20 +27,26 @@
 	$Views->add_head();
 	$Views->do_header('message');
 ?>
-
-	<form action="<?php $_SERVER['PHP_SELF']; ?>" method="post" accept-charset="utf-8">
-		<h1>Sign Up</h1>
-		<input type="hidden" name="auth_token" />
-		<input type="hidden" name="checkmark" value="&#x2713;" />
-		<input type="text" name="username" placeholder="Username" value="<?php if(isset($username)) echo $username; ?>">
-		<input type="text" name="email" placeholder="Email" value="<?php if(isset($email)) echo $email; ?>"/>
-		<input type="password" name="password" placeholder="Password" />
-		<input type="password" name="confirmation" placeholder="Confirm" />
-		<button type="submit" name="register">Submit</button>
-	</form>
+<div id="signInWrap">
+	<div id="signInForm">
+		<form action="<?php $_SERVER['PHP_SELF']; ?>" method="post" accept-charset="utf-8">
+			<div id="signInHead">
+				<h3>Sign Up</h3>
+			</div>
+			<input type="hidden" name="auth_token" />
+			<input type="hidden" name="checkmark" value="&#x2713;" />
+			<input type="text" class="signInInput" name="username" placeholder="Username" value="<?php if(isset($username)) echo $username; ?>">
+			<input type="text" class="signInInput" name="email" placeholder="Email" value="<?php if(isset($email)) echo $email; ?>"/>
+			<input type="password" class="signInInput" name="password" placeholder="Password" />
+			<input type="password" class="signInInput" name="confirmation" placeholder="Confirm" />
+			<button type="submit" class="signInButton" name="register">Submit</button>
+			<span class="or">- OR -</span>
+			<a class="signUpLink" href="https://www.budvibes.com/sign-in">Sign In Here!</a>
+		</form>
+	</div>
+</div>
 	
 	<?php
-		echo print_r($errors);
 		if(@$errors){
 			foreach($errors as $error=>$status){
 				echo '<li>'.$status.'</li>';
