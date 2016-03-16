@@ -11,9 +11,7 @@
 	<meta charset="utf-8" />
 </head>
 <body>
-	<h1>
-		<?php $msg = $app->Hi(); echo $msg; ?>
-	</h1>
+	<h1>Hello</h1>
 	<a href="/signup">Sign Up</a>
 	<a href="/login">Log In</a>
 </body>
