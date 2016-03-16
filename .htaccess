@@ -1,0 +1,15 @@
+RewriteEngine On
+
+#UNCOMMENT FOR HTTPS
+#RewriteCond %{HTTPS} off
+#RewriteRule ^/(.*) https://%{HTTP_HOST}%{REQUEST_URI} [L]
+
+
+#UNCOMMENT FOR 404 ERROR DOCUMENT
+#ErrorDocument 404 http(s)://www.example.com/404error
+#RewriteRule ^404error$ 404.php [L]
+
+RewriteRule ^users$ index.php[L]
+RewriteRule ^users/new$ views/users/new.php [L]
+RewriteRule ^users/edit/([a-zA-Z0-9\-]+) views/users/edit.php?id=$1 [L]
+RewriteRule ^users/show/(a-zA-Z0-9\-]+) views/users/show.php?id=$1 [L]
