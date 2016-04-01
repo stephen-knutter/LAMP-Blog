@@ -78,6 +78,7 @@ div#header{
 	width: 100%;
 	height: 55px;
 	background-color: #5FB02D;
+	background-color: #82BD2D;
 	float: left;
 	z-index: 5;
 	border-bottom: 1px solid #000000;
@@ -93,6 +94,12 @@ div#header{
 	z-index: 5;
 	width: 24px;
 	height: 24px;
+	text-decoration: none;
+	color: #003D38;
+}
+
+#header a:hover{
+	color: #002400;
 }
 
 #header img#headLogo{

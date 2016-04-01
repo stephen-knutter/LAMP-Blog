@@ -9,7 +9,8 @@ RewriteEngine On
 #ErrorDocument 404 http(s)://www.example.com/404error
 #RewriteRule ^404error$ 404.php [L]
 
-RewriteRule ^users$ index.php[L]
-RewriteRule ^users/new$ views/users/new.php [L]
-RewriteRule ^users/edit/([a-zA-Z0-9\-]+) views/users/edit.php?id=$1 [L]
-RewriteRule ^users/show/(a-zA-Z0-9\-]+) views/users/show.php?id=$1 [L]
+#RewriteRule ^users$ index.php [L]
+RewriteRule ^signup$ views/users/new.php [L]
+RewriteRule ^([a-zA-Z0-9\-]+)$ views/users/show.php?id=$1 [L]
+RewriteRule ^users/edit$([a-zA-Z0-9\-]+)$ /views/users/edit.php?id=$1 [L]
+

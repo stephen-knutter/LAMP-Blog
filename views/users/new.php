@@ -1,9 +1,13 @@
 <?php
-	include('../application_views.php');
-	include('../../controllers/users_controller.php');
+	#include('../application_views.php');
+	#include('../../controllers/users_controller.php');
+	
+	require dirname(dirname(__DIR__)) . '/bv_inc.php';
+	require dirname(dirname(__DIR__)) . '/controllers/users_controller.php';
 	
 	$UsersCtrl = new UsersCtrl;
 	$Views = new ApplicationViews;
+	$Helper = new ApplicationHelper;
 	
 	#FOR PRODUCTION ONLY
 	#$UsersCtrl->check_url();
@@ -28,6 +32,14 @@
 	$Views->do_header('message');
 ?>
 <div id="signInWrap">
+	<?php
+		#echo print_r(@$errors);
+		if(@$errors){
+			foreach($errors as $error=>$status){
+				echo '<p class="error">'.$status.'</p>';
+			}
+		}
+	?>
 	<div id="signInForm">
 		<form action="<?php $_SERVER['PHP_SELF']; ?>" method="post" accept-charset="utf-8">
 			<div id="signInHead">
@@ -45,14 +57,6 @@
 		</form>
 	</div>
 </div>
-	
-	<?php
-		if(@$errors){
-			foreach($errors as $error=>$status){
-				echo '<li>'.$status.'</li>';
-			}
-		}
-	?>
 <?php
 	$Views->do_footer();
 ?>
