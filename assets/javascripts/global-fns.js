@@ -1,5 +1,4 @@
 /*TOP MENU HOVER*/
-
 $(function(){
 	
 	//BUTTONS
@@ -211,7 +210,7 @@ $(function(){
 		}
   });
 	
-})
+});
 
 
 //console.log('Global fns is ready');

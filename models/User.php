@@ -3,20 +3,20 @@
 	class User extends ApplicationModels{
 		
 		public $pdo;
+		public $token;
 		private $url;
-		private $conn;
-		private $token;
-		private $controller;
+		private $Controller;
+		private $Helper;
 		private $errors = array();
 		
 		public function __construct(){
-			$this->conn = $this->db_conn();
 			$this->pdo = $this->pdo_conn();
-			$this->controller = new ApplicationCtrl;
+			$this->Controller = new ApplicationCtrl;
+			$this->Helper = new ApplicationHelper;
 		}
 		
 		#VERIFY USERNAME
-		public function validate_username($username){
+		public function validateUsername($username){
 			if( (strlen($username) >= 4) && (strlen($username) <=29) ){
 				
 				#$reserved_words = array("sign-up", "sign-in", "privacy", "terms", "claim", "finish", "tags", "users", "weed", "stores", 
@@ -32,9 +32,11 @@
 						$this->errors['success'] = false;
 					} else {
 						$this->url = $this->create_url($username);
-						$query = "SELECT slug FROM users WHERE slug='".$this->url."'";
-						$result = $this->conn->query($query);
-						$num = $result->num_rows;
+						$usernameCheck = "SELECT slug FROM users WHERE slug=:slug";
+						$statement = $this->pdo->prepare($usernameCheck);
+						$statement->bindValue(':slug',$this->url);
+						$statement->execute();
+						$num = $statement->rowCount();
 						if($num){
 							$this->errors['username'] = 'Username already in use';
 							$this->errors['success'] = false;
@@ -50,11 +52,13 @@
 			return $this->errors;
 		}
 		#VERIFY EMAIL
-		public function validate_email($email){
-			if(filter_var($email, FILTER_VALIDATE_EMAIL) ){
-				$query = "SELECT email FROM users WHERE email='".$email."'";
-				$result = $this->conn->query($query);
-				$num = $result->num_rows;
+		public function validateEmail($email){
+			if(filter_var($email, FILTER_VALIDATE_EMAIL)){
+				$emailCheck = "SELECT email FROM users WHERE email=:email";
+				$statement = $this->pdo->prepare($emailCheck);
+				$statement->bindValue(':email',$email);
+				$statement->execute();
+				$num = $statement->rowCount();
 				if($num){
 					$this->errors['email'] = 'Email has been registered';
 					$this->errors['success'] = false;
@@ -68,8 +72,8 @@
 			return $this->errors;
 		}
 		#VERIFY PASSWORD
-		public function validate_password($password,$confirmation){
-			if( (strlen($password) >= 5) && strlen($password) <= 50){
+		public function validatePassword($password,$confirmation){
+			if(strlen($password) > 5){
 				if($password == $confirmation){
 					$this->errors['success'] = true;
 				} else {
@@ -83,44 +87,59 @@
 			return $this->errors;
 		}
 		#ADD NEW USER
-		public function add_user($username,$email,$password){
-			$this->token = $this->create_token();
-			$query = "INSERT INTO users (username,slug, profile_pic, 
+		public function addUser($username,$email,$password){
+			$this->token = $this->Helper->createToken();
+			$newUser = "INSERT INTO users (username,slug, profile_pic, 
 					 email, type, store_id, store_reg, store_state, 
 					 password_digest, verified, reg_digest, created_at,updated_at)
-					 VALUES('".$this->escape($username)."', '".$this->escape($this->url)."', 'no-profile.png',
-					 '".$this->escape($email)."', 'user', 0, 0, 0, '".sha1($this->escape($password))."', 0, '".sha1($this->escape($this->token))."', NOW(), NOW())";
-			if($this->conn->query($query)){
-				$new_id = $this->conn->insert_id;
-				$newdir = '../assets/user-images/'.$new_id.'/';
+					 VALUES(:username, :slug, 'no-profile.png',
+					 :email, 'user', 0, 0, 0, sha1(:password), 0, sha1(:token), NOW(), NOW())";
+			$statement = $this->pdo->prepare($newUser);
+			$statement->bindValue(':username',$username);
+			$statement->bindValue(':email',$email);
+			$statement->bindValue(':token', $this->token);
+			$statement->bindValue(':password',$password);
+			$statement->bindValue(':slug',$this->url);
+			$statement->execute();
+			$newId = $this->pdo->lastInsertId();
+			if($newId){
+				$newdir = dirname(__DIR__) . '/assets/user-images/'.$newId;
 				if(!file_exists($newdir)){
 					mkdir($newdir, 0755);
 				}
-				$query = "SELECT id, username,slug profile_pic, type, store_id, store_reg, store_state, verified 
-						 FROM users WHERE id='".$new_id."'";
-				$result = $this->conn->query($query);
-				$user = $result->fetch_assoc();
+				$addedUser = "SELECT id, username,slug, profile_pic, email, type, store_id, store_reg, store_state, verified 
+				FROM users WHERE id=:id";
+				$statement = $this->pdo->prepare($addedUser);
+				$statement->bindValue(':id',$newId, PDO::PARAM_INT);
+				$statement->execute();
+				$user = $statement->fetch(PDO::FETCH_ASSOC);
+				return $user;
+			} else {
+				return false;
+			}
+		}
+		#CHECK USER FOR LOGIN
+		public function checkUserCredentials($email,$password){
+			$userLogin = "SELECT id, username, slug, profile_pic, email, type, 
+					 store_id, store_reg, store_state, verified 
+					 FROM users WHERE email=:email AND password_digest=sha1(:password)";
+			$statement = $this->pdo->prepare($userLogin);
+			$statement->bindValue(':email',$email);
+			$statement->bindValue(':password',$password);
+			$statement->execute();
+			$num = $statement->rowCount();
+			if($num == 1){
+				$user = $statement->fetch(PDO::FETCH_ASSOC);
 				return $user;
 			} else {
 				return false;
 			}
 		}
 		
-		#SEND MESSAGE
-		public function finish_signup($user){
-			$link = $this->obfuscate_link($this->token);
-			$subject = 'Complete Sign Up - Budvibes';
-			$link_name = $user['slug'];
-			$url = __LOCATION__ . "/complete-signup.php?link=".$link."&user=".$link_name;
-			$from = "no-reply@budvibes.com";
-			header('Location: '.$_SERVER['LOCATION'].'/'.$link_name);
-			//$this->send_message($subject, $email, $url, $from);
-		}
-		
-		public function get_user($user){
+		public function getUser($user){
 			$sql = "SELECT id, username, slug, profile_pic, email, type, 
 					store_id, store_reg, store_state, verified 
-					FROM users WHERE slug= :user";
+					FROM users WHERE slug=:user";
 					  
 			$statement = $this->pdo->prepare($sql);
 			$statement->bindValue(':user', $user);
@@ -141,7 +160,7 @@
 					WHERE follower_id= :user_id 
 					AND following_id= :following_id";
 			$statement = $this->pdo->prepare($sql);
-			$statement->bindValue(':user_id', $_SESSION['logged_in_id'], PDO::PARAM_INT);
+			$statement->bindValue(':user_id', @$_SESSION['logged_in_id'], PDO::PARAM_INT);
 			$statement->bindValue(':following_id', $id, PDO::PARAM_INT);
 			$statement->execute();
 			$num = $statement->rowCount();
@@ -323,6 +342,35 @@
 			$statement->execute();
 			$results = $statement->fetchAll(PDO::FETCH_ASSOC);
 			return $results;
+		}
+		
+		public function verifyUserEmail($email){
+			$emailCheck = "SELECT email FROM users WHERE email=:email";
+			$statement = $this->pdo->prepare($emailCheck);
+			$statement->bindValue(':email',$email);
+			$statement->execute();
+			$count = $statement->rowCount();
+			if($count == 1){
+				return true;
+			} else {
+				return false;
+			}
+		}
+		
+		public function resetPassword($email){
+			$date = new DateTime();
+			$newPass = $date->format(U);
+			$updatePass = "UPDATE users SET password=sha1(:password) 
+			WHERE email=:email";
+			$statement = $this->pdo->prepare($updatePass);
+			$statement->bindValue(':password',$newPass);
+			$statement->bindValue(':email',$email);
+			$statement->execute();
+			if($statement->rowCount()){
+				return $newPass;
+			} else {
+				return false;
+			}
 		}
 	}
 ?>

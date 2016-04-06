@@ -1,6 +1,4 @@
 <?php
-	#include('../application_views.php');
-	#include('../../controllers/users_controller.php');
 	require dirname(dirname(__DIR__)) . '/bv_inc.php';
 	require dirname(dirname(__DIR__)) . '/controllers/users_controller.php';
 	
@@ -29,7 +27,7 @@
 			
 			<div id="userProfileBasic">
 				<?php
-					if($_SESSION['logged_in_user'] == $user['slug']){
+					if(@$_SESSION['logged_in_user'] == $user['slug']){
 						$form = true;
 					} else {
 						$form = false;
@@ -45,7 +43,7 @@
 					$UsersCtrl->doTopStrains();
 				?>
 		
-				<!--NEARBY MAP -->
+				<!--NEARBY MAP  !!! -- MOVING TO A BUTTON ON HOME PAGE -- !!!
 				<div id="nearbyMap" class="39.739236|-104.990251">
 					<div id="nearbyHead">
 						<h3>Near You</h3>
@@ -53,7 +51,7 @@
 					<div id="nearby-map"></div>
 					<div class="nearbyStoreWrap"></div>
 				</div>
-					
+				-->	
 				
 				<!-- TOP POSTERS -->
 				<?php

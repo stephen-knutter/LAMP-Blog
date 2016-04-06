@@ -7,7 +7,27 @@
 		private $user_id;
 		private $username;
 		
-		public function log_in($user){
+		public function obfuscateLink($file_id,$type='documents'){
+			$temp = array(date("jmY"), $file_id, $type); // using date("jmY") ensures download links are specific to each day
+			$temp = serialize($temp);
+			$temp = base64_encode($temp);
+			$link = rawurlencode($temp);
+			return $link;
+		}
+		
+		function unobfuscateLink($link) {
+			$temp = rawurldecode($link);
+			$temp = base64_decode($temp);
+			$download_array = unserialize($temp);
+			return $download_array;
+		}
+		
+		public function createToken(){
+			$token = md5(uniqid(rand(), true));
+			return $token;
+		}
+
+		public function logIn($user){
 			#SET SESSIONS
 			$_SESSION['logged_in_id'] = $user['id'];
 			$_SESSION['logged_in_user'] = $user['username'];
@@ -23,8 +43,8 @@
 			}
 			
 			#SET COOKIES - 30Day Expiration
-			$cook_id = $this->obfuscate_link($row['user_id']);
-			$cook_store_id = $this->obfuscate_link($row['store_id']);
+			$cook_id = $this->obfuscateLink($user['id']);
+			$cook_store_id = $this->obfuscateLink($user['store_id']);
 		
 			setcookie('logged_in_id', $cook_id, time() + (60 * 60 * 24 * 30));
 			setcookie('logged_in_user', $user['username'], time() + (60 * 60 * 24 * 30));
@@ -34,17 +54,16 @@
 			setcookie('store_state', $user['store_state'], time() + (60 * 60 * 24 * 30));
 			setcookie('user_verified', $user['verified'], time() + (60 * 60 * 24 * 30));
 			setcookie('store', $_SESSION['store'], time() + (60 * 60 * 24 * 30));
-			
 		}
 		
-		public function check_session(){
+		public function checkSession(){
 			if(!isset($_SESSION['logged_in_id'])){
 				if(isset($_COOKIE['logged_in_id']) && isset($_COOKIE['logged_in_user']) && isset($_COOKIE['user_verified']) 
 				&& isset($_COOKIE['logged_in_photo']) && isset($_COOKIE['store']) && isset($_COOKIE['store_id']) && isset($_COOKIE['store_reg']) && isset($_COOKIE['store_state'])){
-					$cookie_id = unobfuscate_link($_COOKIE['logged_in_id']);
+					$cookie_id = unobfuscateLink($_COOKIE['logged_in_id']);
 					$cookie_id = $cookie_id[1];
 					$_SESSION['logged_in_id'] = $cookie_id;
-					$cookie_store_id = unobfuscate_link($_COOKIE['store_id']);
+					$cookie_store_id = unobfuscateLink($_COOKIE['store_id']);
 					$cookie_store_id = $cookie_store_id[1];
 					$_SESSION['store_id'] = $cookie_store_id;
 					$_SESSION['store_reg'] = $_COOKIE['store_reg'];

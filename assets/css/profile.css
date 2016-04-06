@@ -236,18 +236,18 @@ table{
 }
 
 td.threadCount{
-	background: transparent url('../images/reply-bubble.png') 98% 50% no-repeat;
+	background: transparent url('../assets/images/reply-bubble.png') 98% 50% no-repeat;
 	font-family: georgia;
 }
 
 td.topicCount{
-	background: transparent url('../images/folderworld.png') 90% 55% no-repeat;
+	background: transparent url('../assets/images/folderworld.png') 90% 55% no-repeat;
 	font-family: georgia;
 }
 
 .follow-message span.followText{
 	left: 17%;
-	background: transparent url('../../images/follow-icon.png') 0 5% no-repeat;
+	background: transparent url('../../assets/images/follow-icon.png') 0 5% no-repeat;
 	padding-left: 20px;
 	color: #000000;
 }

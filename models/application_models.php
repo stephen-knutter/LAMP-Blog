@@ -3,7 +3,6 @@
 	class ApplicationModels{
 		
 		public	$pdo;
-		private $mMysql;
 		private $Helper;
 		
 		public function __construct(){
@@ -15,25 +14,11 @@
 			#MODEL FUNCTIONS LIST#
 			 @pdo_conn();
 			 @create_url();
-			 @create_token();
 			 @obfuscate_link();
 			 @get_prod_buttons();
 			 @get_user_buttons();
 			 @getUsernameHead();
 		*****/
-		
-		public function db_conn(){
-			$this->mMysql = new mysqli('localhost', 'root', '', 'budvibes');
-			if($this->mMysql){
-				return $this->mMysql;
-			} else {
-				return false;
-			}
-		}
-		
-		public function escape($item){
-			return $this->mMysql->real_escape_string($item);
-		}
 		
 		public function pdo_conn(){
 			try{
@@ -65,18 +50,6 @@
 			$username = preg_replace('/\&39\;/', '', $username);
 			$username = preg_replace('/\s+/', '-', $username);
 			return $username;
-		}
-		
-		public function create_token(){
-			$token = md5(uniqid(rand(), true));
-			return $token;
-		}
-		
-		public function obfuscate_link($link){
-			$temp = rawurldecode($link);
-			$temp = base64_decode($temp);
-			$download_array = unserialize($temp);
-			return $download_array;
 		}
 		
 		public function get_prod_buttons($id){
@@ -239,6 +212,62 @@
 			$statement->execute();
 			$count = $statement->fetchColumn(0);
 			return $count;
+		}
+		
+		public function findUserMessageCount($id){
+			$msgCount = "SELECT COUNT(*) FROM messages 
+			WHERE status='u' AND user_two=:id";
+			$statement = $this->pdo->prepare($msgCount);
+			$statement->bindValue(':id',$id,PDO::PARAM_INT);
+			$statement->execute();
+			$count = $statement->fetchColumn(0);
+			return $count;
+		}
+		
+		public function findUserMessages($id){
+			$messages = array();
+			$userMessages = "SELECT chat_id, parent, user_one, user_two 
+			FROM messages 
+			WHERE parent = 0 
+			AND (user_one=:id OR user_two=:id)";
+			$statement = $this->pdo->prepare($userMessages);
+			$statement->bindValue(':id',$id,PDO::PARAM_INT);
+			$statement->execute();
+			$count = $statement->rowCount();
+			$messageThread = $statement->fetchAll(PDO::FETCH_ASSOC);
+			$messages['count'] = $count;
+			$messages['thread'] = $messageThread;
+			return $messages;
+		}
+		
+		public function findUserMessageOne($id){
+			$message = "SELECT m.chat_id, m.parent, m.status, m.user_one, m.user_two, m.message_type, m.created_at, 
+			u.id AS user_id, u.username, u.profile_pic 
+			FROM messages m 
+			LEFT JOIN users u ON m.user_two = u.id 
+			WHERE m.user_two=:id 
+			ORDER BY m.created_at DESC 
+			LIMIT 1";
+			$statement = $this->pdo->prepare($message);
+			$statement->bindValue(':id',$id,PDO::PARAM_INT);
+			$statement->execute();
+			$msg = $statement->fetchAll(PDO::FETCH_ASSOC);
+			return $msg;
+		}
+		
+		public function findUserMessageTwo($id){
+			$message = "SELECT m.chat_id, m.parent, m.status, m.user_one, m.user_two, m.message_type,m.created_at, 
+			u.user_id, u.username, u.profile_pic 
+			FROM messages m 
+			LEFT JOIN users u ON m.user_one = u.user_id 
+			WHERE m.user_one=:id 
+			ORDER BY m.created_at DESC 
+			LIMIT 1";
+			$statement = $this->pdo->prepare($message);
+			$statement->bindValue(':id',$id,PDO::PARAM_INT);
+			$statement->execute();
+			$msg = $statement->fetchAll(PDO::FETCH_ASSOC);
+			return $msg;
 		}
 		
 	} //END APPLICATION MODELS CLASS

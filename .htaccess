@@ -9,6 +9,10 @@ RewriteEngine On
 #ErrorDocument 404 http(s)://www.example.com/404error
 #RewriteRule ^404error$ 404.php [L]
 
+RewriteRule ^logout$ controllers/logout_controller.php [L]
+RewriteRule ^login$  views/users/login.php [L]
+RewriteRule ^forgot$ views/users/forgot.php [L]
+
 #RewriteRule ^users$ index.php [L]
 RewriteRule ^signup$ views/users/new.php [L]
 RewriteRule ^([a-zA-Z0-9\-]+)$ views/users/show.php?id=$1 [L]

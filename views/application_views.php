@@ -18,6 +18,7 @@ class ApplicationViews{
 			 @doFooter();
 			 @generateProfilePic();
 			 @generateFeed();
+			 @generateFollowingButtons();
 			 @
 		*****/
 		
@@ -36,14 +37,14 @@ class ApplicationViews{
 			$html .= 	'<link rel="stylesheet" type="text/css" href="'. __LOCATION__ .'/assets/css/profile.css">';
 			$html .=	'<link rel="stylesheet" type="text/css" href="'. __LOCATION__ .'/assets/css/sign.css">';
 			$html .=	'<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">';
-			$html .= 	'<link rel="icon" href="https://www.budvibes.com/images/tab-pic.png">';
-			$html .= 	'<script src="https://maps.googleapis.com/maps/api/js?v=3.14&sensor=false"></script>';
-			$html .= 	'<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>';
+			$html .= 	'<link rel="icon" href="'. __LOCATION__ .'/assets/images/tab-pic.png">';
+			$html .= 	'<script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?v=3.14&sensor=false"></script>';
+			$html .= 	'<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>';
+			$html .= 	'<script type="text/javascript" src="'. __LOCATION__ .'/assets/javascripts/global-fns.js"></script>';
 			$html .= 	'<script type="text/javascript" src="'. __LOCATION__ .'/assets/javascripts/infobubble.js"></script>';
 			$html .= 	'<script type="text/javascript" src="'. __LOCATION__ .'/assets/javascripts/search.js"></script>';
 			$html .= 	'<script type="text/javascript" src="'. __LOCATION__ .'/assets/javascripts/front-script.js"></script>';
 			$html .=	'<script type="text/javascript" src="'. __LOCATION__ .'/assets/javascripts/profile.js"></script>';
-			$html .= 	'<script type="text/javascript" src="'. __LOCATION__ .'/assets/javascripts/global-fns.js"></script>';
 			$html .= 	'<script type="text/javascript" src="'. __LOCATION__ .'/assets/javascripts/relation.js"></script>';
 			$html .= 	'<script type="text/javascript" src="'. __LOCATION__ .'/assets/javascripts/endless-scroll.js"></script>';
 			$html .= 	'<script type="text/javascript" src="'. __LOCATION__ .'/assets/javascripts/tooltip.js"></script>';
@@ -101,16 +102,22 @@ class ApplicationViews{
 							$html .= '</div>';
 						} else {
 							$html .= '<div id="headMenu">';
+							/*
 							$html .=	'<li><a href="/"><img src="'. __LOCATION__ .'/assets/images/home-icon.png" alt="home"></a></li>';
 							$html .=	'<li><a id="forumIcon"><img src="'. __LOCATION__ .'/assets/images/forum-icon.png" alt="budvibes forum topics"></a></li>';
 							$html .= 	'<li><a id="libIcon"><img src="'. __LOCATION__ .'/assets/images/leaf-head-icon.png" alt="budvibes marijuana strains"></a></li>';
 							$html .= 	'<li><a id="locationIcon"><img src="'. __LOCATION__ .'/assets/images/location-icon-small.png" alt="budvibes marijuana dispensary maps"></a></li>';
 							$html .= 	'<li><a id="userIcon"><img src="'. __LOCATION__ .'/assets/images/user-icon.png" alt="budvibes sign in"></a></li>';
-							
+							*/
+							$html .=	'<li><a href="/"><i class="fa fa-home"></i></a></li>';
+							$html .=	'<li><a id="forumIcon"><i class="fa fa-comment"></i></a></li>';
+							$html .= 	'<li><a id="libIcon"><i class="fa fa-leaf"></i></a></li>';
+							$html .= 	'<li><a id="locationIcon"><i class="fa fa-map-marker"></i></a></li>';
+							$html .= 	'<li><a id="userIcon"><i class="fa fa-user-secret"></i></a></li>';
 							if($type == 'message'){
-								$html .= '<li><a id="msgIcon"><img src="'. __LOCATION__ .'/assets/images/message-user-icon.png" alt="budvibes sign up"></a></li>';
+								$html .= '<li><a id="msgIcon"><i class="fa fa-envelope"></i></a></li>';
 							} else {
-								$html .= '<li><a id="menuIcon"><img src="'. __LOCATION__ .'/assets/images/menu-icon.png" alt="marijuana dispensary listings"></a></li>';
+								$html .= '<li><a id="menuIcon"><i class="fa fa-bars"></i></a></li>';
 							}
 							
 							$html .= '</div>';
@@ -120,10 +127,505 @@ class ApplicationViews{
 			echo $html;
 		}
 		
+		public function generateFollowingButtons($id,$user){
+		?>
+			<!-- FOLLOW USER PAGE-->
+				<div class="message-user" id="message-<?php echo $id; ?>" data-chat="<?php echo $id; ?>">
+					<img src="<?php echo __LOCATION__  . '/assets/images/message-icon.png' ?>" alt="message" title="message <?php echo $user; ?>"/>
+				</div>
+				<div class="follow-message" id="typeUser">	
+					<span id="relationLink" class="unfollow-<?php echo $id; ?> unfollowText">Unfollow</span>
+				</div>
+		<?php
+		}
+		
+		public function generateEditButtons($id,$user){
+		?>
+			<!-- EDIT BUTTON USER PAGE -->
+				<div class="follow-message" id="typeUser">
+					<?php
+						if(@$_SESSION['store']){
+							$linkName = $this->Controller->remove_whitespace(@$_SESSION['logged_in_user']);
+							$linkState = $this->Controller->remove_whitespace(@$_SESSION['store_state']);
+							$linkRegion = $this->Controller->remove_whitespace(@$_SESSION['store_reg']);
+							$storeUrl = __LOCATION__ . '/'.$linkState.'/'.$linkRegion.'/'.$linkName;
+					?>
+						<span id="editLink" class="follow-<?php echo $id; ?> editText"><a href="<?php echo $storeUrl.'/edit'; ?>">Edit</a></span>
+					<?php
+						} else {
+							$linkName = $this->Controller->remove_whitespace(@$_SESSION['logged_in_user']);
+							$userUrl = __LOCATION__ . '/'.$linkName.'/edit';
+					?>
+						<span id="editLink" class="follow-<?php echo $id; ?> editText"><a href="<?php echo $userUrl; ?>">Edit</a></span>
+					<?php
+						}
+					?>
+					<img class="userEditIcon" src="<?php echo __LOCATION__ . '/assets/images/rss-icon.png' ?>" />
+				</div>
+		<?php	
+		}
+		
+		public function generateFollowerButtons($id,$user){
+			?>
+			<!-- FOLLOW BUTTON FOR NON LOGGED IN USERS ON USER PAGE-->
+			<div class="message-user" id="message-<?php echo $id; ?>" data-chat="<?php echo $id; ?>">
+				<img src="<?php echo __LOCATION__ . '/assets/images/message-icon.png' ?>" alt="message" title="message <?php echo $user; ?>"/>
+			</div>
+			<div class="follow-message" id="typeUser">
+				<span id="relationLink" class="follow-<?php echo $id; ?> followText">Follow</span>
+			</div>
+			<?php
+		}
+		
+		public function generateUserCountBar($url,$feedclass,$postclass,$photoclass,
+											 $budclass,$followerclass,$followingclass,$videoclass,
+											 $feedCount,$postCount,$photoCount,$videoCount,
+											 $followerCount,$budCount,$followingCount){
+			echo '<div class="infoBarWrap clearfix">';
+			echo 	'<a href="'.$url.'"> <div class="feedInfo '.$feedclass.' clearfix">
+						<span class="infoNumber">'.$feedCount.'</span>
+						<span class="infoDesc">feed</span>
+					</div></a>';
+			echo 	'<a href="'.$url.'/posts"><div class="postInfo '.$postclass.' clearfix">
+						<span class="infoNumber">'.$postCount.'</span>
+						<span class="infoDesc">posts</span>
+					</div></a>';
+			echo 	'<a href="'.$url.'/photos"><div class="photoInfo '.$photoclass.' clearfix">
+						<span class="infoNumber">'.$photoCount.'</span>
+						<span class="infoDesc">photos</span>
+					</div></a>';
+			echo 	'<a href="'.$url.'/videos"><div class="followingInfo '.$videoclass.' clearfix">
+						<span class="infoNumber">'.$videoCount.'</span>
+						<span class="infoDesc">video</span>
+					</div></a>';
+			echo 	'<a href="'.$url.'/followers"><div class="followersInfo '.$followerclass.' clearfix">
+						<span class="infoNumber">'.$followerCount.'</span>
+						<span class="infoDesc">followers</span>
+					</div></a>';
+			echo    '<a href="'.$url.'/buds"><div class="budInfo '.$budclass.' clearfix">
+						<span class="infoNumber">'.$budCount.'</span>
+						<span class="infoDesc">buds</span>
+					</div></a>';
+			echo 	'<a href="'.$url.'/following"><div class="followingInfo '.$followingclass.' clearfix">
+						<span class="infoNumber">'.$followingCount.'</span>
+						<span class="infoDesc">following</span>
+					</div></a>';
+			echo '</div>';								  
+		}
+		
+		public function doTopStrains($topStrains){
+			echo '<div class="recentStrainsWrap clearfix">';
+			echo 	'<div id="strainHeadText">';
+			echo		'<h3>Top Strains</h3>';
+			echo 	'</div>';
+			echo 	'<div class="topStrainsPics clearfix">';
+					foreach($topStrains as $row){
+						if(strlen($row['name']) > 20){
+							$name = substr($row['name'],0,20);
+							$name = $name.'...';
+						} else {
+							$name = $row['name'];
+						}
+						$linkName = $this->Controller->remove_whitespace($row['name']);
+						echo '<a href="'. __LOCATION__ .'/strains/'.$linkName.'">';
+						echo '<div class="topStrainWrap">';
+						echo '<div class="topStrainImg"><img style="height: 110px; width: 110px;" src="'. __LOCATION__ .'/assets/images/strains/110-'.$row['pic'].'" alt="'.$row['name'].' weed strain"></div>';
+						echo '<div class="topStrainName">'.$name.'</div>';
+						echo '</div>';
+						echo '</a>';
+					}
+					echo '<a href="'. __LOCATION__ .'/strains/">';
+					echo '<div class="topStrainWrap">';
+					echo '<div class="topStrainImg"><img style="height: 110px; width: 110px;" src="'. __LOCATION__ .'/assets/images/explore.png" alt="More Weed"></div>';
+					echo '<div class="topStrainName">More...</div>';
+					echo '</div>';
+					echo '</a>';
+			echo	'</div>';
+			echo 	'</div>';
+		}
+		
+		public function doTopPosters($topPosters){
+			echo '<div class="recentStrainsWrap topPosters clearfix">';
+			echo	'<div id="posterHeadText">';
+			echo		'<h3>Top Posters</h3>';
+			echo 	'</div>';
+			echo	'<div class="topStrainsPics clearfix">';
+					//$topPosters = $this->UserModel->getTopPosters();
+					foreach($topPosters as $row){
+						if(strlen($row['username']) > 20){
+							$name = substr($row['username'],0,20);
+							$name = $name.'...';
+						} else {
+							$name = $row['username'];
+						}
+						$linkName = $this->Controller->remove_whitespace($row['username']);
+						if($row['type'] == 'store'){
+							echo '<a href="'. __LOCATION__ .'/'.$row['store_state'].'/'.$row['store_reg'].'/'.$linkName.'">';
+						} else {
+							echo '<a href="'. __LOCATION__ .'/'.$linkName.'">';
+						}
+						if($row['profile_pic'] == 'no-profile.png'){
+							$profilePic = __LOCATION__ . "/assets/images/top-no-profile.png";
+						} else {
+							$profilePic = __LOCATION__ . "/assets/user-images/".$row['user_id']."/top-".$row['profile_pic'];
+						}
+						echo '<div class="topStrainWrap">';
+						echo '<div class="topStrainImg"><img style="height: 110px; width: 110px;" src="'.$profilePic.'" alt="'.$row['username'].'\'s profile"></div>';
+						echo '<div class="topStrainName">'.$name.'</div>';
+						echo '</div>';
+						echo '</a>';
+					}
+					echo '</div>';
+	
+			//do_footer($type,$store);
+	
+			echo  '</div>';	
+		}
+		
 		#ADD HEAD MENU ITEMS TO DOM
 		public function doUserMenu($type=''){
 			?>
-				
+			<!-- LOGIN MENU -->
+			<?php if(!isset($_SESSION['logged_in_user'])) { ?>
+				<div id="logMenu" class="logIn logMenu">
+					<h3><img src="<?php echo __LOCATION__ . '/assets/images/log-in-head.png'; ?>" alt="budvibes sign in"></h3>
+					<div id="logWrap">
+					<form action="../../../sign-in.php" method="post" id="loginForm">
+						<input type="hidden" id="back_uri" name="back_uri" value="<?php echo $_SERVER['REQUEST_URI']; ?>">
+						<input type="text" class="loginInput" name="email" id="loginText" placeholder="Email" />
+						<input type="password" class="loginInput" name="pass" id="loginPass"  placeholder="Password">
+						<input type="submit" class="loginSubmit" name="sign-in" id="submitLogin" value="Log In" />
+					</form>
+					<div id="signUp"><a href="<?php echo __LOCATION__ . '/signup'; ?>" id="signUpLink">Sign Up?</a></div>
+					</div>
+				</div>
+		
+				<div id="logMenu" class="signUp logMenu">
+					<h3><img src="<?php echo __LOCATION__ . '/assets/images/sign-up-head.png'; ?>" alt="budvibes sign up"></h3>
+					<div id="logWrap">
+						<form action="../../../sign-up.php" method="post" id="signUpForm">
+							<input type="hidden" id="back_uri" name="back_uri" value="<?php echo $_SERVER['REQUEST_URI']; ?>">
+							<input type="text" class="signInput" name="username" placeholder="Username">
+							<input type="text" class="signInput" name="email" placeholder="Email">
+							<input type="password" class="signInput" name="pass" placeholder="Password">
+							<input type="password" class="signInput" name="confirmpass" placeholder="Confirm Password">
+							<input type="submit" class="signSubmit" name="signup" value="Sign Up">
+						</form>
+						<div id="signUp">
+							<a href="<?php echo __LOCATION__ . '/login' ?>" id="signInLink">&#8592; Log In</a>
+						</div>
+					</div>
+				</div>
+		<!-- LOGGED IN USER MENU -->
+		<?php
+		  } else {
+		?>
+			<div id="logMenu" class="userMenu logMenu">
+				<?php
+					if($_SESSION['logged_in_photo'] == 'no-profile.png' || !$_SESSION['logged_in_photo']){
+						$imgPath = __LOCATION__ . '/assets/images/thumb-no-profile.png';
+					} else {
+						$imgPath = __LOCATION__ . '/assets/user-images/'.$_SESSION['logged_in_id'].'/thumb-'.$_SESSION['logged_in_photo'];
+					}
+				?>
+				<img id="userTopThumb" style="height: 60px; width: 60px;" src="<?php echo $imgPath; ?>" alt="<?php echo $_SESSION['logged_in_user']; ?>">
+				<?php
+					$linkName = $this->Controller->remove_whitespace($_SESSION['logged_in_user']);
+					if($_SESSION['store']){
+						$url = __LOCATION__ .'/'.$_SESSION['store_state'].'/'.$_SESSION['store_reg'].'/'.$linkName;
+				?>
+					<h3><a href="<?php echo $url; ?>"><?php echo $_SESSION['logged_in_user']; ?></a></h3>
+				<?php
+					} else {
+						$url = __LOCATION__ .'/'. $linkName;
+				?>
+					<h3><a href="<?php echo $url; ?>"><?php echo $_SESSION['logged_in_user']; ?></a></h3>
+				<?php
+					}
+				?>
+				<div id="logOut"><a href="<?php echo __LOCATION__ . '/logout'; ?>">Log Out</a></div>
+			</div>
+		<?php
+		  }
+		?>
+		<!-- LOCATION MENU -->
+		<div id="locationMenu">
+			<h3><img src="<?php echo __LOCATION__ . '/assets/images/map-head.png'; ?>" alt="weed map locations"></h3>
+			<div id="mapsBody">
+				<div id="mapFeed" class="Scrollable">
+					<ul>
+						<li><a href="<?php echo __LOCATION__ . '/colorado/denver'; ?>">Colorado</a></li>
+						<li><a href="<?php echo __LOCATION__ . '/washington/seattle'; ?>">Washington</a></li>
+						<li><a href="<?php echo __LOCATION__ . '/oregon/portland'; ?>">Oregon</a></li>
+						<li><a href="<?php echo __LOCATION__ . '/california/los-angeles'; ?>">California</a></li>
+						<li><a href="<?php echo __LOCATION__ . '/michigan/detroit'; ?>">Michigan</a></li>
+						<li><a href="<?php echo __LOCATION__ . '/arizona/phoenix'; ?>">Arizona</a></li>
+						<li><a href="<?php echo __LOCATION__ . '/nevada/las-vegas'; ?>">Nevada</a></li>
+						<li><a href="<?php echo __LOCATION__ . '/spain/barcelona'; ?>">Spain</a></li>
+						<li><a href="<?php echo __LOCATION__ . '/netherlands/amsterdam'; ?>">Amsterdam, NL</a></li>
+						<li><a href="<?php echo __LOCATION__ . '/british-columbia/vancouver'; ?>">Vancouver, BC</a></li>
+						<li><a href="<?php echo __LOCATION__ . '/new-mexico/albuquerque'; ?>">New Mexico</a></li>
+						<li><a href="<?php echo __LOCATION__ . '/maine/augusta'; ?>">Maine</a></li>
+						<li><a href="<?php echo __LOCATION__ . '/connecticut/hartford'; ?>">Connecticut</a></li>
+						<li><a href="<?php echo __LOCATION__ . '/montana/bozeman'; ?>">Montana</a></li>
+						<li><a href="<?php echo __LOCATION__ . '/district-of-columbia/washington'; ?>">District of Columbia</a></li>
+						<li><a href="<?php echo __LOCATION__ . '/illinois/chicago'; ?>">Illinois</a></li>
+						<li><a href="<?php echo __LOCATION__ . '/new-jersey/newark'; ?>">New Jersey</a></li>
+						<li><a href="<?php echo __LOCATION__ . '/minnesota/minneapolis'; ?>">Minnesota</a></li>
+						<li><a href="<?php echo __LOCATION__ . '/massachusetts/boston'; ?>">Massachusetts</a></li>
+						<li><a href="<?php echo __LOCATION__ . '/alaska/anchorage'; ?>">Alaska</a></li>
+						<li><a href="<?php echo __LOCATION__ . '/delaware/wilmington'; ?>">Delaware</a></li>
+					</ul>
+				</div>
+			</div>
+			<div id="mapsHeadFoot"></div>
+		</div>
+		<!-- LISTING / MESSAGES -->
+		<?php
+			if($type == 'message'){
+		?>
+		<?php
+			if(!isset($_SESSION['logged_in_id'])){
+				echo '<div class="inboxCountTroller">1</div>';
+			} else {
+				$msgCount = $this->Controller->getMessageCount($_SESSION['logged_in_id']);
+				if($msgCount > 0){
+					echo '<div class="inboxCount">'.$msgCount.'</div>';
+				}
+			}
+		
+			if(isset($_SESSION['logged_in_id'])){
+		?>
+			<div id="msgWrap">
+				<div id="listingHead"><img src="<?php echo __LOCATION__ . './assets/images/message-head-icon.png'; ?>" alt="<?php echo $_SESSION['logged_in_user'].'\'s messages'?>"></div>
+				<div id="messages">
+					<?php
+						$userMessages = $this->Controller->getUserMessages($_SESSION['logged_in_id']);
+						$totalUsers = $userMessages['count'];
+						$messageThread = $userMessages['thread']; 
+						if($totalUsers > 0){
+							$data = array();
+							$i=0;
+							foreach($messageThread as $message){
+								$messageUserOne = $message['user_one'];
+								$messageUserTwo = $message['user_two'];
+								if($messageUserOne == $_SESSION['logged_in_id']){
+									$msg = $this->Controller->getFirstUserMessage($messageUserTwo); 
+								} else {
+									$msg = $this->Controller->getSecondMessage($messageUserOne); 
+								}
+								$data[$i]['chat_id'] = $msg['chat_id'];
+								$data[$i]['parent'] = $msg['parent'];
+								$data[$i]['status'] = $msg['status'];
+								$data[$i]['user_one'] = $msg['user_one'];
+								$data[$i]['user_two'] = $msg['user_two'];
+								$data[$i]['message_type'] = $msg['message_type'];
+								$data[$i]['created_at'] = $msg['created_at'];
+								$data[$i]['user_id'] = $msg['user_id'];
+								$data[$i]['username'] = $msg['username'];
+								$data[$i]['profile_pic'] = $msg['profile_pic'];
+								$i++;
+							}
+							function cmp($a,$b){
+								return strcmp($a["created_at"],$b["created_at"]);
+							}
+							usort($data, "cmp");
+							$totalData = count($data);
+							$i=0;
+							while($i < $totalData){
+								if($msg['profile_pic'] == 'no-profile.png'){
+									$thumbPic = __LOCATION__ . '/assets/images/thumb-no-profile.png';
+								} else {
+									$thumbPic = __LOCATION__  . '/assets/user-images/'.$data[$i]['user_id'].'/thumbsmall-'.$data[$i]['profile_pic'];
+								}
+								echo '<div class="headMsgWrap clearfix '.$data[$i]['status'].'" data-chat="'.$data[$i]['user_id'].'">';
+								echo	 '<div class="headMsgImg"><img src="'.$thumbPic.'"></div>';
+								if($msg['message_type'] == 'mt'){
+									$msgHead = '<span class="headMsgName">'.$data[$i]['username'].'</span> sent a text message';
+								} else {
+									$msgHead = '<span class="headMsgName">'.$data[$i]['username'].'</span> sent a photo';
+								}
+								$date = strtotime($data[$i]['created_at']);
+								$date = date('M d, Y g:i a', $date);
+								echo	 '<div class="headMsgText">';
+								if($data[$i]['message_type'] == 'me' || $data[$i]['message_type'] == 'mp'){
+									echo		'<span class="chatDesc">'.$msgHead.'</span><br/>';
+								} else {
+									echo		'<span class="chatText">'.$msgHead.'</span><br/>';
+								}
+								echo		'<span class="headMsgDate">'.$date.'</span>';
+								echo	'</div>';
+								echo '</div>';
+								$i++;
+							}
+						}
+					?>
+				</div>
+				<div id="listingFoot">
+					<ul id="listingFootList">
+						<li><a href="https://www.facebook.com/BudVibescom-691043380996432/?ref=hl" target="_blank">Facebook</a></li>
+						<li><a href="https://twitter.com/Bud_Vibes" target="_blank">Twitter</a></li>
+						<li><a href="https://plus.google.com/103465185573413976826/about" target="_blank">Google+</a></li>
+					</ul>
+				</div>
+			</div> <!-- END LISTING WRAP -->
+			<?php
+			 } else {
+			?>
+				<div id="msgWrap">
+					<div class="messages">
+						<div id="signInMenu" class="signUpMenu">
+							<h3><img src="<?php echo __LOCATION__ . '/assets/images/sign-up-head.png'; ?>" alt="budvibes sign up"></h3>
+							<form action="../../../sign-up.php" method="post" id="signUpForm">
+								<input type="hidden" id="back_uri" name="back_uri" value="<?php echo $_SERVER['REQUEST_URI']; ?>">
+								<input type="text" class="signInput" name="username" placeholder="Username">
+								<input type="text" class="signInput" name="email" placeholder="Email">
+								<input type="password" class="signInput" name="pass" placeholder="Password">
+								<input type="password" class="signInput" name="confirmpass" placeholder="Confirm Password">
+								<input type="submit" class="signSubmit" name="signup" value="Sign Up">
+							</form>
+							<div id="signUp">
+								<a href="<?php echo __LOCATION__ . '/login';?>" id="signInLink">&#8592; Log In</a>
+							</div>
+						</div>
+						<div id="listingFoot">
+							<ul id="listingFootList">
+								<li><a href="https://www.facebook.com/BudVibescom-691043380996432/?ref=hl" target="_blank">Facebook</a></li>
+								<li><a href="https://twitter.com/Bud_Vibes" target="_blank">Twitter</a></li>
+								<li><a href="https://plus.google.com/103465185573413976826/about" target="_blank">Google+</a></li>
+							</ul>
+						</div>
+					</div>
+				</div>
+			<?php
+			 }
+			?>
+	  <?php
+		} else {
+			switch($head){
+				case 'washington':
+					$headImg = __LOCATION__ . '/assets/images/wash-head-icon.png';
+					$alt = 'washington marijuana dispensary listings';
+				break;
+				case 'colorado':
+					$headImg = __LOCATION__ . '/assets/images/dispense-head-icon.png';
+					$alt = $region.'&#44;colorado marijuana dispensary listings';
+				break;
+				case 'oregon':
+					$headImg = __LOCATION__ . '/assets/images/org-head-icon.png';
+					$alt = 'oregon marijuana dispensary listings';
+				break;
+				case 'california':
+					$headImg = __LOCATION__ . '/assets/images/cal-head-icon.png';
+					$alt = $region.'&#44;california marijuana dispensary listings';
+				break;
+				case 'british-columbia':
+					$headImg = __LOCATION__ . '/assets/images/van-head-icon.png';
+					$alt = 'british columbia marijuana dispesnary listings';
+				break;
+				case 'michigan':
+					$headImg = __LOCATION__ . '/assets/images/mich-head-icon.png';
+					$alt = 'michigan marijuana dispensary listings';
+				break;
+				case 'arizona':
+					$headImg = __LOCATION__ . '/assets/images/arz-head-icon.png';
+					$alt = 'arizona marijuana dispensary listings';
+				break;
+				case 'nevada':
+					$headImg = __LOCATION__ . '/assets/images/nev-head-icon.png';
+					$alt = 'nevada marijuana dispensary listings';
+				break;
+				case 'connecticut':
+					$headImg = __LOCATION__ . '/assets/images/con-head-icon.png';
+					$alt = 'connecticut marijuana dispensary listings';
+				break;
+				case 'delaware':
+					$headImg = __LOCATION__ . '/assets/images/del-head-icon.png';
+					$alt = 'delaware marijuana dispensary listings';
+				break;
+				case 'netherlands':
+					$headImg = __LOCATION__ . '/assets/images/nel-head-icon.png';
+					$alt = 'amsterdam marijuana dispensary listings';
+				break;
+				case 'illinois':
+					$headImg = __LOCATION__ . '/assets/images/ill-head-icon.png';
+					$alt = 'illinois marijuana dispensary listings';
+				break;
+				case 'alaska':
+					$headImg = __LOCATION__ . '/assets/images/ska-head-icon.png';
+					$alt = 'alaska marijuana dispensary listings';
+				break;
+				case 'district-of-columbia':
+					$headImg = __LOCATION__ . '/assets/images/dis-head-icon.png';
+					$alt = 'vancouver marijuana dispensary listings';
+				break;
+				case 'maine':
+					$headImg = __LOCATION__ . '/assets/images/mne-head-icon.png';
+					$alt = 'maine marijuana dispensary listings';
+				break;
+				case 'massachusetts':
+					$headImg = __LOCATION__ . '/assets/images/mass-head-icon.png';
+					$alt = 'massachusetts marijuana dispensary listings';
+				break;
+				case 'minnesota':
+					$headImg = __LOCATION__ . '/assets/images/min-head-icon.png';
+					$alt = 'minnesota marijuana dispensary listings';
+				break;
+				case 'montana':
+					$headImg = __LOCATION__ . '/assets/images/mon-head-icon.png';
+					$alt = 'montana marijuana dispensary listings';
+				break;
+				case 'new-jersey':
+					$headImg = __LOCATION__ . '/assets/images/jer-head-icon.png';
+					$alt = 'new jersey marijuana dispensary listings';
+				break;
+				case 'new-mexico':
+					$headImg = __LOCATION__ . '/assets/images/mex-head-icon.png';
+					$alt = 'new mexico marijuana dispensary listings';
+				break;
+				case 'spain':
+					$headImg = __LOCATION__ . '/assets/images/spn-head-icon.png';
+					$alt = 'spain marijuana dispensary listings';
+				break;
+			}
+		?>
+		<div id="listingWrap">
+			<div id="listingHead"><img src="<?php echo $headImg; ?>" alt="<?php echo $alt; ?>"></div>
+			<div id="listings" class="Scrollable"></div>
+			<div id="listingFoot">
+				<ul id="listingFootList">
+					<li><a href="https://www.facebook.com/BudVibescom-691043380996432/?ref=hl" target="_blank">Facebook</a></li>
+					<li><a href="https://twitter.com/Bud_Vibes" target="_blank">Twitter</a></li>
+					<li><a href="https://plus.google.com/103465185573413976826/about" target="_blank">Google+</a></li>
+				</ul>
+			</div>
+		</div>
+	<?php
+	  } 
+	?>
+		<!-- FORUM -->
+		<div id="forumHeadWrap">
+			<div id="forumHeadText"><img src="<?php echo __LOCATION__ . '/assets/images/recent-forum.png'; ?>" alt="recent budvibes forum discussions" /></div>
+			<div id="forumFeed" class="Scrollable">
+				<?php
+					//$conn = db_conn();
+					//do_recent_forum($conn,3);
+				?>
+			</div>
+			<div id="forumHeadFoot"><a href="<?php echo __LOCATION__ . '/forum/';?>">Go To Forum &#8689;</a></div>
+		</div>
+
+		<!-- STRAIN LIBRARY -->
+		<div id="libHeadWrap">
+			<div id="libHeadText"><img src="<?php echo __LOCATION__ . '/assets/images/recent-strains.png'?>" alt="recently smoked weed strains" /></div>
+			<div id="libFeed" class="Scrollable">
+				<?php
+					//$conn = db_conn();
+					//do_recent_smoking($conn,3);
+				?>
+			</div>
+			<div id="libHeadFoot"><a href="<?php echo __LOCATION__ . '/strains/'; ?>">Go To Strains &#8689;</a></div>
+		</div>
 			<?php
 		}
 		
