@@ -56,7 +56,7 @@
 					#SESSIONS AND REDIRECT
 					$this->Helper->logIn($user);
 					$this->finishSignup($user);
-					$this->errors['success'] = 'Success';
+					$this->errors['sending_mail'] = 'Internal error';
 					return $this->errors;
 					exit();
 				} else {
