@@ -18,14 +18,14 @@
 			$this->Views = new ApplicationViews;
 			$this->Mailer = new ApplicationMailer;
 		}
-		/*****
-			# NEW USER FUNCTIONS #
-			 @validateUser();
-			 @validateUsername();
-			 @validateEmail();
-			 @validatePassword();
-			 @generateFeed();
-		*****/
+		/*
+		 *	# NEW USER FUNCTIONS #
+		 *	 @validateUser();
+		 *	 @validateUsername();
+		 *	 @validateEmail();
+		 *	 @validatePassword();
+		 *	 @generateFeed();
+		**/
 		public function validateUser($username,$email,$password,$confirmation){
 			$this->username = $username;
 			$this->email = $email;
@@ -83,7 +83,7 @@
 			$link = $this->Helper->obfuscateLink($this->UserModel->token);
 			$subject = 'Complete Sign Up';
 			$linkName = $user['slug'];
-			$url = __LOCATION__ . "/complete-signup.php?link=".$link."&user=".$linkName;
+			$url = __LOCATION__ . "/verify?link=".$link."&user=".$linkName;
 			$email = $user['email'];
 			$this->Mailer->setMessage($subject,$email,$url);
 			if($this->Mailer->sendMail()){
@@ -109,17 +109,17 @@
 			}
 		}
 		
-		/*****
-			###USER SHOW FUNCTIONS###
-			 @getUser();
-			 @generateRelationButtons();
-			 @generateUserCountBar();
-			 @doTopStrains();
-			 @doTopPosters();
-			 @generatePostForm();
-			 @generateFeed();
-			 @doRecent();
-		*****/
+		/*
+		 *	###USER SHOW FUNCTIONS###
+		 *	 @getUser();
+		 *	 @generateRelationButtons();
+		 *	 @generateUserCountBar();
+		 *	 @doTopStrains();
+		 *	 @doTopPosters();
+		 *	 @generatePostForm();
+		 *	 @generateFeed();
+		 *	 @doRecent();
+		**/
 		public function getUser($user){
 			$user = $this->UserModel->getUser($user);
 			if(!empty($user)){
@@ -270,10 +270,25 @@
 			}
 		}
 		
-		/*****
-			###USER SESSION FUNCTIONS###
-			@checkIfLoggedIn(); 
-		*****/
+		public function verifyRegToken($user,$token){
+			$check = $this->UserModel->checkRegToken($user,$token);
+			if($check){
+				$this->UserModel->verifyNewUser($user);
+				$url = __LOCATION__ .'/'. $user;
+				header('Location: ' . $url);
+				exit();
+			} else {
+				header('Location: ' . __LOCATION__);
+				exit();
+			}
+			
+			
+		}
+		
+		/*
+		 *	###USER SESSION FUNCTIONS###
+		 *	@checkIfLoggedIn(); 
+		**/
 		public function checkIfLoggedIn(){
 			if(isset($_SESSION['logged_in_user'])){
 				$uri = $this->remove_whitespace($_SESSION['logged_in_user']);

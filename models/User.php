@@ -372,5 +372,23 @@
 				return false;
 			}
 		}
+		
+		public function checkRegToken($user,$token){
+			$tokenCheck = "SELECT user_id FROM users 
+			WHERE slug=:user AND reg_digest=sha1(:token)";
+			$statement = $this->pdo->prepare($tokenCheck);
+			$params = array(':user'=>$user, ':token'=>$token);
+			$statement->execute($params);
+			return $statement->rowCount() ? true : false;
+		}
+		
+		public function verifyNewUser($user){
+			$verifyUser = "UPDATE users SET verified=1, updated_at=NOW() 
+			WHERE slug=:user";
+			$statement = $this->pdo->prepare($verifyUser);
+			$statement->bindValue(':user',$user);
+			$statement->execute();
+			return $statement->rowCount() ? true : false;
+		}
 	}
 ?>

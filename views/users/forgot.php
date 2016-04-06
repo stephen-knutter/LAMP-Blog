@@ -30,20 +30,17 @@
 	$Views->doUserMenu('message');
 ?>
 <div id="forgotWrap">
-		<div id="forgotHead">
-			<h3>Forgot Password</h3>
-		</div>
-		<?php
-			if(!empty($errors)){
-				foreach($errors as $error){
-					echo '<p class="error">'.$error.'</p>';
-				}
-			} else if(@$yes == 'success'){
-				echo '<p class="success">new password has been sent</p>';
+	<?php
+		if(!empty($errors)){
+			foreach($errors as $error){
+				echo '<p class="error">'.$error.'</p>';
 			}
+		} else if(@$yes == 'success'){
+			echo '<p class="success">new password has been sent</p>';
+		}
 			
-			include '_forgot.php';
-		?>
+		include '_forgot.php';
+	?>
 </div>
 <?php
 	$Views->doFooter();

@@ -290,7 +290,7 @@ class ApplicationViews{
 				<div id="logMenu" class="logIn logMenu">
 					<h3><img src="<?php echo __LOCATION__ . '/assets/images/log-in-head.png'; ?>" alt="budvibes sign in"></h3>
 					<div id="logWrap">
-					<form action="../../../sign-in.php" method="post" id="loginForm">
+					<form action="<?php echo __LOCATION__ . '/login';?>" method="post" id="loginForm">
 						<input type="hidden" id="back_uri" name="back_uri" value="<?php echo $_SERVER['REQUEST_URI']; ?>">
 						<input type="text" class="loginInput" name="email" id="loginText" placeholder="Email" />
 						<input type="password" class="loginInput" name="pass" id="loginPass"  placeholder="Password">
@@ -303,13 +303,13 @@ class ApplicationViews{
 				<div id="logMenu" class="signUp logMenu">
 					<h3><img src="<?php echo __LOCATION__ . '/assets/images/sign-up-head.png'; ?>" alt="budvibes sign up"></h3>
 					<div id="logWrap">
-						<form action="../../../sign-up.php" method="post" id="signUpForm">
+						<form action="<?php echo __LOCATION__ . '/signup';?>" method="post" id="signUpForm">
 							<input type="hidden" id="back_uri" name="back_uri" value="<?php echo $_SERVER['REQUEST_URI']; ?>">
 							<input type="text" class="signInput" name="username" placeholder="Username">
 							<input type="text" class="signInput" name="email" placeholder="Email">
-							<input type="password" class="signInput" name="pass" placeholder="Password">
-							<input type="password" class="signInput" name="confirmpass" placeholder="Confirm Password">
-							<input type="submit" class="signSubmit" name="signup" value="Sign Up">
+							<input type="password" class="signInput" name="password" placeholder="Password">
+							<input type="password" class="signInput" name="confirmation" placeholder="Confirm Password">
+							<input type="submit" class="signSubmit" name="register" value="Sign Up">
 						</form>
 						<div id="signUp">
 							<a href="<?php echo __LOCATION__ . '/login' ?>" id="signInLink">&#8592; Log In</a>
@@ -476,13 +476,13 @@ class ApplicationViews{
 					<div class="messages">
 						<div id="signInMenu" class="signUpMenu">
 							<h3><img src="<?php echo __LOCATION__ . '/assets/images/sign-up-head.png'; ?>" alt="budvibes sign up"></h3>
-							<form action="../../../sign-up.php" method="post" id="signUpForm">
+							<form action="<?php echo __LOCATION__ . '/signup';?>" method="post" id="signUpForm">
 								<input type="hidden" id="back_uri" name="back_uri" value="<?php echo $_SERVER['REQUEST_URI']; ?>">
 								<input type="text" class="signInput" name="username" placeholder="Username">
 								<input type="text" class="signInput" name="email" placeholder="Email">
-								<input type="password" class="signInput" name="pass" placeholder="Password">
-								<input type="password" class="signInput" name="confirmpass" placeholder="Confirm Password">
-								<input type="submit" class="signSubmit" name="signup" value="Sign Up">
+								<input type="password" class="signInput" name="password" placeholder="Password">
+								<input type="password" class="signInput" name="confirmation" placeholder="Confirm Password">
+								<input type="submit" class="signSubmit" name="register" value="Sign Up">
 							</form>
 							<div id="signUp">
 								<a href="<?php echo __LOCATION__ . '/login';?>" id="signInLink">&#8592; Log In</a>

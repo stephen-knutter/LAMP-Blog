@@ -12,6 +12,7 @@ RewriteEngine On
 RewriteRule ^logout$ controllers/logout_controller.php [L]
 RewriteRule ^login$  views/users/login.php [L]
 RewriteRule ^forgot$ views/users/forgot.php [L]
+RewriteRule ^verify$ views/users/verify.php [L]
 
 #RewriteRule ^users$ index.php [L]
 RewriteRule ^signup$ views/users/new.php [L]

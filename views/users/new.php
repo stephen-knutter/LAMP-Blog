@@ -14,10 +14,10 @@
 	
 	if(isset($_POST['register'])){
 		$errors = array();
-		$username = trim($_POST['username']);
-		$email = trim($_POST['email']);
-		$password = trim($_POST['password']);
-		$confirmation = trim($_POST['confirmation']);
+		@$username = trim($_POST['username']);
+		@$email = trim($_POST['email']);
+		@$password = trim($_POST['password']);
+		@$confirmation = trim($_POST['confirmation']);
 		
 		if(!empty($username) && !empty($email) && !empty($password) && !empty($confirmation)){
 			$errors = $UsersCtrl->validateUser($username,$email,$password,$confirmation);

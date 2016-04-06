@@ -29,9 +29,6 @@
 	$Views->doUserMenu('message');
 ?>
 <div id="signInWrap">
-	<div id="signInHead">
-		<h3>Sign In</h3>
-	</div>
 	<?php
 		if(!empty($errors)){
 			foreach($errors as $error){
