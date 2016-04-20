@@ -24,6 +24,9 @@
 					$this->message = '<p>Registration is complete and your new password is&nbsp;<b>'.$this->alt.'</b>&nbsp; log in with your email and click the edit button to change</p><br/>';
 				break;
 				case 'reset':
+					$this->message = '<p>Your new password is<b>'.$this->alt.'</b><a href="https://'. __LOCATION__ .'/login">Log In</a> to your account to change</p>';
+				break;
+				case 'billing':
 					$this->message = '<p>New store to be set up for billing with a store id of <b>'.$this->alt.'</b></p>';
 				break;
 				default:

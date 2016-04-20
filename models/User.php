@@ -164,7 +164,7 @@
 			$statement->bindValue(':following_id', $id, PDO::PARAM_INT);
 			$statement->execute();
 			$num = $statement->rowCount();
-			return $num;
+			return $num ? $num : 0;
 		}
 		
 		
@@ -191,7 +191,7 @@
 			$prodcount = $statement->fetchColumn(0);
 			//PRODUCT AND FEED COUNT
 			$totalFeed = $feedcount + $prodcount;
-			return $totalFeed;
+			return $totalFeed ? $totalFeed : 0;
 		}
 		
 		public function generateTotalPosts($id){
@@ -214,9 +214,8 @@
 			$statement->bindValue(':id', $id, PDO::PARAM_INT);
 			$statement->execute();
 			$postprodcount = $statement->fetchColumn(0);
-	
 			$totalPosts = $postcount + $postprodcount;
-			return $totalPosts;
+			return $totalPosts ? $totalPosts : 0;
 		}
 		
 		public function generateTotalPhotos($id){
@@ -233,7 +232,7 @@
 			$statement->bindValue(':id', $id, PDO::PARAM_INT);
 			$statement->execute();
 			$totalPhotos = $statement->fetchColumn(0);
-			return $totalPhotos;
+			return $totalPhotos ? $totalPhotos : 0;
 		}
 		
 		public function generateTotalVideos($id){
@@ -250,7 +249,7 @@
 			$statement->bindValue(':id', $id, PDO::PARAM_INT);
 			$statement->execute();
 			$totalVideo = $statement->fetchColumn(0);
-			return $totalVideo;
+			return $totalVideo ? $totalVideo : 0;
 		}
 		
 		public function generateTotalFollowers($id){
@@ -261,7 +260,7 @@
 			$statement->bindValue(':id', $id, PDO::PARAM_INT);
 			$statement->execute();
 			$totalFollowers = $statement->fetchColumn(0);
-			return $totalFollowers;
+			return $totalFollowers ? $totalFollowers : 0;
 		}
 		
 		public function generateTotalBuds($id){
@@ -272,7 +271,7 @@
 			$statement->bindValue(':id', $id, PDO::PARAM_INT);
 			$statement->execute();
 			$totalBuds = $statement->fetchColumn(0);
-			return $totalBuds;
+			return $totalBuds ? $totalBuds : 0;
 		}
 		
 		public function generateTotalFollowing($id){
@@ -283,7 +282,7 @@
 			$statement->bindValue(':id', $id, PDO::PARAM_INT);
 			$statement->execute();
 			$totalFollowing = $statement->fetchColumn(0);
-			return $totalFollowing;
+			return $totalFollowing ? $totalFollowing : 0;
 		}
 		
 		public function getTopStrains(){
@@ -296,12 +295,12 @@
 			$statement = $this->pdo->prepare($topStrains);
 			$statement->execute();
 			$results = $statement->fetchAll(PDO::FETCH_ASSOC);
-			return $results;
+			return $results ? $results : false;
 		}
 		
 		public function getTopPosters(){
-			$topPosters = "SELECT u.id, u.username, u.profile_pic, u.type, u.store_id, u.store_reg, u.store_state, 
-			c.comm_id
+			$topPosters = "SELECT u.id, u.username, u.profile_pic, 
+			u.type, u.store_id, u.store_reg, u.store_state, c.comm_id
 			FROM users u
 			LEFT JOIN user_comments c ON u.id=c.comm_id
 			GROUP BY c.comm_id 
@@ -310,13 +309,15 @@
 			$statement = $this->pdo->prepare($topPosters);
 			$statement->execute();
 			$results = $statement->fetchAll(PDO::FETCH_ASSOC);
-			return $results;
+			return $results ? $results : false;
 		}
 		
 		public function getUserFeed($id){
-			$userFeed = "SELECT c.id, c.user_id AS user_comm_id, c.rating, c.comm_type, 
-			c.comm_id, c.orig_id, c.comment, c.pic, c.vid, c.tags, c.created_at,
-			u.id AS user_id, u.username, u.profile_pic, u.type, u.store_id, u.store_reg, u.store_state,
+			$userFeed = "SELECT c.id, c.user_id AS user_comm_id, 
+			c.rating, c.comm_type, c.comm_id, c.orig_id, c.comment, 
+			c.pic, c.vid, c.tags, c.created_at, u.id AS user_id, 
+			u.username, u.profile_pic, u.type, u.store_id, u.store_reg, 
+			u.store_state,
 			NULL,NULL 
 			FROM user_comments c 
 			LEFT JOIN users u ON c.comm_id = u.id 
@@ -327,8 +328,8 @@
 			UNION ALL 
 			SELECT pc.id, pc.user_id AS user_comm_id, pc.rating, pc.comm_type, 
 			pc.comm_id, pc.orig_id, pc.comment, pc.pic, pc.vid, pc.tags, pc.created_at, 
-			pu.id AS user_id, pu.username, pu.profile_pic, pu.type, pu.store_id, pu.store_reg, pu.store_state, 
-			pp.id AS prod_id, pp.pic AS prod_pic 
+			pu.id AS user_id, pu.username, pu.profile_pic, pu.type, pu.store_id, 
+			pu.store_reg, pu.store_state, pp.id AS prod_id, pp.pic AS prod_pic 
 			FROM prod_comments pc 
 			LEFT JOIN users pu ON pc.comm_id = pu.id 
 			LEFT JOIN products pp ON pc.user_id = pp.id 
@@ -341,7 +342,7 @@
 			$statement->bindValue(':id', $id, PDO::PARAM_INT);
 			$statement->execute();
 			$results = $statement->fetchAll(PDO::FETCH_ASSOC);
-			return $results;
+			return $results ? $results : false;
 		}
 		
 		public function verifyUserEmail($email){
@@ -349,24 +350,20 @@
 			$statement = $this->pdo->prepare($emailCheck);
 			$statement->bindValue(':email',$email);
 			$statement->execute();
-			$count = $statement->rowCount();
-			if($count == 1){
-				return true;
-			} else {
-				return false;
-			}
+			$count = $statement->rowCount() ? true : false;
 		}
 		
 		public function resetPassword($email){
 			$date = new DateTime();
-			$newPass = $date->format(U);
-			$updatePass = "UPDATE users SET password=sha1(:password) 
+			$newPass = $date->format('U');
+			$updatePass = "UPDATE users SET password_digest=sha1(:password) 
 			WHERE email=:email";
 			$statement = $this->pdo->prepare($updatePass);
 			$statement->bindValue(':password',$newPass);
 			$statement->bindValue(':email',$email);
 			$statement->execute();
-			if($statement->rowCount()){
+			$count = $statement->rowCount() ? true : false;
+			if($count){
 				return $newPass;
 			} else {
 				return false;
@@ -374,7 +371,7 @@
 		}
 		
 		public function checkRegToken($user,$token){
-			$tokenCheck = "SELECT user_id FROM users 
+			$tokenCheck = "SELECT id FROM users 
 			WHERE slug=:user AND reg_digest=sha1(:token)";
 			$statement = $this->pdo->prepare($tokenCheck);
 			$params = array(':user'=>$user, ':token'=>$token);
@@ -389,6 +386,71 @@
 			$statement->bindValue(':user',$user);
 			$statement->execute();
 			return $statement->rowCount() ? true : false;
+		}
+		
+		public function getRecentPosts(){
+			$recentPosts = "SELECT c.id, c.user_id AS user_comm_id, 
+			c.rating, c.comm_id, 
+			c.comm_type, c.orig_id, c.comment, c.pic, 
+			c.tags, c.created_at, u.id AS user_id, 
+			u.username, u.profile_pic, u.type, 
+			u.store_id, u.store_reg, u.store_state,
+			NULL,NULL
+			FROM user_comments c
+			LEFT JOIN users u ON c.comm_id = u.id
+			WHERE c.pic <> 'NULL' 
+			AND c.comm_type <> 'svf' 
+			AND c.comm_type <> 'svv' 
+			AND c.comm_type <> 'shpvv' 
+			AND c.comm_type <> 'shpvf' 
+			AND c.comm_type <> 'shsvf' 
+			AND c.comm_type <> 'shsvv' 
+			AND c.comm_type <> 'shpf' 
+			AND c.comm_type <> 'shrf' 
+			AND c.comm_type <> 'shpt' 
+			AND c.comm_type <> 'shrt' 
+			AND c.comm_type <> 'shpp' 
+			AND c.comm_type <> 'shrp' 
+			AND c.comm_type <> 'shpvf'  
+			AND c.comm_type <> 'shrvf' 
+			AND c.comm_type <> 'shpvv'  
+			AND c.comm_type <> 'shrvv' 
+			AND c.comm_type <> 'shpll' 
+			AND c.comm_type <> 'shrll' 
+			AND c.comm_type <> 'shplf'  
+			AND c.comm_type <> 'shrlf' 
+			AND c.comm_type <> 'shsmk' 
+			AND c.comm_type <> 'shfg' 
+			UNION ALL
+			SELECT pc.id, pc.user_id AS user_comm_id, 
+			pc.rating, pc.comm_id, pc.comm_type, 
+			pc.orig_id, pc.comment, pc.pic, pc.tags, 
+			pc.created_at, pu.id AS user_id, pu.username, 
+			pu.profile_pic, pu.type, pu.store_id, pu.store_reg, 
+			pu.store_state, pp.id AS prod_id, pp.pic AS prod_pic
+			FROM prod_comments pc
+			LEFT JOIN users pu ON pc.comm_id = pu.id 
+			LEFT JOIN products pp ON pc.user_id = pp.id
+			WHERE pc.pic <> 'NULL' 
+			AND pc.comm_type <> 'svf' 
+			AND pc.comm_type <> 'svv'
+			AND pc.comm_type <> 'shpvv' 
+			AND pc.comm_type <> 'shpvf' 
+			AND pc.comm_type <> 'shsvf' 
+			AND pc.comm_type <> 'shsvv' 
+			AND pc.comm_type <> 'shsf' 
+			AND pc.comm_type <> 'shst' 
+			AND pc.comm_type <> 'shsp'  
+			AND pc.comm_type <> 'shsvf' 
+			AND pc.comm_type <> 'shsvv' 
+			AND pc.comm_type <> 'shsll' 
+			AND pc.comm_type <> 'shslf' 
+			AND pc.comm_type <> 'shsmk' 
+			ORDER BY rand() 
+			DESC LIMIT 15";
+			$statement = $this->pdo->prepare($recentPosts);
+			$statement->execute();
+			return $statement->rowCount() ? $statement->fetchAll(PDO::FETCH_ASSOC) : false;
 		}
 	}
 ?>

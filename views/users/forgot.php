@@ -19,13 +19,16 @@
 		$email = trim($_POST['email']);
 		$errors = array();
 		if(!empty($email)){
-			$errors = $this->UsersCtrl->checkUserEmail($email);
+			$errors = $UsersCtrl->checkUserEmail($email);
 		} else {
 			$errors['blank'] = '1 or more fields blank';
 		}
 	}
 	
-	$Views->addHead();
+	$params = array('title'=>'Forgot Password'.__URLTITLE__, 
+					'location'=>'/forgot',
+					'meta'=>'Forgot Password | '.__SITENAME__);
+	$Views->addHead('custom',$params);
 	$Views->doHeader('message');
 	$Views->doUserMenu('message');
 ?>
@@ -35,7 +38,7 @@
 			foreach($errors as $error){
 				echo '<p class="error">'.$error.'</p>';
 			}
-		} else if(@$yes == 'success'){
+		} else if(@$yes == 'yes'){
 			echo '<p class="success">new password has been sent</p>';
 		}
 			

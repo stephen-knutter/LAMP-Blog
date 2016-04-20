@@ -27,7 +27,10 @@
 		
 	}
 	
-	$Views->addHead();
+	$params = array('title'=>'Sign Up'.__URLTITLE__, 
+					'location'=>'/signup',
+					'meta'=>'Sign up for '.__SITENAME__);
+	$Views->addHead('custom',$params);
 	$Views->doHeader('message');
 	$Views->doUserMenu('message');
 ?>

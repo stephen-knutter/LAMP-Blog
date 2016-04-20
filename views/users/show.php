@@ -1,6 +1,7 @@
 <?php
 	require dirname(dirname(__DIR__)) . '/bv_inc.php';
 	require dirname(dirname(__DIR__)) . '/controllers/users_controller.php';
+	require dirname(dirname(__DIR__)) . '/vendor/autoload.php';
 	
 	$UsersCtrl = new UsersCtrl;
 	$Views = new ApplicationViews;
@@ -14,7 +15,7 @@
 	$user = $_GET['id'];
 	$user = $UsersCtrl->getUser($user);
 	
-	$Views->addHead();
+	$Views->addHead('profile',$user);
 	$Views->doHeader('message');
 	$Views->doUserMenu('message');
 ?>
@@ -81,7 +82,7 @@
 			<div id="recentPane">
 				<h3 class="latestHead">Latest</h3>
 				<?php
-					#do_recent($conn);
+					$UsersCtrl->doRecent();
 				?>
 			</div>
 			

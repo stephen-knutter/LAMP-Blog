@@ -69,7 +69,7 @@
 			$statement = $this->pdo_conn()->prepare($otherUser);
 			$statement->bindValue(':id',$id,PDO::PARAM_INT);
 			$statement->execute();
-			$username = $statement->fetchColumn(1);
+			$username = $statement->fetchColumn(0);
 			return $username;
 		}
 		
@@ -78,7 +78,7 @@
 			$statement = $this->pdo->prepare($strainName);
 			$statement->bindValue(':id',$id,PDO::PARAM_INT);
 			$statement->execute();
-			$strain = $statement->fetchColumn(1);
+			$strain = $statement->fetchColumn(0);
 			return $strain;
 		}
 		
@@ -87,7 +87,7 @@
 			$statement = $this->pdo->prepare($secondUser);
 			$statement->bindValue(':id',$id,PDO::PARAM_INT);
 			$statement->execute();
-			$user = $statement->fetchAll(PDO::FETCH_ASSOC);
+			$user = $statement->fetch(PDO::FETCH_ASSOC);
 			return $user;
 		}
 		
@@ -106,7 +106,7 @@
 			$statement = $this->pdo->prepare($blockTitle);
 			$statement->bindValue(':id',$id,PDO::PARAM_INT);
 			$statement->execute();
-			$title = $statement->fetchColumn(1);
+			$title = $statement->fetchColumn(0);
 			return $title;
 		}
 		
@@ -128,7 +128,7 @@
 			$statement = $this->pdo->prepare($forumComment);
 			$statement->bindValue(':id',$id,PDO::PARAM_INT);
 			$statement->execute();
-			$message = $statement->fetchColumn(1);
+			$message = $statement->fetchColumn(0);
 			return $message;
 		}
 		
@@ -269,6 +269,147 @@
 			$msg = $statement->fetchAll(PDO::FETCH_ASSOC);
 			return $msg;
 		}
+		
+		public function deleteTempPhoto($id){
+			$deletePhoto = "DELETE FROM temp_postphotos 
+			WHERE user_id=:id";
+			$statement = $this->pdo->prepare($deletePhoto);
+			$statement->bindValue(':id',$id,PDO::PARAM_INT);
+			$statement->execute();
+			return $statement->rowCount() ? true : false; 
+		}
+		
+		public function findTempPic($id){
+			$tempPhoto = "SELECT pic FROM temp_postphotos 
+			WHERE user_id=:id";
+			$statement = $this->pdo->prepare($tempPhoto);
+			$statement->bindValue(':id',$id,PDO::PARAM_INT);
+			$statement->execute();
+			$tempPic = $statement->fetchColumn(0);
+			return $tempPic ? $tempPic : false;
+		}
+		
+		public function insertTempPic($id,$photo,$type){
+			$tempPic = "INSERT INTO temp_postphotos(user_id,pic,type)
+			VALUES(:id,:photo,:type)";
+			$statement = $this->pdo->prepare($tempPic);
+			$statement->bindValue(':id',$id,PDO::PARAM_INT);
+			$statement->bindValue(':photo',$photo);
+			$statement->bindValue(':type',$type);
+			$statement->execute();
+			return $statement->rowCount() ? true : false;
+		}
+		
+		public function findTempVideo($id){
+			$tempVideo = "SELECT video FROM temp_postvideos 
+			WHERE user_id=:id";
+			$statement = $this->pdo->prepare($tempVideo);
+			$statement->bindValue(':id',$id,PDO::PARAM_INT);
+			$statement->execute();
+			$tempVideo = $statement->fetchColumn(0);
+			return $tempVideo ? $tempVideo : false;
+		}
+		
+		public function deleteTempVideo($id){
+			$deleteVideo = "DELETE FROM temp_postvideos 
+			WHERE user_id=:id";
+			$statement = $this->pdo->prepare($deleteVideo);
+			$statement->bindValue(':id',$id,PDO::PARAM_INT);
+			$statement->execute();
+			return $statement->rowCount() ? true : false;
+		}
+		
+		public function getStoreId($id){
+			$storeId = "SELECT store_id FROM users WHERE id=:id";
+			$statement->bindValue(':id',$id,PDO::PARAM_INT);
+			$statement->execute();
+			$id = $statement->fetchColumn(0);
+			return $id ? $id : false;
+		}
+		
+		public function insertProdPhotoFull($curWallId,$rating,
+											$type,$userId,
+											$userText,$newPhoto,
+											$tagString){
+			$newProdComment = "INSERT INTO prod_comments 
+			VALUES('NULL', :curWallId, :rating, :userId, :type, :userId, 
+			:userText, :newPhoto, 'NULL', :tagString, NOW())";
+			$statement->bindValue(':curWallId',$curWallId,PDO::PARAM_INT);
+			$statement->bindValue(':rating',$rating,PDO::PARAM_INT);
+			$statement->bindValue(':type',$type);
+			$statement->bindValue(':userId',$userId,PDO::PARAM_INT);
+			$statement->bindValue(':userText',$userText);
+			$statement->bindValue(':newPhoto',$newPhoto);
+			$statement->bindValue(':tagString',$tagString);
+			$statement->execute();
+			$insertId = $this->pdo->lastInsertId();
+			return $insertId ? $insertId : false;
+		}
+		
+		public function insertUserPhotoFull($curWallId,$rating,
+											$type,$userId,
+											$userText,$newPhoto,
+											$tagString){
+			$newUserComment = "INSERT INTO user_comments 
+			VALUES('NULL', :curWallId, :rating, :userId, :type, :userId,
+			:userText, :newPhoto, 'NULL', :tagString, NOW())";
+			$statement = $this->pdo->prepare($newUserComment);
+			$statement->bindValue(':curWallId',$curWallId,PDO::PARAM_INT);
+			$statement->bindValue(':rating',$rating,PDO::PARAM_INT);
+			$statement->bindValue(':type',$type);
+			$statement->bindValue(':userId',$userId,PDO::PARAM_INT);
+			$statement->bindValue(':userText',$userText);
+			$statement->bindValue(':newPhoto',$newPhoto);
+			$statement->bindValue(':tagString',$tagString);
+			$statement->execute();
+			$insertId = $this->pdo->lastInsertId();
+			return $insertId ? $insertId : false;
+		}
+		
+		public function insertTempVideo($userId,$video,$type){
+			$tempVideo = "INSERT INTO temp_postvideos (user_id,video,type) 
+			VALUES(:userId,:video,:type)";
+			$statement = $this->pdo->prepare($tempVideo);
+			$statement->bindValue(':userId',$userId,PDO::PARAM_INT);
+			$statement->bindValue(':video',$video);
+			$statement->bindValue(':type',$type);
+			$statement->execute();
+			return $statement->rowCount() ? true : false;
+		}
+		
+		public function findNewProdComment($id){
+			$newProdComment = "SELECT c.id, c.user_id AS user_comm_id, 
+			c.rating, c.comm_id, c.comm_type, c.orig_id, c.comment, 
+			c.pic, c.vid,  c.tags, c.created_at, u.id AS user_id, 
+			u.username, u.profile_pic, u.type, u.store_id, 
+			u.store_reg, u.store_state
+			FROM prod_comments c
+			LEFT JOIN users u ON c.comm_id = u.id
+			WHERE c.id=:id";
+			$statement = $this->pdo->prepare($newProdComment);
+			$statement->bindValue(':id',$id,PDO::PARAM_INT);
+			$statement->execute();
+			$comment = $statement->fetchAll(PDO::FETCH_ASSOC);
+			return $comment ? $comment : false;
+		}
+		
+		public function findNewUserComment($id){
+			$newUserComment = "SELECT c.id, c.user_id AS user_comm_id, 
+			c.rating, c.comm_id, c.comm_type, c.orig_id,  
+			c.comment, c.pic, c.vid,  c.tags, c.created_at, 
+			u.id AS user_id, u.username, u.profile_pic, 
+			u.type, u.store_id, u.store_reg, u.store_state
+			FROM user_comments c
+			LEFT JOIN users u ON c.comm_id = u.id
+			WHERE c.id=:id";
+			$statement = $this->pdo->prepare($newUserComment);
+			$statement->bindValue(':id',$id,PDO::PARAM_INT);
+			$statement->execute();
+			$comment = $statement->fetchAll(PDO::FETCH_ASSOC);
+			return $comment ? $comment : false;
+		}
+		
+		
 		
 	} //END APPLICATION MODELS CLASS
 ?>

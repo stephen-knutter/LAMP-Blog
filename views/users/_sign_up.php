@@ -1,8 +1,8 @@
 <div id="signInForm">
+	<div id="signInHead">
+		<h3>Sign Up</h3>
+	</div>
 	<form action="<?php echo __LOCATION__ . '/signup'; ?>" method="post" accept-charset="utf-8">
-		<div id="signInHead">
-			<h3>Sign Up</h3>
-		</div>
 		<input type="hidden" name="auth_token" />
 		<input type="hidden" name="checkmark" value="&#x2713;" />
 		<input type="text" class="signInInput" name="username" placeholder="Username" value="<?php if(isset($username)) echo $username; ?>">

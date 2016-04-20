@@ -1,5 +1,6 @@
 <?php
 	require dirname(dirname(__DIR__)) . '/bv_inc.php';
+	require dirname(dirname(__DIR__)) . '/controllers/users_controller.php';
 	
 	$UsersCtrl = new UsersCtrl;
 	$Helper = new ApplicationHelper;
@@ -8,9 +9,10 @@
 	$user = $_GET['user'];
 	
 	if(!empty($regToken) && !empty($user)){
-		$tokenArray = $this->Helper->unobfuscateLink($regToken);
+		$tokenArray = $Helper->unobfuscateLink($regToken);
 		$regToken = $tokenArray[1];
-		$this->UsersCtrl->verifyRegToken($user,$regToken);
+		$UsersCtrl->verifyRegToken($user,$regToken);
 	} else {
 		header('Location: ' . __LOCATION__);
+		exit();
 	}

@@ -24,7 +24,10 @@
 		}
 	}
 	
-	$Views->addHead();
+	$params = array('title'=>'Log In'.__URLTITLE__, 
+					'location'=>'/login',
+					'meta'=>'Log In to '.__SITENAME__);
+	$Views->addHead('custom',$params);
 	$Views->doHeader('message');
 	$Views->doUserMenu('message');
 ?>

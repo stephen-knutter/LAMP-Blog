@@ -212,9 +212,6 @@ $(function(){
 	
 });
 
-
-//console.log('Global fns is ready');
-
 /*CUSTOM RADIO BUTTONS*/
 $(function(){
     var radio = $("input[type=radio]");

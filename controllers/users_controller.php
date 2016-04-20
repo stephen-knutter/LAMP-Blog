@@ -14,9 +14,9 @@
 		
 		public function __construct(){
 			$this->UserModel = new User;
-			$this->Helper = new ApplicationHelper;
-			$this->Views = new ApplicationViews;
-			$this->Mailer = new ApplicationMailer;
+			$this->Helper    = new ApplicationHelper;
+			$this->Mailer    = new ApplicationMailer;
+			$this->Views     = new ApplicationViews;
 		}
 		/*
 		 *	# NEW USER FUNCTIONS #
@@ -26,6 +26,7 @@
 		 *	 @validatePassword();
 		 *	 @generateFeed();
 		**/
+		
 		public function validateUser($username,$email,$password,$confirmation){
 			$this->username = $username;
 			$this->email = $email;
@@ -200,7 +201,11 @@
 			switch($feedType){
 				case 'feed':
 					$results = $this->UserModel->getUserFeed($id);
-					$this->Views->generateFeed($results,$feedType);
+					if($results){
+						$this->Views->generateFeed($results,$feedType);
+					} else {
+						return false;
+					}
 				break;
 				case 'posts':
 					$this->UserModel->doPostsFeed();
@@ -298,6 +303,9 @@
 		}
 		
 		public function doRecent(){
+			$recent = $this->UserModel->getRecentPosts();
+			
+				$this->Views->generateRecentPosts($recent);
 			
 		}
 		

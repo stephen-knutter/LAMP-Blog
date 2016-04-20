@@ -23,13 +23,34 @@ class ApplicationViews{
 		*****/
 		
 		#DISPLAY HEADER
-		public function addHead($title='Blog',$meta_desc="",$alt="",$url=""){
+		public function addHead($type,$item){
+			switch($type){
+				case 'profile':
+					$title = $item['username'] . __URLTITLE__;
+					$url = __LOCATION__ . '/' . $item['slug'];
+					$alt = __MOBILELOCATION__ . '/' . $item['slug'];
+					$meta = $item['username'] . '&#39;s feed';
+				break;
+				case 'custom':
+					$title = $item['title'];
+					$url = __LOCATION__ . $item['location'];
+					$alt = __MOBILELOCATION__ . $item['location'];
+					$meta = $item['meta'];
+				break;
+				default:
+					$title = __URLTITLE__;
+					$url = __LOCATION__;
+					$alt = __MOBILELOCATION__;
+					$meta = __WELCOME__;
+				break;
+			}
+			
 			$html = '<!DOCTYPE html>';
 			$html .= '<html>';
 			$html .= '<head>';
 			$html .= 	'<title>'.$title.'</title>';
 			$html .= 	'<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />';
-			$html .= 	'<meta name="description" content="'.$meta_desc.'">';
+			$html .= 	'<meta name="description" content="'.$meta.'">';
 			$html .= 	'<link rel="alternate" media="only screen and (max-width: 640px)" href="'.$alt.'">';
 			$html .=	'<link rel="canonical" href="'.$url.'">';
 			$html .= 	'<link rel="stylesheet" type="text/css" href="'. __LOCATION__ .'/assets/css/mac-front.css">';
@@ -40,18 +61,27 @@ class ApplicationViews{
 			$html .= 	'<link rel="icon" href="'. __LOCATION__ .'/assets/images/tab-pic.png">';
 			$html .= 	'<script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?v=3.14&sensor=false"></script>';
 			$html .= 	'<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>';
+			$html .= 	'<script type="text/javascript" src="'. __LOCATION__ .'/assets/javascripts/config.js"></script>';
 			$html .= 	'<script type="text/javascript" src="'. __LOCATION__ .'/assets/javascripts/global-fns.js"></script>';
+			$html .=	'<script type="text/javascript" src="'. __LOCATION__ .'/assets/javascripts/profile.js"></script>';
 			$html .= 	'<script type="text/javascript" src="'. __LOCATION__ .'/assets/javascripts/infobubble.js"></script>';
 			$html .= 	'<script type="text/javascript" src="'. __LOCATION__ .'/assets/javascripts/search.js"></script>';
-			$html .= 	'<script type="text/javascript" src="'. __LOCATION__ .'/assets/javascripts/front-script.js"></script>';
-			$html .=	'<script type="text/javascript" src="'. __LOCATION__ .'/assets/javascripts/profile.js"></script>';
+			$html .=	'<script type="text/javascript" src="'. __LOCATION__ .'/assets/javascripts/jquery.form.min.js"></script>';
+			$html .=	'<script type="text/javascript" src="'. __LOCATION__ .'/assets/javascripts/jquery.Jcrop.min.js"></script>';
+			$html .=	'<script type="text/javascript" src="'. __LOCATION__ .'/assets/javascripts/geoPosition.js"></script>';
+			$html .=	'<script type="text/javascript" src="'. __LOCATION__ .'/assets/javascripts/geoPositionSimulator.js"></script>';
+			if($type != 'profile'){
+				$html .= 	'<script type="text/javascript" src="'. __LOCATION__ .'/assets/javascripts/front-script.js"></script>';
+			}
 			$html .= 	'<script type="text/javascript" src="'. __LOCATION__ .'/assets/javascripts/relation.js"></script>';
 			$html .= 	'<script type="text/javascript" src="'. __LOCATION__ .'/assets/javascripts/endless-scroll.js"></script>';
 			$html .= 	'<script type="text/javascript" src="'. __LOCATION__ .'/assets/javascripts/tooltip.js"></script>';
+			
 			$html .= 	'<!--[if IE]><script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->';
+			$html .= 	'<script src="https://vjs.zencdn.net/4.12/video.js"></script>';
+			$html .= 	'<link rel="stylesheet" type="text/css" href="'. __LOCATION__ .'/assets/css/tube.css" />';
 			$html .= '</head>';
 			$html .= '<body>';
-			
 			echo $html;
 		}
 		
@@ -665,7 +695,7 @@ class ApplicationViews{
 				$post_text = 'Post';
 			}
 	?>
-			<form action="../../../add-post-photo.php" method="post" enctype="multipart/form-data" class="addPostForm" target="headForm">
+			<form action="<?php echo __LOCATION__ . '/ajax/ajax_media_preview.php'; ?>" method="post" enctype="multipart/form-data" class="addPostForm" target="headForm">
 				<input type="hidden" name="post_type" class="post_type" value="<?php echo $input_type; ?>" />
 				<textarea id="userFeedBox" placeholder="<?php echo $placeholder; ?>"></textarea>
 				<div class="tagPane"></div>
@@ -757,12 +787,14 @@ class ApplicationViews{
 						$button_id = 'addPostButton';
 					}
 				?>
-				<div class="postButtonWrap"><button id="<?php echo $button_id; ?>" class="<?php echo $username; ?>-<?php echo $id; ?>"><?php echo $post_text; ?></button></div>
+				<div class="postButtonWrap">
+				   <button id="<?php echo $button_id; ?>" class="<?php echo $username; ?>-<?php echo $id; ?>"><?php echo $post_text; ?></button>
+				</div>
 			</form>
 	<?php
 		}
 		
-	public function generateFeed($items,$feedType){
+	public function generateFeed($items,$feedType,$ajax=false){
 		foreach($items as $row){
 			$commentId = $row['id'];
 			$date = $row['created_at'];
@@ -771,7 +803,7 @@ class ApplicationViews{
 			$username = $row['username'];
 			$userCommId = $row['user_comm_id'];
 			$commId = $row['comm_id'];
-			$nullRow = $row['NULL'];
+			$nullRow = @$row['NULL'];
 			$commType = $row['comm_type'];
 			$type = $row['type'];
 			$storeState = $row['store_state'];
@@ -782,8 +814,26 @@ class ApplicationViews{
 			$picture = $row['pic'];
 			$video = $row['vid'];
 			$tags = $row['tags'];
-				
-			echo "<div class='commWrap'>";
+			
+			if($ajax){
+				$status = array();
+				$status['code'] = 200;
+				$status['message'] = "<div class='commWrap'>";
+					                 //ITEM HEAD
+					                 $this->generateFeedHead($commentId,$date,$profilePic,$userId,
+											$username,$userCommId,$commId,$nullRow,
+											$commType,$type,$storeState,$storeRegion,
+											$origId,$rating);
+					                //ITEM BODY
+					                $this->generateFeedBody($commentId,$commType,$comment,$origId,
+										   $username,$picture,$video,$rating,$tags);
+											
+					                //ITEM REPLIES/FOOTER
+					                $this->generateFeedReplies($feedType,$commType,$commentId,$rating);
+				                    "</div>";
+				echo json_encode($status);
+			} else {
+				echo "<div class='commWrap'>";
 					//ITEM HEAD
 					$this->generateFeedHead($commentId,$date,$profilePic,$userId,
 											$username,$userCommId,$commId,$nullRow,
@@ -795,7 +845,8 @@ class ApplicationViews{
 											
 					//ITEM REPLIES/FOOTER
 					$this->generateFeedReplies($feedType,$commType,$commentId,$rating);
-			echo "</div>";
+				echo "</div>";
+			}
 		}
 	}
 	
@@ -955,7 +1006,7 @@ class ApplicationViews{
 			}
 		}
 		echo "</div>";
-		echo "</div>";
+		//echo "</div>";
 	} else {
 		//IF BELOW MAP FEED ONLY GRAB SHARE AND REPLY TOTALS
 			if($commType == 'sf' || $commType == 'st' || $commType == 'sp' || 
@@ -1225,8 +1276,8 @@ class ApplicationViews{
 							$wallLink = __LOCATION__ .'/'. $linkName;
 							$iconClass = 'user-icon';
 						} else {
-							$secondStoreRegion = $user['store_reg'];
-							$secondStoreState = $user['store_state'];
+							$secondStoreRegion = $secondUser['store_reg'];
+							$secondStoreState = $secondUser['store_state'];
 							$wallLink = __LOCATION__ .'/'. $secondStoreState.'/'.$secondStoreRegion.'/'.$linkName;
 							$iconClass = 'store-icon';
 						}
@@ -1263,5 +1314,67 @@ class ApplicationViews{
 			}
 	echo "</div>";//END commHead
   }
+  
+  public function generateRecentPosts($posts){
+	  foreach($posts as $post){
+		  $type = $post['type'];
+		  $username = $post['username'];
+		  $linkName = $this->Controller->remove_whitespace($username);
+		  $storeState = $post['store_state'];
+		  $storeRegion = $post['store_reg'];
+		  $profilePic = $post['profile_pic'];
+		  $commType = $post['comm_type'];
+		  $commId = $post['comm_id'];
+		  $origId = $post['orig_id'];
+		  $pic = $post['pic'];
+		//$extension = strtolower(strrchr($row_recent['pic'], '.'));
+		if($type  == 'store'){
+			$link = __LOCATION__ . '/' .$storeState.'/'.$storeRegion.'/'.$linkName;
+		} else {
+			$link = __LOCATION__ . '/' .$linkName;
+		}
+		if($profilePic == 'no-profile.png'){
+			$thumbImg = __LOCATION__ . '/assets/images/thumb-no-profile.png';
+		} else {
+			$thumbImg = __LOCATION__  . '/assets/user-images/'.$commId.'/thumb-'.$profilePic;
+		}
+		echo '<div class="recentWrap">';
+		echo '<div class="recentHead clearfix">';
+		echo 	'<div class="recentThumbWrap">';
+		echo 		'<img class="recentThumb" src="'.$thumbImg.'" alt="'.$username.'">';
+		echo 	'</div>';
+		echo 	'<div class="recentNameWrap">';
+		echo 		'<h5><a href="'.$link.'">'.$username.'</a></h5>';
+		echo 	'</div>';
+		echo '</div>';
+		$picLink = __LOCATION__ . '/assets/user-images/'.$origId.'/'.$pic;
+		$picLinkSmall = __LOCATION__ . '/assets/user-images/'.$origId.'/mobile-'.$pic;
+			if($commType == 'rvf' || 
+			   $commType == 'pvf' || 
+			   $commType == 'svf' || 
+			   $commType == 'rvv' || 
+			   $commType == 'pvv' || 
+			   $commType == 'svv'){
+				echo 	'<img class="recentPic" src="'.$picLink.'">';
+			} else if($commType == 'rlf' || 
+					  $commType == 'plf' || 
+					  $commType == 'slf' || 
+					  $commType == 'rll' || 
+					  $commType == 'pll' || 
+					  $commType == 'sll' || 
+					  $commType == 'shrlf' || 
+					  $commType == 'shplf' || 
+					  $commType == 'shslf' || 
+					  $commType == 'shrll' || 
+					  $commType == 'shpll' || 
+					  $commType == 'shsll'){
+				  echo '<img class="recentPic" src="'.$picLinkSmall.'" alt="'.$username.'\'s recent post">';
+			} else {
+				  echo '<img class="recentPic" src="'.$picLinkSmall.'" alt="'.$username.'\'s post photo">';
+			}
+		echo '</div>';
+	  }
+  }
+  
 } //END ApplicationViews Class
 ?>

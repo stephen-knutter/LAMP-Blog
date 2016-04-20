@@ -185,7 +185,6 @@ $(function(){
 		if(result == 0){
 			$("#userProfilePic").append("<p class='uploadError'>Error uploading file</p>");
 		} else {
-			/*window.location = 'http://www.budmapz.com/'+result.trim();*/
 			location.reload();
 		}
 		}
@@ -243,8 +242,6 @@ $(function(){
         } else if(result == 5){
           $form.before("<p class='error'>username cannot be blank</p>");
         } else {
-          /*window.location = 'http://www.budmapz.com/edit.php?user='+result;*/
-          //newNameContain.val(result);
 		  window.location = 'https://www.budvibes.com/'+result+'/edit';
           $form.before("<p class='success'>username changed successfully</p>");
         }
@@ -407,20 +404,30 @@ $(function(){
    //freezePane();
 });
 
-/*USER FEEDS (POST AND REPY)*/
-iaddphoto = {
-  curButton: null,
-  curForm: null,
-  curId: null,
-  curPane: null,
-  curTags: null,
-  showPanes: null
-}
 
-/*NEW POST*/
+
+/*NEW POSTS*/
 $(function(){
-  curTagPane = $(".userTagPane");
-  curSubmittedTags = $(".submittedTags");
+    iaddphoto = {
+	  curButton: null,
+	  curForm: null,
+	  curId: null,
+	  curPane: null,
+	  curTags: null,
+	  showPanes: null,
+	  photoBtn: $("input.photoFileButton"),
+	  videoBtn: $("input.videoFileButton"),
+	  linkBtn: $('.linkFileButton'),
+	  userTagPane: $(".userTagPane"),
+	  submittedTags: $(".submittedTags"),
+	  buttonToggles: $(".buttonToggle"),
+	  buttonToggleInputs: $(".buttonToggle").find("input"),
+	  xhrType: $("input.xhr_type"),
+	  postType: $("input.post_type"),
+	  tagPane: $("div.tagPane"), //aka userTagPane
+	  userPostBox: $("textarea#userFeedBox"),
+	  dropPane: $("div.dropPane"),
+	}
   /*POST BUTTON CLICK*/
   $("#addPostButton, #addProdButton").on("click", function(event){
     if(!event){
@@ -431,27 +438,38 @@ $(function(){
     var buttonVal = $button.html();
     var buttonWrap = $button.parent("div");
     var iframePhoto = 'noframe';
-    /*CURRENT FEED WALL ID AND USERNAME*/
+    //CURRENT FEED WALL ID AND USERNAME
     var buttonClass = $button.attr("class");
     var dash = buttonClass.indexOf("-");
     var strEnd = buttonClass.length;
     var curWallId = buttonClass.slice(dash+1,strEnd);
     var curWallUser = buttonClass.slice(0,dash);
-    /*XHR TYPE*/
-    var xhrType = buttonWrap.siblings("input.xhr_type").val();
-    /*POST TYPE(PROD OR USER)*/
-    var postType = buttonWrap.siblings("input.post_type").val();
-    /*TAG PANE*/
-    userCurPane = buttonWrap.siblings("div.tagPane");
-    /*USER PHOTO*/
-    var userPhotoImg = userCurPane.find("img.postImgPreview");
+    //XHR TYPE
+    //var xhrType = buttonWrap.siblings("input.xhr_type").val();
+	var xhrType = iaddphoto
+				      .xhrType
+					  .val();
+    //POST TYPE(PROD OR USER)
+    //var postType = buttonWrap.siblings("input.post_type").val();
+	var postType = iaddphoto
+					  .postType
+					  .val();
+    //TAG PANE
+    //var userCurPane = buttonWrap.siblings("div.tagPane");
+    //USER PHOTO
+    var userPhotoImg = iaddphoto
+						 .tagPane
+						 .find("img.postImgPreview");
     var userPhoto = userPhotoImg.attr("src");
-    /*USER VIDEO*/
-    var userVideoWrap = userCurPane.find("video");
-    var userVideo = userVideoWrap.find("source").attr("src");
-    /*LINK INFO*/
-    var userLinkWrap = userCurPane.find("div.userLink");
-    //var linkHtml = userLinkWrap.html();
+    //USER VIDEO
+    var userVideoWrap = iaddphoto.tagPane.find("video");
+    var userVideo = userVideoWrap
+						.find("source")
+						.attr("src");
+    //LINK INFO
+    var userLinkWrap = iaddphoto
+						.tagPane
+						.find("div.userLink");
     var linkSource = userLinkWrap.find("img");
     var linkType = linkSource.attr("id");
     if(linkType == 'iframephoto'){
@@ -462,20 +480,26 @@ $(function(){
     var userLink = linkSource.attr("src");
     linkSource.remove();
     var linkHtml = userLinkWrap.html();
-    /*USER COMMENT*/
-    var userPostBox = buttonWrap.siblings("textarea#userFeedBox");
-    var userPost = userPostBox.val();
-    /*TAGS*/
+    //USER COMMENT
+    //var userPostBox = buttonWrap.siblings("textarea#userFeedBox");
+    var userPost = iaddphoto
+					.userPostBox
+					.val();
+    //TAGS
     var tags = Array();
-    var tagPane = buttonWrap.siblings("div.submittedTags");
-    var curTags = tagPane.find("span.newTag");
+    //var tagPane = buttonWrap.siblings("div.submittedTags");
+    var curTags = iaddphoto
+					.submittedTags
+					.find("span.newTag");
     curTags.each(function(){
       tags.push($(this).text());
     })
-    /*var tagsJSON = JSON.stringify(tags);*/
-    /*RATING*/
-    var curRating = buttonWrap.siblings("div.stars").find('input[name=rating]:checked').val();
-    var url = 'https://www.budvibes.com/add-post.php';
+    //RATING
+    var curRating = buttonWrap
+						.siblings("div.stars")
+						.find('input[name=rating]:checked')
+						.val();
+    var url = __LOCATION__ + '/ajax/ajax_add_post.php';
     if(!curRating){
       curRating = 'No Rating';
     }
@@ -500,54 +524,87 @@ $(function(){
     
     $.ajax({
       beforeSend: function(){
-        buttonWrap.append("<img class='postgear' src='https://www.budvibes.com/images/postgear.gif'>");
         $(".error").remove();
-        $button.attr("disabled", "disabled").html("");
+        $button
+			.attr("disabled", "disabled")
+			.html("");
       },
       type: 'POST',
-      data: {cur_wall_id: curWallId, cur_wall_user: curWallUser, text: userPost, 
-        photo: userPhoto, video: userVideo, tags: tags, rating: curRating, xhr_type: xhrType, post_type: postType, media: media, 
-        link: userLink, link_info: linkHtml, iframe: iframePhoto},
+      data: {cur_wall_id: curWallId, 
+			 cur_wall_user: curWallUser, 
+			 text: userPost, 
+			 photo: userPhoto, 
+			 video: userVideo, 
+			 tags: tags, 
+			 rating: curRating, 
+			 xhr_type: xhrType, 
+			 post_type: postType, 
+			 media: media, 
+			 link: userLink, 
+			 link_info: linkHtml, 
+			 iframe: iframePhoto},
       url: url,
       success: function(result){
-        //console.log(result);
-        if(result == 0){
-          $(".submittedTags").after("<p class='error'>Error adding comment</p>");
-        }else if(result == 2){
-          $(".submittedTags").after("<p class='error'>Must insert comment or add photo or video</p>");
-        } else {
-          $(".dropPane").prepend(result);
-          var vidId = $(".dropPane").first("div.commPostVideo").find("video").attr("id");
-          if(vidId == 'newvideo'){
-            videojs('newvideo',{},function(){});
-          }
-          $("img.postImgPreview").remove();
-          $("div.userLink").remove();
-          $("div.tagPane").find("div.video-js, video").remove();
-          userPostBox.val("");
-          userPhotoImg.remove();
-          if(iaddphoto.curButton){
-            iaddphoto.curButton.attr("disabled", false);
-          }
-          $(".userTagPane, .submittedTags, .bigx").css("display", "none").html("");
-          $("div.stars").find("div").find("a").removeClass("rating");
-          iaddphoto.curButton = null;
-          iaddphoto.curForm = null;
-          iaddphoto.curId = null;
-          iaddphoto.curPane = null;
-          
-        }
-        
+        console.log(result);
+		result = $.parseJSON(result) || null;
+		iStatus = result.code || null;
+		if(result){
+		  switch(iStatus){
+			case 204:
+			case 401:
+			case 500:
+				iaddphoto
+					.submittedTags
+					.after("<p class='error'>"+result.status+"</p>");
+			break;
+			default:
+			  var comment = result.message;
+			  iaddphoto.dropPane.prepend(comment);
+              var vidId = iaddphoto
+					       .dropPane
+						   .first("div.commPostVideo")
+						   .find("video")
+						   .attr("id");
+              if(vidId == 'newvideo'){
+                videojs('newvideo',{},function(){});
+              }
+              $("img.postImgPreview").remove();
+              $("div.userLink").remove();
+              iaddphoto
+				 .tagPane
+				 .find("div.video-js, video")
+				 .remove();
+              iaddphoto
+			     .userPostBox
+				 .val("");
+              userPhotoImg.remove();
+              if(iaddphoto.curButton){
+               iaddphoto.curButton.attr("disabled", false);
+             }
+             $(".bigx").css("display", "none").html("");
+		     iaddphoto.userTagPane.css("display","none");
+		     iaddphoto.submittedTags.css("display","none");
+             $("div.stars").find("div").find("a").removeClass("rating");
+             iaddphoto.curButton = null;
+             iaddphoto.curForm = null;
+             iaddphoto.curId = null;
+             iaddphoto.curPane = null;
+			break;
+		  }
+		} else {
+			iaddphoto
+				.submittedTags
+				.after("<p class='error'>Internal error</p>");
+		}
       },
       complete: function(){
-        buttonWrap.find("img.postgear").remove();
         $button.attr("disabled",false).html(buttonVal);
-        $("div.buttonToggle").find("input").attr("disabled", false);
+		iaddphoto.buttonToggleInputs.attr("disabled",false);
       }
     });
     
   });
-  
+	
   /*REPLY BUTTON CLICK*/
   $("body").on("click", "button.replyButton", function(event){
     if(!event){
@@ -626,10 +683,18 @@ $(function(){
   /*ADD A LINK*/
   $("body").on("click", ".linkFileButton", function(event){ 
     iaddphoto.curButton = $(this);
-    iaddphoto.curForm = iaddphoto.curButton.parent("div").parent("form");
-    iaddphoto.curPane = iaddphoto.curButton.parent("div").siblings("div.tagPane");
+    iaddphoto.curForm = iaddphoto
+						   .curButton
+						   .parent("div")
+						   .parent("form");
+    iaddphoto.curPane = iaddphoto
+						   .curButton
+						   .parent("div")
+						   .siblings("div.tagPane");
     $("input#addlink").remove();
-    iaddphoto.curPane.before('<input type="text" name="addlink" id="addlink" placeholder="Paste a link here" />');
+    iaddphoto
+	   .curPane
+	   .before('<input type="text" name="addlink" id="addlink" placeholder="Paste a link here" />');
   });
 
   $("body").on("paste", "input#addlink", function(event){
@@ -639,145 +704,152 @@ $(function(){
 	
     var timeoutId = setTimeout(function(){
       if(e.val() != "" && e.val() != inputCache){
-        $("div.buttonToggle").find("input").attr("disabled", "disabled");
-        //iaddphoto.curPane = e.siblings("div.tagPane");
+        //$("div.buttonToggle").find("input").attr("disabled", "disabled");
+		iaddphoto
+			.buttonToggleInputs.attr("disabled","disabled");
         elink = inputCache = e.val();
-		//alert(elink + ' - ' + inputCache);
-        //elink = encodeURIComponent(elink);
-        //clearInterval(timeoutId);
-        url = 'https://www.budvibes.com/add-link.php';
+        url = __LOCATION__+'/ajax/ajax_add_link.php';
         $.ajax({
           beforeSend: function(){
-            iaddphoto.curPane.append("<img class='ajaxImage' src='https://www.budvibes.com/images/green-bars.gif'>");
+            iaddphoto
+			    .curPane
+				.append("<img class='ajaxImage' src='"+__LOCATION__ +"/assets/images/green-bars.gif'>");
           },
           type: 'POST',
           url: url,
           data: {add_link : elink},
           success: function(result){
+			result = $.parseJSON(result);
 			inputCache = null;
-            //console.log(result)
-            if(result == 0){
-              //alert('internal error');
-              e.css("color","red");
-            } else if(result == 6){
-              $(".chatBoxWrap").remove();
-              $("body").append(
-                '<div class="chatBoxWrap" id="thread-no">'+
-                '<div class="chatBoxHead clearfix"><span class="chatName" id="chat-none">Sign Up</span><span class="chatClose">X</span></div>'+
-                '<div class="chatBoxBody">'+
-                  '<div id="signInMenu" class="signUpMenu">'+
-                    '<h3><img src="https://www.budvibes.com/images/sign-up-head.png" alt="User Sign Up"></h3>'+
-                    '<form action="../../../sign-up.php" method="post" id="signUpForm">'+
-                      '<input type="text" class="signInput" name="username" placeholder="Username">'+
-                      '<input type="text" class="signInput" name="email" placeholder="Email">'+
-                      '<input type="password" class="signInput" name="pass" placeholder="Password">'+
-                      '<input type="password" class="signInput" name="confirmpass" placeholder="Confirm Password">'+
-                      '<input type="submit" class="signSubmit" name="signup" value="Sign Up">'+
-                    '</form>'+
-                    '<div id="signUp">'+
-                      '<a href="https://www.budvibes.com/sign-in.php" id="signInLink">&#8592; Sign In</a>'+
-                    '</div>'+
-                  '</div>'+
-                '</div>'+
-                '<div class="chatBoxPostWrap">'+
-                  '<div class="chatReplyBoxWrap clearfix">'+
-                    '<div class="chatBox" contenteditable="true"></div>'+
-                  '</div>'+
-                '</div>'+
-                '<div class="chatButtons clearfix">'+
-                  '<div class="chatCamWrap">'+
-                    '<form id="chatPic" action="./add-message.php" type="post">'+
-                      '<input type="file" name="pic" class="chatCamFile" />'+
-                      '<input type="hidden" name="message" value="NULL" />'+
-                      '<input type="hidden" name="emoji" value="NULL" />'+
-                      '<input type="hidden" name="thread" value="none" />'+
-                      '<input type="hidden" name="user" value="none" />'+
-                      '<img class="chatCamImg" src="https://www.budvibes.com/images/chat-cam.png" />'+
-                    '</form>'+
-                  '</div>'+
-                  '<div class="chatEmoWrap">'+
-                    '<img class="chatEmoImg" src="https://www.budvibes.com/images/chat-smile.png" />'+
-                  '</div>'+
-                '</div>'+
-              '</div>'
-              );
-              $("input#addlink").html("").remove();
-              $(".buttonToggle").find("input").attr("disabled",false);
-            } else {
-              result = $.parseJSON(result);
-              if(!result){
-                $("img.ajaxImage").remove();
-                e.css("color","red");
-              }
-              //tagPane = e.parent("div#linkFileButtonWrap").siblings("div.tagPane");
-              var html = ""
-              if((!result.ogimage || result.ogimage == "") && (!result.ogtitle || result.ogtitle == "") && (!result.ogdescription || result.ogdescription == "") && (!result.ogurl || result.ogurl == "")
-              && (!result.site_title || result.site_title == "") && (!result.meta_description || result.meta_description == "") && (!result.iframe || result.iframe == "")){
-                //NO RESULTS
-                $("input#addlink").css("color","red");
-              } else if((!result.ogimage) && (!result.ogtitle) && (!result.ogdescription) && (!result.ogurl)
-                  && (!result.site_title) &&  (!result.meta_description) && (result.iframe)){
-                //IFRAME ONLY
-                html += "<div class='userLink'>";
-                html += "<img class='iframephoto' id='iframenophoto' style='display:none;' src='https://www.budvibes.com/images/videoholder.png' />";
-                html += result.iframe;
-                html += "<div>";
-              } else if( ((result.ogimage) || (result.ogtitle) || (result.ogdescription) || (result.ogurl)
-                    || (result.site_title) || (result.meta_description)) && (result.iframe)){
-                //IFRAME & OG INFORMATION
-                html += "<div class='userLink'>";
-                html += "<img class='iframephoto' id='iframephoto' style='display: none;' src='"+result.ogimage+"'>";
-                html += result.iframe;
-                html += "<div>";
-              } else if( ((!result.ogimage) && (!result.ogtitle) && (!result.ogdescription) && (!result.ogurl) && (!result.iframe)) 
-                && ((result.site_title) || (result.meta_description)) ){
-                //ONLY META AND TITLE INFORMATION  
-                  html += "<div class='userLink'>";
-                  if(result.site_title && result.site_title != ""){
-                    html += "<h2 class='postHeadPreview'>"+result.site_title+"</h2>";
-                  }
-                  if(result.meta_description && result.meta_description != ""){
-                    html += "<span class='postDescPreview'>"+result.meta_description+"</span>";
-                  }
-                  html += '</div>';
-              } else if( ((result.ogimage) || (result.ogtitle) || (result.ogdescription) || (result.ogurl)) && (!result.iframe)){
-                //OG ONLY NO IFRAME
-                  html += "<div class='userLink linkWrap'>";
-                  if(result.ogimage && result.ogimage != ""){
-                    html += "<img class='linkImgPreview' src='"+result.ogimage+"'>";
-                  }
-                  if(result.ogtitle && result.ogtitle != ""){
-                    html += "<h2>"+result.ogtitle+"</h2>";
-                  }
-                  if(result.ogdescription && result.ogdescription != ""){
-                    html += "<span class='postDescPreview'>"+result.ogdescription+"</span>";
-                  } else if(result.meta_description && result.meta_description != ""){
-                    html += "<span class='postDescPreview'>"+result.meta_description+"</span>";
-                  }
-                  if((result.sitename && result.sitename != "") && (result.ogurl && result.ogurl != "")){
-                    html += "<b><a class='postLinkPreview' rel='nofollow' href='"+result.ogurl+"' target='_blank'>"+result.sitename+"</a></b>";
-                  } 
-                  html += "</div>";
-              } else {
-                //DETECTION FAILED
-                $("input#addlink").css("color","red");
-              }
-              if(html && html != ""){
-                iaddphoto.curPane.append("<img class='bigx' src='https://www.budvibes.com/images/bigx.png' title='Remove'/>");
-                $("input#addlink").val("").remove();
-                iaddphoto.curPane.append(html);
-                $(".userTagPane, .submittedTags").css("display", "block");
-              } else {
-                $("input#addlink").css("color", "red");
-              }
-              
-            }
-            //
-          },
+			var zStatus = result['code'];
+			switch(zStatus){
+				case 500:
+					e.css("color","red");
+				break;
+				case 401:
+					$(".chatBoxWrap").remove();
+					$("body").append(doSignUpBox());
+					$("input#addlink").html("").remove();
+					iaddphoto
+					    .buttonToggleInputs
+						.attr("disabled",false);
+				break;
+				case 200:
+					if(!result){
+						$("img.ajaxImage").remove();
+						e.css("color","red");
+					}
+					var html = ""
+					if((!result.ogimage || result.ogimage == "") && 
+					   (!result.ogtitle || result.ogtitle == "") && 
+					   (!result.ogdescription || result.ogdescription == "") && 
+					   (!result.ogurl || result.ogurl == "")
+					&& (!result.site_title || result.site_title == "") && 
+					   (!result.meta_description || result.meta_description == "") && 
+					   (!result.iframe || result.iframe == "")){
+					//NO RESULTS
+						$("input#addlink").css("color","red");
+					} else if((!result.ogimage) && 
+					          (!result.ogtitle) && 
+							  (!result.ogdescription) && 
+							  (!result.ogurl) &&
+						      (!result.site_title) &&  
+						      (!result.meta_description) && 
+							  (result.iframe)){
+					//IFRAME ONLY
+						html += "<div class='userLink'>";
+						html += "<img class='iframephoto' id='iframenophoto' style='display:none;' src='https://www.budvibes.com/images/videoholder.png' />";
+						html += result.iframe;
+						html += "<div>";
+					} else if(((result.ogimage) || 
+							   (result.ogtitle) || 
+							   (result.ogdescription) || 
+							   (result.ogurl) ||
+						       (result.site_title) || 
+							   (result.meta_description)) 
+							   && (result.iframe)){
+					//IFRAME & OG INFORMATION
+						html += "<div class='userLink'>";
+						html += "<img class='iframephoto' id='iframephoto' style='display: none;' src='"+result.ogimage+"'>";
+						html += result.iframe;
+						html += "<div>";
+					} else if(((!result.ogimage) && 
+					           (!result.ogtitle) && 
+							   (!result.ogdescription) && 
+							   (!result.ogurl) && 
+							   (!result.iframe)) 
+						       && ((result.site_title) || 
+							       (result.meta_description)) ){
+					//ONLY META AND TITLE INFORMATION  
+						html += "<div class='userLink'>";
+						if(result.site_title && result.site_title != ""){
+							html += "<h2 class='postHeadPreview'>"+result.site_title+"</h2>";
+						}
+						if(result.meta_description && 
+						   result.meta_description != ""){
+							html += "<span class='postDescPreview'>"+result.meta_description+"</span>";
+						}
+						html += '</div>';
+					} else if(((result.ogimage) || 
+					           (result.ogtitle) || 
+							   (result.ogdescription) || 
+							   (result.ogurl)) 
+							   && (!result.iframe)){
+					//OG ONLY NO IFRAME
+						html += "<div class='userLink linkWrap'>";
+						if(result.ogimage && 
+						   result.ogimage != ""){
+							html += "<img class='linkImgPreview' src='"+result.ogimage+"'>";
+						}
+						if(result.ogtitle && 
+						   result.ogtitle != ""){
+							html += "<h2>"+result.ogtitle+"</h2>";
+						}
+						if(result.ogdescription && 
+						   result.ogdescription != ""){
+							html += "<span class='postDescPreview'>"+result.ogdescription+"</span>";
+						} else if(result.meta_description && 
+						          result.meta_description != ""){
+							html += "<span class='postDescPreview'>"+result.meta_description+"</span>";
+						}
+						if((result.sitename && 
+						    result.sitename != "") 
+							&& (result.ogurl && 
+							    result.ogurl != "")){
+							html += "<b><a class='postLinkPreview' rel='nofollow' href='"+result.ogurl+"' target='_blank'>"+result.sitename+"</a></b>";
+						} 
+						html += "</div>";
+					} else {
+					//DETECTION FAILED
+						$("input#addlink").css("color","red");
+					}
+					if(html && html != ""){
+						iaddphoto
+						   .curPane
+						   .append("<i class='bigx fa fa-times fa-3x' ></i>");
+						$("input#addlink")
+							    .val("")
+							    .remove();
+						iaddphoto
+						    .curPane
+							.append(html);
+						iaddphoto
+						    .userTagPane
+							.css("display","block");
+						iaddphoto
+						    .submittedTags
+							.css("display","block");
+					} else {
+						$("input#addlink").css("color", "red");
+					}
+					break;
+				}
+		  },
           complete: function(){
             $("img.ajaxImage").remove();
-            $(".buttonToggle").find("input").attr("disabled",false);
-			//clearInterval(timeoutId);
+			iaddphoto
+			   .buttonToggleInputs
+			   .attr("disabled",false);
 			$("body").focus();
           }
         })
@@ -785,121 +857,146 @@ $(function(){
       }
     },300)
   })
-
-  /*ADD PHOTO TO COMMENT*/
+	
+  /*ADD PHOTO/VIDEO TO COMMENT*/
   $("body").on("change", ".photoFileButton, .videoFileButton", function(){
-    $("#addlink").remove();
-    iaddphoto.curButton = $(this);
+    $("#addlink").remove(); //zAddPhoto.addLink = $("#addlink");
+    iaddphoto.curButton = $(this);//zAddPhoto.curButton = $(this);
     
     //KEEP TAG PANE HIDDEN ON REPLY PHOTO
-    var paneCheck = $(this).attr("class").split(" ");
+    var paneCheck = $(this)
+					   .attr("class")
+					   .split(" ");
     if(paneCheck[0] == 'userReplyFile'){
       iaddphoto.showPanes = false;
     } else {
       iaddphoto.showPanes = true;
     }
     
-    iaddphoto.curForm = iaddphoto.curButton.parent("div").parent("form");
+    iaddphoto.curForm = iaddphoto
+						   .curButton
+						   .parent("div")
+						   .parent("form"); //zAddPhoto.curform
     if(iaddphoto.curPane){
-      iaddphoto.curPane.find("img").remove();
+      iaddphoto
+	     .curPane
+		 .find("img")
+		 .remove();
     }
-    iaddphoto.curPane = iaddphoto.curForm.children("div.tagPane");
+    iaddphoto.curPane = iaddphoto
+					      .curForm
+						  .children("div.tagPane"); //zAddPhoto.curPane
     if(iaddphoto.curButton.val() != ''){
-      iaddphoto.curForm.submit();//form.addPostForm
+      iaddphoto
+	     .curForm
+		 .submit();//form.addPostForm
     }
   });
   $("body").on("submit", ".addPostForm", function(event){
     $form = $(this);
     $("p.error").remove();
-    $(".userTagPane, .submittedTags").css("display", "none");
-    
+	$(".chatBoxWrap").remove();
+    iaddphoto
+	    .userTagPane
+		.css("display","none");
+	iaddphoto
+	    .submittedTags
+		.css("display", "none");
     /*DETERMINE IF BROWSER SUPPORTS new FormData()*/
     if(window.FormData === undefined){
       //IFRAME ROUTE
-      iaddphoto.curPane.append("<img class='ajaxImage' src='https://www.budvibes.com/images/green-bars.gif'>");
-      $form.find("iframe").load(function(){
+      iaddphoto
+	      .curPane
+		  .append("<img class='ajaxImage' src='"+__LOCATION__+"/assets/images/green-bars.gif'>");
+      $form
+	   .find("iframe")
+	   .load(function(){ //zAddPhoto.curFrame
         $("p.error").remove();
-        var isrc = iaddphoto.curForm.children("iframe").contents().find("body").find("textarea").html();
-        iaddphoto.curPane.find("img").remove();
-        if(isrc == 0){
-          $(".submittedTags").after("<p class='error'>Error uploading file</p>");
-        } else if(isrc == 2) {
-          $(".submittedTags").after("<p class='error'>File must be gif, jpg, or png smaller than 10MB</p>");
-        } else if(isrc == 3){
-          $(".submittedTags").after("<p class='error'>Video added successfully</p>");
-        } else if(isrc == 4){
-          $(".submittedTags").after("<p class='error'>Error moving video</p>");
-        } else if(isrc == 5){
-          $(".submittedTags").after("<p class='error'>Invalid video format</p>");
-        } else if(result == 6){
-          $(".chatBoxWrap").remove();
-          $("body").append(
-            '<div class="chatBoxWrap" id="thread-no">'+
-            '<div class="chatBoxHead clearfix"><span class="chatName" id="chat-none">Sign Up</span><span class="chatClose">X</span></div>'+
-            '<div class="chatBoxBody">'+
-              '<div id="signInMenu" class="signUpMenu">'+
-                '<h3><img src="https://www.budvibes.com/images/sign-up-head.png" alt="User Sign Up"></h3>'+
-                '<form action="../../../sign-up.php" method="post" id="signUpForm">'+
-                  '<input type="text" class="signInput" name="username" placeholder="Username">'+
-                  '<input type="text" class="signInput" name="email" placeholder="Email">'+
-                  '<input type="password" class="signInput" name="pass" placeholder="Password">'+
-                  '<input type="password" class="signInput" name="confirmpass" placeholder="Confirm Password">'+
-                  '<input type="submit" class="signSubmit" name="signup" value="Sign Up">'+
-                '</form>'+
-                '<div id="signUp">'+
-                  '<a href="https://www.budvibes.com/sign-in.php" id="signInLink">&#8592; Sign In</a>'+
-                '</div>'+
-              '</div>'+
-            '</div>'+
-            '<div class="chatBoxPostWrap">'+
-              '<div class="chatReplyBoxWrap clearfix">'+
-                '<div class="chatBox" contenteditable="true"></div>'+
-              '</div>'+
-            '</div>'+
-            '<div class="chatButtons clearfix">'+
-              '<div class="chatCamWrap">'+
-                '<form id="chatPic" action="./add-message.php" type="post">'+
-                  '<input type="file" name="pic" class="chatCamFile" />'+
-                  '<input type="hidden" name="message" value="NULL" />'+
-                  '<input type="hidden" name="emoji" value="NULL" />'+
-                  '<input type="hidden" name="thread" value="none" />'+
-                  '<input type="hidden" name="user" value="none" />'+
-                  '<img class="chatCamImg" src="https://www.budvibes.com/images/chat-cam.png" />'+
-                '</form>'+
-              '</div>'+
-              '<div class="chatEmoWrap">'+
-                '<img class="chatEmoImg" src="https://www.budvibes.com/images/chat-smile.png" />'+
-              '</div>'+
-            '</div>'+
-          '</div>'
-          );
-          $(".buttonToggle").find("input").attr("disabled",false);
-        } else {
-          var isrc = $.parseJSON(isrc);
-          if(isrc.media_type == "photo"){
-            iaddphoto.curPane.append("<img style='width:98%;' class='postImgPreview' src='"+isrc.file_source+"'>");
-            //DON'T DISPLAY TAG PANE ON REPLY PHOTO
-            if(iaddphoto.showPanes){
-              $(".userTagPane, .submittedTags").css("display", "block");
-            }
-            iaddphoto.curButton.attr("disabled", "disabled");
-            iaddphoto.curPane.append("<img class='bigx' src='https://www.budvibes.com/images/bigx.png' title='remove'/>");
-          } else {
-            var timeStamp = (new Date()).getTime();
-            iaddphoto.curPane.append('<video loop style="margin: 0 auto; position: relative; display: block;" class="video-preview'+timeStamp+'" class="video-js vjs-default-skin" controls preload="auto" width="516" height="516">'+
-                         '<source src='+isrc.file_source+'>'+
-                         '<p class="vjs-no-js">To view this video please enable JavaScript, and consider upgrading to a web browser that <a href="https://videojs.com/html5-video-support/" target="_blank">supports HTML5 video</a></p>'+
-                        '</video>'
-                      );
-            videojs('video-preview'+timeStamp,{},function(){});
-            iaddphoto.curPane.next("div.userTagPane").css("display", "block");
-            iaddphoto.curPane.append("<img class='bigx' src='https://www.budvibes.com/images/bigx.png' title='Remove'/>");
-            iaddphoto.curForm.find("div.buttonToggle").find("input").attr("disabled", "disabled");
-            $(".userTagPane, .submittedTags").css("display", "block");
-          }
-        }
-        $form.find("div.replyPhotoButtonWrap").find("input.photoFileButton").val("");
-      })
+        var isrc = iaddphoto
+					.curForm
+					.children("iframe")
+					.contents()
+					.find("body")
+					.find("textarea")
+					.html();
+		isrc = $.parseJSON(isrc) || null;
+        iaddphoto
+		  .curPane
+		  .find("img")
+		  .remove();
+		if(isrc){
+			var iStatus = isrc.code;
+			switch(iStatus){
+				case 500:
+				case 402:
+					iaddphoto
+						.submittedTags
+						.after("<p class='error'>"+isrc.status+"</p>");
+				break;
+				case 401:
+					$("body").append(doSignUpBox());
+					iaddphoto
+						.buttonToggleInputs
+						.attr("disabled","disabled");
+				break;
+				default: 
+				  if(isrc.media_type == "photo"){
+				    iaddphoto
+					   .curPane
+					   .append("<img style='width:98%;' class='postImgPreview' src='"+isrc.file_source+"'>");
+                    //DON'T DISPLAY TAG PANE ON REPLY PHOTO
+                   if(iaddphoto.showPanes){
+				     iaddphoto
+					    .userTagPane
+						.css("display","block");
+				     iaddphoto
+					    .userTagPane
+						.css("display","block");
+                   }
+                   iaddphoto
+				      .curButton
+					  .attr("disabled", "disabled");
+                   iaddphoto
+				      .curPane
+					  .append(bigX());
+                 } else if(isrc.media_type == "video") {
+			       var timeStamp = (new Date()).getTime();
+			       var videoSource = isrc.file_source
+                   iaddphoto
+				      .curPane
+					  .append(addVideo(videoSource,timeStamp));
+                   videojs('video-preview'+timeStamp,{},function(){});
+                   iaddphoto
+				      .userTagPane
+					  .css("display","block");
+			       iaddphoto
+				      .curPane
+					  .append(bigX());
+                   iaddphoto
+				      .buttonToggleInputs
+					  .attr("disabled","disabled");
+			       iaddphoto
+				      .userTagPane
+					  .css("display","block");
+			       iaddphoto
+				      .submittedTags
+					  .css("display","block");
+		         } else {
+			       iaddphoto
+				      .submittedTags
+					  .after("<p class='erro'>Internal error</p>");
+		         }
+				break;
+			 }
+		} else {
+		   iaddphoto
+		      .submittedTags
+			  .after("<p class='erro'>Internal error</p>");
+		}
+		iaddphoto
+		   .photoBtn
+		   .val("");
+	  })
     } else {
       //NEW FormData ROUTE
       if(!event){
@@ -909,10 +1006,19 @@ $(function(){
       $.ajax({
         beforeSend: function(){
           $(".error").remove();
-          $("userTagPane, .submittedTags").css("display", "none");
-          iaddphoto.curPane.find("img").remove();
-          iaddphoto.curPane.find("div.userTagPane").remove();
-          iaddphoto.curPane.append("<img class='ajaxImage' src='https://www.budvibes.com/images/green-bars.gif'>");
+		  iaddphoto
+		     .curPane
+			 .find("img")
+			 .remove();
+		  iaddphoto
+		     .userTagPane
+			 .css("display","none");
+		  iaddphoto
+		     .submittedTags
+			 .css("display", "none");
+          iaddphoto
+		     .curPane
+			 .append("<img class='ajaxImage' src='"+__LOCATION__+"/assets/images/green-bars.gif'>");
         },
         type: 'POST',
         url: $form.attr("action"),
@@ -921,111 +1027,131 @@ $(function(){
         cache: false,
         processData: false,
         success: function(result){
-          //alert(result);
-          if(result == 0){
-            $(".submittedTags").after("<p class='error'>Error uploading file</p>");
-          } else if(result == 2){
-            $(".submittedTags").after("<p class='error'>File must be gif, jpg, or png smaller than 10MB</p>");
-          } else if(result == 3){
-            $(".submittedTags").after("<p class='error'>Video added successfully</p>");
-          } else if(result == 4){
-            $(".submittedTags").after("<p class='error'>Error moving video</p>");
-          } else if(result == 5){
-            $(".submittedTags").after("<p class='error'>Invalid video format</p>");
-          } else if(result == 6){
-            $(".chatBoxWrap").remove();
-            $("body").append(
-              '<div class="chatBoxWrap" id="thread-no">'+
-              '<div class="chatBoxHead clearfix"><span class="chatName" id="chat-none">Sign Up</span><span class="chatClose">X</span></div>'+
-              '<div class="chatBoxBody">'+
-                '<div id="signInMenu" class="signUpMenu">'+
-                  '<h3><img src="https://www.budvibes.com/images/sign-up-head.png" alt="User Sign Up"></h3>'+
-                  '<form action="../../../sign-up.php" method="post" id="signUpForm">'+
-                    '<input type="text" class="signInput" name="username" placeholder="Username">'+
-                    '<input type="text" class="signInput" name="email" placeholder="Email">'+
-                    '<input type="password" class="signInput" name="pass" placeholder="Password">'+
-                    '<input type="password" class="signInput" name="confirmpass" placeholder="Confirm Password">'+
-                    '<input type="submit" class="signSubmit" name="signup" value="Sign Up">'+
-                  '</form>'+
-                  '<div id="signUp">'+
-                    '<a href="https://www.budvibes.com/sign-in.php" id="signInLink">&#8592; Sign In</a>'+
-                  '</div>'+
-                '</div>'+
-              '</div>'+
-              '<div class="chatBoxPostWrap">'+
-                '<div class="chatReplyBoxWrap clearfix">'+
-                  '<div class="chatBox" contenteditable="true"></div>'+
-                '</div>'+
-              '</div>'+
-              '<div class="chatButtons clearfix">'+
-                '<div class="chatCamWrap">'+
-                  '<form id="chatPic" action="./add-message.php" type="post">'+
-                    '<input type="file" name="pic" class="chatCamFile" />'+
-                    '<input type="hidden" name="message" value="NULL" />'+
-                    '<input type="hidden" name="emoji" value="NULL" />'+
-                    '<input type="hidden" name="thread" value="none" />'+
-                    '<input type="hidden" name="user" value="none" />'+
-                    '<img class="chatCamImg" src="https://www.budvibes.com/images/chat-cam.png" />'+
-                  '</form>'+
-                '</div>'+
-                '<div class="chatEmoWrap">'+
-                  '<img class="chatEmoImg" src="https://www.budvibes.com/images/chat-smile.png" />'+
-                '</div>'+
-              '</div>'+
-            '</div>'
-            );
-            $(".buttonToggle").find("input").attr("disabled",false);
-          } else {
-            var result = $.parseJSON(result);//result.media_type(video or photo) !! result.file_source
-            if(result.media_type == "photo"){
-              iaddphoto.curPane.append("<img class='postImgPreview' src='"+result.file_source+"'>");
-              iaddphoto.curPane.next("div.userTagPane").css("display", "block");
-              iaddphoto.curPane.append("<img class='bigx' src='https://www.budvibes.com/images/bigx.png' title='Remove'/>");
-              //iaddphoto.curButton.attr("disabled", "disabled");
-              iaddphoto.curForm.find("div.buttonToggle").find("input").attr("disabled", "disabled");
-              //DON'T DISPLAY TAG PANE ON REPLY PHOTO
-              if(iaddphoto.showPanes){
-                $(".userTagPane, .submittedTags").css("display", "block");
-              }
-            } else if(result.media_type == "video") {
-              var timeStamp = (new Date()).getTime();
-              iaddphoto.curPane.append('<video loop style="margin: 0 auto; position: relative; display: block;" id="video-preview'+timeStamp+'" class="video-js vjs-default-skin" controls preload="auto" width="516" height="516">'+
-                           '<source src='+result.file_source+'>'+
-                           '<p class="vjs-no-js">To view this video please enable JavaScript, and consider upgrading to a web browser that <a href="https://videojs.com/html5-video-support/" target="_blank">supports HTML5 video</a></p>'+
-                          '</video>'
-                        );
-              videojs('video-preview'+timeStamp,{},function(){});
-              iaddphoto.curPane.next("div.userTagPane").css("display", "block");
-              iaddphoto.curPane.append("<img class='bigx' src='https://www.budvibes.com/images/bigx.png' title='Remove'/>");
-              //iaddphoto.curButton.attr("disabled", "disabled");
-              iaddphoto.curForm.find("div.buttonToggle").find("input").attr("disabled", "disabled");
-              $(".userTagPane, .submittedTags").css("display", "block");
-            }
-          }
+		  console.log(result);
+		  isrc = $.parseJSON(result) || null;
+		  
+		  if(isrc){
+			  iStatus = isrc.code
+			  switch(iStatus){
+				case 500:
+				case 402:
+					iaddphoto
+					   .submittedTags
+					   .after("<p class='error'>"+isrc.status+"</p>")
+				break;
+				case 401:
+					$("body").append(doSignUpBox());
+					iaddphoto
+					   .buttonToggleInputs
+					   .attr("disabled","disabled");
+				break;
+				default: 
+				  if(isrc.media_type == "photo"){
+						iaddphoto
+						   .curPane
+						   .append("<img class='postImgPreview' src='"+isrc.file_source+"'>");
+						iaddphoto
+						   .userTagPane
+						   .css("display","block"); 
+						iaddphoto
+						   .curPane
+						   .append("");
+						iaddphoto
+						    .buttonToggleInputs
+							.attr("disabled","disabled");
+						iaddphoto
+						    .curPane
+							.append(bigX());
+						//DON'T DISPLAY TAG PANE ON REPLY PHOTO
+					    if(iaddphoto.showPanes){
+						  iaddphoto.userTagPane.css("display","block");
+						  iaddphoto.submittedTags.css("display","block");
+					    }
+				  } else if(isrc.media_type == "video"){
+					  var timeStamp = (new Date()).getTime();
+					  var videoSource = isrc.file_source;
+                      iaddphoto
+					      .curPane
+						  .append(addVideo(videoSource,timeStamp));
+                      videojs('video-preview'+timeStamp,{},function(){});
+			          iaddphoto
+					      .userTagPane
+						  .css("display","block");
+                      iaddphoto
+					      .curPane
+						  .append(bigX());
+                      iaddphoto
+					      .buttonToggleInputs
+						  .attr("disabled","disabled");
+			          iaddphoto
+					      .userTagPane
+						  .css("display","block");
+			          iaddphoto
+					      .submittedTags
+						  .css("display","block");
+				  } else {
+					  iaddphoto
+					      .submittedTags
+						  .after("<p class='error'>Internal error</p>");
+				  }
+				break;
+			  }
+		  } else {
+			  iaddphoto
+			     .submittedTags
+				 .after("<p class='error'>Internal error</p>");
+		  }
+		  iaddphoto
+		     .photoBtn
+			 .val("");
         },
         complete: function(){
-          iaddphoto.curPane.find("img.ajaxImage").remove();
-          $form.find("div.replyPhotoButtonWrap").find("input.photoFileButton").val("");
-        }
+          iaddphoto
+		     .curPane
+			 .find("img.ajaxImage")
+			 .remove();
+		  iaddphoto
+		     .photoBtn
+			 .val("");
+		}
       })
     }
   });
   
   /*BIGX REMOVE PHOTO*/
-  $("body").on("click", "img.bigx", function(){
-    /*iaddphoto.curPane.find("img").fadeOut();*/
-    iaddphoto.curPane.find("img,h2,span,br,a, div.vidoe-js, video, div.userLink").remove();
-    /*iaddphoto.curPane.find("div.video-js, video").remove();*/
-    iaddphoto.curPane.html("");
-    /*iaddphoto.curButton.attr("disabled",false);*/
-    iaddphoto.curForm.find("div.buttonToggle").find("input").attr("disabled", false);
+  $("body").on("click", "i.bigx", function(){
+    iaddphoto
+	   .curPane
+	   .find("img,h2,span,br,a, div.vidoe-js, video, div.userLink")
+	   .remove();
+    iaddphoto
+	   .curPane
+	   .html("");
+	iaddphoto
+	   .buttonToggleInputs
+	   .attr("disabled",false);
     iaddphoto.curPane = null;
-    iaddphoto.curButton.val("");
-    $(".photoFileButton, .videoFileButton, .linkFileButton").val("");
+    iaddphoto
+	   .curButton
+	   .val("");
+	iaddphoto
+	   .photoBtn
+	   .val("");
+	iaddphoto
+	   .videoBtn
+	   .val("");
+	iaddphoto
+	   .linkBtn
+	   .val("");
     if(iaddphoto.curTags == null){
-      $(".userTagPane, .submittedTags").css("display", "none");
+	  iaddphoto
+	   .userTagPane
+	   .css("display","none");
+	  iaddphoto
+	   .submittedTags
+	   .css("display","none");
     }
-  })
+  });
 
   /*TAG PANE*/
   $("div.userTagPane").keydown(function(event){
@@ -1073,21 +1199,6 @@ $(function(){
         iaddphoto.curTags = null;
       }
     }
-  })
-});
-
-/*TOGGLE REPLY FORM*/
-$(function(){
-  $("body").on("click", "span.addLink", function(event){
-    if(!event){
-      event = window.event;
-    }
-    event.preventDefault();
-    event.stopPropagation();
-    $link = $(this);
-    var parent = $link.closest("div.repliesHead");
-    var form = parent.siblings("div.replyForm");
-    form.slideToggle("fast");
   })
 });
 

@@ -1,13 +1,12 @@
 <?php
 
 	class ApplicationCtrl{
-		
 		private $Helper;
 		private $Model;
 		
 		public function __construct(){
 			$this->Helper = new ApplicationHelper;
-			$this->Model = new ApplicationModels;
+			$this->Model  = new ApplicationModels;
 		}
 		
 		public function remove_whitespace($link){
@@ -146,7 +145,80 @@
 			$userMsg = $this->Model->findUserMessageTwo($id);
 			return $userMsg;
 		}
-	}
+		
+		public function removeTempPhoto($id){
+			$this->Model->deleteTempPhoto($id);
+		}
+		
+		public function getTempPic($id){
+			$tempPic = $this->Model->findTempPic($id);
+			return $tempPic;
+		}
+		
+		public function addTempPic($id,$photo,$type){
+			$tempPic = $this->Model->insertTempPic($id,$photo,$type);
+			return $tempPic;
+		}
+		
+		public function getTempVideo($id){
+			$tempVideo = $this->Model->findTempVideo($id);
+			return $tempVideo;
+		}
+		
+		public function removeTempVideo($id){
+			$this->Model->deleteTempVideo($id);
+		}
+		
+		/*
+		 * @PHOTO CROPPING FUNCTIONS
+		 **/
+		
+		public function cropPhotos($path,$photo){
+			$pics = $this->Helper->cropPhoto($path,$photo);
+			return $pics;
+		}
+		
+		public function addProdPhotoFull($curWallId,$rating,
+										 $type,$userId,
+										 $userText,$newPhoto,
+										 $tagString){
+			$newCommentId = $this->Model->insertProdPhotoFull($curWallId,$rating,
+															  $type,$userId,
+															  $userText,$newPhoto,
+															  $tagString);
+			return $newCommentId;
+		}
+		
+		public function addUserPhotoFull($curWallId,$rating,
+										 $type,$userId,
+										 $userText,$newPhoto,
+										 $tagString){
+			$newCommentId = $this->Model->insertUserPhotoFull($curWallId,$rating,
+															  $type,$userId,
+															  $userText,$newPhoto,
+															  $tagString);
+			return $newCommentId;
+		}
+		
+		public function generateNewComment($newCommentId,$xhr,$postType){
+			if($postType == 'product'){
+				$newComment = $this->Model->findNewProdComment($newCommentId);
+			} else {
+				$newComment = $this->Model->findNewUserComment($newCommentId);
+			}								   
+			if($newComment){
+				return $newComment;
+			} else {
+				return false;
+			}
+		}
+		
+		public function addTempVideo($Userid,$video,$type){
+			$tempVideo = $this->Model->insertTempVideo($Userid,$video,$type);
+			return $tempVideo;
+		}
+		
+	}//END APPLICATION CONTROLLER CLASS
 ?>
 
 
