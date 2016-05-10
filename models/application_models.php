@@ -330,7 +330,7 @@
 		public function insertProdPhotoFull($curWallId,$rating,
 											$type,$userId,
 											$userText,$newPhoto,
-											$tagString){
+											$newVideo,$tagString){
 			$newProdComment = "INSERT INTO prod_comments 
 			VALUES('NULL', :curWallId, :rating, :userId, :type, :userId, 
 			:userText, :newPhoto, 'NULL', :tagString, NOW())";
@@ -340,6 +340,7 @@
 			$statement->bindValue(':userId',$userId,PDO::PARAM_INT);
 			$statement->bindValue(':userText',$userText);
 			$statement->bindValue(':newPhoto',$newPhoto);
+			$statement->bindValue(':newVideo',$newVideo);
 			$statement->bindValue(':tagString',$tagString);
 			$statement->execute();
 			$insertId = $this->pdo->lastInsertId();
@@ -349,10 +350,10 @@
 		public function insertUserPhotoFull($curWallId,$rating,
 											$type,$userId,
 											$userText,$newPhoto,
-											$tagString){
+											$newVideo,$tagString){
 			$newUserComment = "INSERT INTO user_comments 
 			VALUES('NULL', :curWallId, :rating, :userId, :type, :userId,
-			:userText, :newPhoto, 'NULL', :tagString, NOW())";
+			:userText, :newPhoto, :newVideo, :tagString, NOW())";
 			$statement = $this->pdo->prepare($newUserComment);
 			$statement->bindValue(':curWallId',$curWallId,PDO::PARAM_INT);
 			$statement->bindValue(':rating',$rating,PDO::PARAM_INT);
@@ -360,10 +361,52 @@
 			$statement->bindValue(':userId',$userId,PDO::PARAM_INT);
 			$statement->bindValue(':userText',$userText);
 			$statement->bindValue(':newPhoto',$newPhoto);
+			$statement->bindValue(':newVideo',$newVideo);
 			$statement->bindValue(':tagString',$tagString);
 			$statement->execute();
 			$insertId = $this->pdo->lastInsertId();
 			return $insertId ? $insertId : false;
+		}
+		
+		public function insertUserVideoOnly($curWallId,$rating,
+								            $type,$userId,
+										    $userText,$newPhoto,
+						                    $newVideo,$tagString){
+			$newVideoComment = "INSERT INTO user_comments 
+			VALUES('NULL', :curWallId, :rating, :userId, 
+			:type, :userId, :userText, 'vid-placeholder.png', :newVideo, 
+			:tagString, NOW())";
+			$statement = $this->pdo->prepare($newVideoComment);
+			$statement->bindValue(':curWallId',$curWallId, PDO::PARAM_INT);
+			$statement->bindValue(':rating',$rating,PDO::PARAM_INT);
+			$statement->bindValue(':type',$type);
+			$statement->bindValue(':userId',$userId,PDO::PARAM_INT);
+			$statement->bindValue(':newVideo',$newVideo);
+			$statement->bindValue(':newPhoto',$newPhoto);
+			$statement->bindValue(':tagString',$tagString);
+			$statement->bindValue(':userText',$userText);
+			$statement->execute();
+			return $statement->rowCount() ? $this->pdo->lastInsertId() : false;
+		}
+		
+		public function insertProdVideoOnly($curWallId,$rating,
+								            $type,$userId,
+										    $userText,$newPhoto,
+						                    $newVideo,$tagString){
+			$newVideo = "INSERT INTO prod_comments 
+			VALUES('NULL', :curWallId, :rating, :userId, 
+			:type, :userId, :userText, :newPhoto, :newVideo, 
+			:tagString, NOW())";
+			$statement = $this->pdo->prepare($newVideo);
+			$statement->bindValue(':curWallId',$curWallId, PDO::PARAM_INT);
+			$statement->bindValue(':rating',$rating,PDO::PARAM_INT);
+			$statement->bindValue(':type',$type);
+			$statement->bindValue(':userId',$userId,PDO::PARAM_INT);
+			$statement->bindValue(':newVideo',$newVideo);
+			$statement->bindValue(':tagString',$tagString);
+			$statement->bindValue(':newPhoto',$newPhoto);
+			$statement->execute();
+			$statement->rowCount() ? $this->pdo->lastInsertId() : false;
 		}
 		
 		public function insertTempVideo($userId,$video,$type){
@@ -373,6 +416,25 @@
 			$statement->bindValue(':userId',$userId,PDO::PARAM_INT);
 			$statement->bindValue(':video',$video);
 			$statement->bindValue(':type',$type);
+			$statement->execute();
+			return $statement->rowCount() ? $this->pdo->lastInsertId() : false;
+		}
+		
+		public function insertProdVideoPic($newVideoPic,$newCommentId){
+			$updateProdComment = "UPDATE prod_comments 
+			SET pic=:newVideoPic WHERE id=:newCommentId"; 
+			$statement = $this->pdo->prepare($updateProdComment);
+			$statement->bindValue(':newVideoPic',$newVideoPic);
+			$statement->bindValue(':newCommentId',$newCommentId,PDO::PARAM_INT);
+			$statement->execute();
+			return $statement->rowCount() ? true : false;
+		}
+		public function insertUserVideoPic($newVideoPic,$newCommentId){
+			$updateUserComment = "UPDATE user_comments 
+			SET pic=:newVideoPic WHERE id=:newCommentId";
+			$statement = $this->pdo->prepare($updateUserComment);
+			$statement->bindValue(':newVideoPic',$newVideoPic);
+			$statement->bindValue(':newCommentId',$newCommentId,PDO::PARAM_INT);
 			$statement->execute();
 			return $statement->rowCount() ? true : false;
 		}
@@ -409,7 +471,51 @@
 			return $comment ? $comment : false;
 		}
 		
+		public function findTempProfilePic($userId){
+			$tempProfilePic = "SELECT photo FROM temp_profilepic 
+			WHERE user_id=:userId";
+			$statement = $this->pdo->prepare($tempProfilePic);
+			$statement->bindValue(':userId',$userId,PDO::PARAM_INT);
+			$statement->execute();
+			return $statement->rowCount() ? $statement->fetch(PDO::FETCH_ASSOC) : false;
+		}
 		
+		public function deleteTempProfilePic($userId,$tempPic,$userdir){
+			$deleteTempPic = "DELETE FROM temp_profielpic WHERE user_id=:userId";
+			$statement = $this->pdo->prepare($deleteTempPic);
+			$statement->bindValue(':userId',$userId,PDO::PARAM_INT);
+			$statement->execute();
+			$num = $statement->rowCount();
+			if($num){
+				$imgPath = $userdir.$tempPic;
+				if(file_exists($imgPath)){
+					unlink($imgPath);
+				}
+				return true;
+			} else {
+				return false;
+			}
+		}
+		
+		public function findUserProfilePic($userId){
+			$profilePic = "SELECT profile_pic FROM users 
+			WHERE id=:userId";
+			$statement = $this->pdo->prepare($profilePic);
+			$statement->bindValue(':userId',$userId,PDO::PARAM_INT);
+			$statement->execute();
+			return $statement->rowCount() ? $statement->fetchColumn(0) : false;
+		}
+		
+		public function insertProfilePic($userId,$photo){
+			$newProfilePic = "UPDATE users 
+			SET profile_pic=:photo 
+			WHERE id=:userId";
+			$statement = $this->pdo->prepare($newProfilePic);
+			$statement->bindValue(':userId',$userId,PDO::PARAM_INT);
+			$statement->bindValue(':photo',$photo);
+			$statement->execute();
+			return $statement->rowCount() ? true : false;
+		}
 		
 	} //END APPLICATION MODELS CLASS
 ?>

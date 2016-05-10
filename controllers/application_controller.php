@@ -147,7 +147,8 @@
 		}
 		
 		public function removeTempPhoto($id){
-			$this->Model->deleteTempPhoto($id);
+			$deletePhoto = $this->Model->deleteTempPhoto($id);
+			return $deletePhoto;
 		}
 		
 		public function getTempPic($id){
@@ -166,7 +167,8 @@
 		}
 		
 		public function removeTempVideo($id){
-			$this->Model->deleteTempVideo($id);
+			$deleteVideo = $this->Model->deleteTempVideo($id);
+			return $deleteVideo;
 		}
 		
 		/*
@@ -185,19 +187,65 @@
 			$newCommentId = $this->Model->insertProdPhotoFull($curWallId,$rating,
 															  $type,$userId,
 															  $userText,$newPhoto,
-															  $tagString);
+															  $newVideo,$tagString);
 			return $newCommentId;
 		}
 		
 		public function addUserPhotoFull($curWallId,$rating,
 										 $type,$userId,
 										 $userText,$newPhoto,
-										 $tagString){
+										 $newVideo,$tagString){
 			$newCommentId = $this->Model->insertUserPhotoFull($curWallId,$rating,
 															  $type,$userId,
 															  $userText,$newPhoto,
-															  $tagString);
+															  $newVideo,$tagString);
 			return $newCommentId;
+		}
+		
+		public function addUserVideoOnly($curWallId,$rating,
+								         $type,$userId,
+										 $userText,$newVideo,
+						                 $tagString){
+			$newCommentId = $this->Model->insertUserVideoOnly($curWallId,$rating,
+															  $type,$userId,
+										                      $userText,$newVideo,
+						                                      $newVideo,$tagString);
+			return $newCommentId;
+		}
+		
+		public function addProdVideoOnly($curWallId,$rating,
+								         $type,$userId,
+										 $userText,$newVideo,
+						                 $tagString){
+			$newCommentId = $this->Model->insertProdVideoOnly($curWallId,$rating,
+															  $type,$userId,
+										                      $userText,$newVideo,
+						                                      $tagString);
+			return $newCommentId;
+		}
+		
+		public function generateVideoPic($newVideo,
+		                                 $userId,
+									     $newCommentId,
+										 $postType){
+			$newVideoPic = $this->Helper->addVideoPic($newVideo,$userId);
+			if($newVideoPic){
+				switch($postType){
+					case 'products':
+					   $addPic = $this->Model->insertProdVideoPic($newVideoPic,$newCommentId);
+					break;
+					default: 
+					   $addPic = $this->Model->insertUserVideoPic($newVideoPic,$newCommentId);
+					break;
+				}
+				if($addPic){
+					return true;
+				} else {
+					return false;
+				}
+			} else {
+				return 'No Pic';
+			}
 		}
 		
 		public function generateNewComment($newCommentId,$xhr,$postType){
@@ -216,6 +264,26 @@
 		public function addTempVideo($Userid,$video,$type){
 			$tempVideo = $this->Model->insertTempVideo($Userid,$video,$type);
 			return $tempVideo;
+		}
+		
+		public function getTempProfilePic($userId){
+			$tempPic = $this->Model->findTempProfilePic($userId);
+			return $tempPic;
+		}
+		
+		public function removeTempProfilePic($userId,$tempPic,$userdir){
+			$removeProfilePic = $this->Model->deleteTempProfilePic($userId,$tempPic,$userdir);
+			return $removeProfielPic;
+		}
+		
+		public function getUserProfilePic($userId){
+			$curProfilePic = $this->Model->findUserProfilePic($userId);
+			return $curProfilePic;
+		}
+		
+		public function addNewProfilePic($userId,$photo){
+			$newProfilePic = $this->Model->insertProfilePic($userId,$photo);
+			return $newProfilePic;
 		}
 		
 	}//END APPLICATION CONTROLLER CLASS

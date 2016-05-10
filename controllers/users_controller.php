@@ -33,19 +33,19 @@
 			$this->password = $password;
 			$this->confirmation = $confirmation;
 			
-			$nameCheck = $this->validateUsername();
+			$nameCheck = $this->validateUsername($username);
 			$nameSuccess = $nameCheck['success'];
 			if(!$nameSuccess){
 				$this->errors['username'] = $nameCheck['username'];
 			}
 			
-			$emailCheck = $this->validateEmail();
+			$emailCheck = $this->validateEmail($email);
 			$emailSuccess = $emailCheck['success'];
 			if(!$emailSuccess){
 				$this->errors['email'] = $emailCheck['email'];
 			}
 			
-			$passCheck = $this->validatePassword();
+			$passCheck = $this->validatePassword($password,$confirmation);
 			$passSuccess = $passCheck['success'];
 			if(!$passSuccess){
 				$this->errors['password'] = $passCheck['password'];
@@ -69,14 +69,14 @@
 			}
 		}
 		
-		private function validateUsername(){
-			return $this->UserModel->validateUsername($this->username);
+		public function validateUsername($username){
+			return $this->UserModel->validateUsername($username);
 		}
-		private function validateEmail(){
-			return $this->UserModel->validateEmail($this->email);
+		public function validateEmail($email){
+			return $this->UserModel->validateEmail($email);
 		}
-		private function validatePassword(){
-			return $this->UserModel->validatePassword($this->password, $this->confirmation);
+		public function validatePassword($password,$confirmation){
+			return $this->UserModel->validatePassword($password, $confirmation);
 		}
 		
 		#SEND MAIL CONFIRMATION TO NEW USER
@@ -139,6 +139,11 @@
 			} else {
 				$this->Views->generateFollowerButtons($id,$user);
 			}
+		}
+		
+		public function checkUserRelation($followId){
+			$relation = $this->UserModel->getRelation($followId);
+			return $relation;
 		}
 		
 		public function generateUserCountBar($id,$user,$type){
@@ -207,11 +212,29 @@
 						return false;
 					}
 				break;
+				case 'ajax-feed':
+					$results = $this->UserModel->getAjaxFeed($id,$alt);
+					if($results){
+						return $this->Views->generateFeed($results,$feedType,true);
+					} else {
+						return false;
+					}
+				break;
 				case 'posts':
-					$this->UserModel->doPostsFeed();
+					$results = $this->UserModel->getPostsFeed();
+					if($results){
+						$this->Views->generateFeed($results,$feedType);
+					} else {
+						return false;
+					}
 				break;
 				case 'ajax-posts':
-					$this->UserModel->doAjaxPostsFeed();
+					$results = $this->UserModel->getAjaxPostsFeed($id,$alt);
+					if($results){
+						return $this->Views->generateFeed($results,$feedType,true);
+					} else {
+						return false;
+					}
 				break;
 				case 'product':
 					$this->UserModel->doProductFeed();
@@ -231,9 +254,6 @@
 				case 'ajax-forums':
 					$this->UserModel->doAjaxForumFeed();
 				break;
-				case 'ajax-feed':
-					$this->UserModel->doAjaxFeed();
-				break;
 				case 'ajax-front':
 					$this->UserModel->doAjaxFrontFeed();
 				break;
@@ -247,6 +267,28 @@
 					$this->UserModel->doStrainPostFeed();
 				break;
 			}
+		}
+		
+		public function generateUserPhotos($id,$alt=''){
+			$results = $this->UserModel->getAjaxUserPhotos($id,$alt);
+			if($results){
+			   $ajaxPhotos = $this->Views->generatePhotos($results,true);
+			   return $ajaxPhotos;
+		    } else {
+			   return false;
+			}
+		}
+		
+		public function generateUserVideos($id,$alt=''){
+			$results = $this->UserModel->getAjaxUserVideos($id,$alt);
+			if($results){
+			    $ajaxVideos = $this->Views->generateVideos($results,true);
+				return $ajaxVideos;
+				exit();
+		    } else {
+				return false;
+				exit();
+		    }
 		}
 		
 		public function checkUserEmail($email){
@@ -275,6 +317,25 @@
 			}
 		}
 		
+		public function updateUsername($userId,$username,$slug){
+			$updateUsername = $this->UserModel->updateUsername($userId,$username,$slug);
+			return $updateUsername;
+		}
+		
+		public function updateEmail($userId,$email){
+			$updateEmail = $this->UserModel->updateEmail($userId,$email);
+			return $updateEmail;
+		}
+		
+		public function updatePassword($userId,
+		                               $newPass,
+									   $oldPass){
+			$updatePassword = $this->UserModel->updatePassword($userId,
+			                                                   $newPass,
+															   $oldPass);
+			return $updatePassword;
+		}
+		
 		public function verifyRegToken($user,$token){
 			$check = $this->UserModel->checkRegToken($user,$token);
 			if($check){
@@ -286,8 +347,25 @@
 				header('Location: ' . __LOCATION__);
 				exit();
 			}
-			
-			
+		}
+		
+		public function getUserFollowers($userId){
+			$userFollowers = $this->UserModel->findUserFollowers($userId);
+			if($userFollowers){
+				return $userFollowers;
+			} else {
+				return false;
+			}
+		}
+		
+		public function addUserFollowing($followId,$userId){
+			$addFollowing = $this->UserModel->insertNewFollowing($followId,$userId);
+			return $addFollowing;
+		}
+		
+		public function removeUserFollowing($unfollowId,$userId){
+			$removeFollowing = $this->UserModel->deleteUserFollowing($unfollowId,$userId);
+			return $removeFollowing;
 		}
 		
 		/*
@@ -304,9 +382,7 @@
 		
 		public function doRecent(){
 			$recent = $this->UserModel->getRecentPosts();
-			
-				$this->Views->generateRecentPosts($recent);
-			
+			$this->Views->generateRecentPosts($recent);
 		}
 		
 	}//END UserCtrl Class

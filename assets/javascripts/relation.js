@@ -1,65 +1,161 @@
 /*FOLLOW / UNFOLLOW*/
 $(function(){
+  irelations = {
+	  curButton: null,
+	  curButtonText: null,
+	  curButtonClass: null,
+	  curButtonAction: null,
+	  relationTypeWrap: $(".follow-message"),
+	  relationType: null,
+	  relationLink: $("span#relationLink"),
+	  relationType: null,
+	  relationUserId: null,
+  }
   $("body").on("click", "span#relationLink, span.relationButton", function(){
-    $button = $(this);
-    var relationType = $button.parent("div").attr("id");
-    if(relationType.indexOf('-') > 0){
-      var dshStart = relationType.indexOf("-");
-      relationType = relationType.slice(0,dshStart);
+    irelations.curButton = $(this);
+	//$button = $(this);
+	irelations.relationType = irelations
+	                            .relationTypeWrap
+								.attr("id");
+    //var relationType = $button.parent("div").attr("id");
+    if(irelations.relationType.indexOf('-') > 0){
+      var dshStart = irelations
+	                   .relationType
+					   .indexOf("-");
+      irelations.relationUserId = irelations
+	                              .relationType
+								  .slice(0,dshStart);
       var small = true;
     } else {
 	  /*BIG BUTTON TYPE*/
-      var curPage = $("span#relationLink").attr("class").split(' ')[0]; //PAGE TYPE
-      var pageStart = curPage.indexOf("-")+1;
-      var pageEnd = curPage.length;
-      var curPageId = curPage.slice(pageStart,pageEnd); //PAGE ID
-      var pageRelation = $("span#relationLink").parent("div").attr("id");
+	  irelations.relationType = irelations
+	                              .relationLink
+								  .attr("class")
+								  .split(' ')[0];
+      //var curPage = $("span#relationLink").attr("class").split(' ')[0]; //PAGE TYPE
+	  var dshStart = irelations
+						.relationType
+						.indexOf("-")+1;
+	  var dshEnd = irelations
+					 .relationType
+					 .length;
+      //var pageStart = curPage.indexOf("-")+1;
+      //var pageEnd = curPage.length;
+	  irelations.relationUserId = irelations
+								  .relationType
+								  .slice(dshStart,dshEnd);
+      //var curPageId = curPage.slice(pageStart,pageEnd); //PAGE ID
+      //var pageRelation = $("span#relationLink").parent("div").attr("id"); irelations.relationType
       var small = false;
     }
-    var buttonHtml = $button.text();
-    var curClass = $button.attr("class");
-    curClass = curClass.split(' ')[0];
-    var strSplit = curClass.indexOf("-");
-    var strEnd = curClass.length;
-    var curAction = curClass.slice(0,strSplit);//PAGE TYPE
-    var curUser = curClass.slice(strSplit+1,strEnd);//USER ID
-    if(curAction == 'follow'){
-      url = 'https://www.budvibes.com/follow.php?user='+curUser+'&type='+relationType;
+    irelations.curButtonText = irelations
+	                            .curButton
+								.text();
+	//var buttonHtml = $button.text();
+    irelations.curButtonClass = irelations
+							     .curButton
+								 .attr("class")
+								 .split(' ')[0];
+	var actionStart = irelations
+	                    .curButtonClass
+						.indexOf("-");
+	
+	irelations.curButtonAction = irelations
+	                              .curButtonClass
+								  .slice(0,actionStart);
+	//var curClass = $button.attr("class");
+    //curClass = curClass.split(' ')[0];
+    //var strSplit = curClass.indexOf("-");
+    //var strEnd = curClass.length;
+    //var curAction = curClass.slice(0,strSplit);//ACTION(FOLLOW/UNFOLLOW)
+    //var curUser = curClass.slice(strSplit+1,strEnd);//USER ID
+    if(irelations.curButtonAction == 'follow'){
+      //url = __LOCATION__ + '/ajax_follow_user.php?user='+curUser+'&type='+relationType;
+	  url = __LOCATION__ + '/ajax/ajax_user_follow.php';
       if(!small){
-        var newhtml = "Unfollow</b>"
-        var newClass = "unfollow-"+curUser+" unfollowText";
+        var newHtml = "Unfollow</b>"
+        var newClass = "unfollow-"
+		               +irelations.relationUserId
+		               +" unfollowText";
       } else {
-        var updatehtml = "Unfollow <b>&minus;</b>"
-        var updateClass = "unfollow-"+curUser+" unfollowText";
-        var newhtml = "&minus; Unfollow";
-        var newClass = "unfollow-"+curUser+" relationButton";
+        var updateHtml = "Unfollow <b>&minus;</b>"
+        var updateClass = "unfollow-"
+		                  +irelations.relationUserId
+						  +" unfollowText";
+        var newHtml = "&minus; Unfollow";
+        var newClass = "unfollow-"
+		               +irelations.relationUserId
+					   +" relationButton";
+      }
+    } else if(irelations.curButtonAction == 'unfollow'){
+      //url = __LOCATION__ + '/ajax_unfollow_user.php?user='+curUser+'&type='+relationType;
+	  url = __LOCATION__ + '/ajax/ajax_user_unfollow.php';
+      if(!small){
+        var newHtml = "Follow";
+        var newClass = "follow-"
+		               +irelations.relationUserId
+					   +" followText";
+      } else {
+        var updateHtml = "Follow <b>&#43;</b>";
+        var updateClass = "follow-"
+		                  +irelations.relationUserId
+						  +" followText";
+        var newHtml = "&#43; Follow";
+        var newClass = "follow-"
+		               +irelations.relationUserId
+					   +" relationButton";
       }
     } else {
-      url = 'https://www.budvibes.com/unfollow.php?user='+curUser+'&type='+relationType;
-      if(!small){
-        var newhtml = "Follow</b>";
-        var newClass = "follow-"+curUser+" followText";
-      } else {
-        var updatehtml = "Follow";
-        var updateClass = "follow-"+curUser+" followText";
-        var newhtml = "&#43; Follow";
-        var newClass = "follow-"+curUser+" relationButton";
-      }
-    }
+		return false;
+	}
     
     $.ajax({
       beforeSend: function(){
         if(!small){
-          $button.parent("div").prepend("<img class='relationGear' src='https://www.budvibes.com/images/geargray.gif' />");
-          $button.html("");
+		  irelations
+		    .curButton
+			.html("");
+          //$button.parent("div").prepend("<img class='relationGear' src='https://www.budvibes.com/images/geargray.gif' />");
+          //$button.html("");
         } else {
-          $button.parent("div").prepend("<img class='relationGearSmall' src='https://www.budvibes.com/images/small-gear.gif' />");
-          $button.css("color", "#dddddd");
+		  irelations
+		    .curButton
+			.css("color","#ddd");
+          //$button.parent("div").prepend("<img class='relationGearSmall' src='https://www.budvibes.com/images/small-gear.gif' />");
+          //$button.css("color", "#dddddd");
         }
       },
-      type: 'GET',
+      type: 'POST',
       url: url,
+	  data: {user_id: irelations.relationUserId,
+	        relation_type: irelations.relationType},
       success: function(result){
+		if(result){
+			$result = $.parseJSON(result);
+			iStatus = $result.code;
+			irelations
+			  .curButton
+			  .html(newHtml)
+			  .attr("class", newClass)
+			  .css("color", "#000");
+			switch(iStatus){
+				case 401:
+					$(".chatBoxWrap").remove();
+					$("body").append(doSignUpBox());
+				break;
+				case 500:
+				case 201:
+					//DO NOTHING
+				break;
+				default:
+					irelations
+					  .curButton
+					  .html(newHtml)
+					  .attr("class",newClass);
+				break;
+			}
+		}
+		/*
         if(result == 1){
           $button.html(newhtml).attr("class", newClass);
           $button.css("color", "#000000");
@@ -117,6 +213,7 @@ $(function(){
         } else {
           $("img.relationGear, img.relationGearSmall").remove();
         }
+		*/
       }
     })
     

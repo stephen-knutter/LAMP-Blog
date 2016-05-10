@@ -1,0 +1,87 @@
+/*LIGHTBOX*/
+#newPicForm{
+	display: inline-block;
+	position: fixed;
+	top: 75px;
+	bottom: 0;
+	left: 0;
+	right: 0;
+	margin: 0 auto;
+	padding: 0;
+}
+
+#newPicForm i{
+	display: block;
+	width: 100%;
+	font-size: .6em;
+}
+
+#savePhoto{
+	float: left;
+	border: none;
+	margin-top: 2px;
+	width: 47px;
+	font-size: .5em;
+	border: 1px solid #AE4DAA;
+	color: #AE4DAA;
+	background-color: #A9DC43;
+	border-radius: 3px;
+	-moz-border-radius: 3px;
+	-webkit-border-radius: 3px;
+	-o-border-radius: 3px;
+}
+
+#cancelPhoto{
+	float: left;
+	border: none;
+	margin-left: 6px;
+	margin-top: 2px;
+	width: 47px;
+	font-size: .5em;
+	border: 1px solid #AE4DAA;
+	color: #AE4DAA;
+	background-color: #A9DC43;
+	border-radius: 3px;
+	-moz-border-radius: 3px;
+	-webkit-border-radius: 3px;
+	-o-border-radius: 3px;
+}
+
+#cancelPhoto:hover, #savePhoto:hover{
+	background-color: #38b326;
+	color: #ffffff;
+}
+
+#overlay{
+	position: absolute;
+	top: 0;
+	left: 0;
+	height: 100%;
+	width: 100%;
+	background: black url('./img/ajax-loader.gif') no-repeat center center;
+	overflow-y: scroll;
+}
+
+#lightbox{
+	position: absolute;
+	top: 0;
+	left: 0;
+	padding: 10px;
+	border-radius: 5px;
+	-moz-border-radius: 5px;
+	-webkit-border-radius: 5px;
+	-o-border-radius: 5px;
+	color: white;
+	opacity: .9;
+}
+
+#picPreview{
+	font-size: .7em;
+	font-weight: bold;
+}
+
+#previewContain{
+	height: 100px;
+	width: 100px; 
+	overflow: hidden;
+}

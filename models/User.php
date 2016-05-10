@@ -18,7 +18,6 @@
 		#VERIFY USERNAME
 		public function validateUsername($username){
 			if( (strlen($username) >= 4) && (strlen($username) <=29) ){
-				
 				#$reserved_words = array("sign-up", "sign-in", "privacy", "terms", "claim", "finish", "tags", "users", "weed", "stores", 
 				#"forums", "profile", "posts", "photos", "videos", "buds", "followers", "following", "edit", "menu", "forgot");
 				$reserved_words = array();
@@ -155,11 +154,11 @@
 		}
 		
 		public function getRelation($id){
-			$sql = "SELECT follower_id, following_id
-					FROM relationships 
-					WHERE follower_id= :user_id 
-					AND following_id= :following_id";
-			$statement = $this->pdo->prepare($sql);
+			$relation = "SELECT follower_id, following_id
+			FROM relationships 
+			WHERE follower_id= :user_id 
+			AND following_id= :following_id";
+			$statement = $this->pdo->prepare($relation);
 			$statement->bindValue(':user_id', @$_SESSION['logged_in_id'], PDO::PARAM_INT);
 			$statement->bindValue(':following_id', $id, PDO::PARAM_INT);
 			$statement->execute();
@@ -345,6 +344,145 @@
 			return $results ? $results : false;
 		}
 		
+		public function getPostsFeed($id){
+			$userPosts = "SELECT c.id, c.user_id AS user_comm_id, c.rating, c.comm_id, 
+		    c.comm_type, c.orig_id, c.comment, c.pic, c.vid, c.tags, c.created_at, 
+		    u.id AS user_id, u.username, u.profile_pic, u.type, u.store_id, u.store_reg, 
+			u.store_state, 
+		    NULL,NULL 
+		    FROM user_comments c
+		    LEFT JOIN users u ON c.comm_id = u.id 
+		    WHERE c.comm_id IN(SELECT comment_id FROM user_replies WHERE user_id=:id) 
+		    OR c.user_id = :id 
+		    OR c.comm_id = :id 
+		    UNION ALL 
+		    SELECT pc.id, pc.user_id AS user_comm_id, pc.rating, pc.comm_id, 
+		    pc.comm_type, pc.orig_id, pc.comment, pc.pic, pc.vid, pc.tags, pc.created_at, 
+		    pu.id AS user_id, pu.username, pu.profile_pic, pu.type, pu.store_id, 
+			pu.store_reg, pu.store_state, 
+		    pp.id AS prod_id, pp.pic AS prod_pic 
+		    FROM prod_comments pc 
+		    LEFT JOIN users pu ON pc.comm_id = pu.id 
+		    LEFT JOIN products pp ON pc.user_id = pp.id 
+		    WHERE 
+		    pc.comm_id IN(SELECT user_id FROM prod_replies WHERE user_id=:id) 
+		    OR 
+		    pc.comm_id = :id 
+		    ORDER BY created_at DESC 
+		    LIMIT 15";
+			$statement = $this->pdo->prepare($userPosts);
+			$statement->bindValue(':id',$id,PDO::PARAM_INT);
+			$statement->execute();
+			return $statement->rowCount() ? $statement->fetchAll(PDO::FETCH_ASSOC) : false;
+		}
+		
+		public function getAjaxFeed($id,$offset){
+			$ajaxFeed = "SELECT c.id, c.user_id AS user_comm_id, c.rating, c.comm_id, 
+		    c.comm_type, c.orig_id, c.comment, c.pic, c.vid, c.tags, c.created_at,
+		    u.id AS user_id, u.username, u.profile_pic, u.type, u.store_id, u.store_reg, 
+			u.store_state,
+		    NULL,NULL 
+		    FROM user_comments c 
+		    LEFT JOIN users u ON c.comm_id = u.id 
+		    WHERE 
+		    c.comm_id IN(SELECT following_id FROM relationships WHERE follower_id=:id) 
+		    OR c.comm_id = :id 
+		    OR c.user_id = :id 
+		    UNION ALL 
+		    SELECT pc.id, pc.user_id AS user_comm_id, pc.rating, pc.comm_id, 
+		    pc.comm_type, pc.orig_id, pc.comment, pc.pic, pc.vid, pc.tags, pc.created_at, 
+		    pu.id AS user_id, pu.username, pu.profile_pic, pu.type, pu.store_id, pu.store_reg, 
+			pu.store_state, 
+		    pp.id AS prod_id, pp.pic AS prod_pic 
+		    FROM prod_comments pc 
+		    LEFT JOIN users pu ON pc.comm_id = pu.id 
+		    LEFT JOIN products pp ON pc.user_id = pp.id 
+		    WHERE 
+		    pp.id IN(SELECT prod_id FROM prod_relationships WHERE user_id=:id) 
+		    OR pc.comm_id IN(SELECT following_id FROM relationships WHERE follower_id=:id) 
+		    OR pc.comm_id = :id 
+		    ORDER BY created_at DESC 
+		    LIMIT :offset, 15";
+			$statement = $this->pdo->prepare($ajaxFeed);
+			$statement->bindValue(':id',$id,PDO::PARAM_INT);
+			$statement->bindValue(':offset',$offset,PDO::PARAM_INT);
+			$statement->execute();
+			return $statement->rowCount() ? $statement->fetchAll(PDO::FETCH_ASSOC) : false;
+		}
+		
+		public function getAjaxPostsFeed($id,$offset){
+			$ajaxPosts = "SELECT c.id, c.user_id AS user_comm_id, c.rating, c.comm_id, 
+		    c.comm_type, c.orig_id, c.comment, c.pic, c.vid, c.tags, c.created_at, 
+		    u.id AS user_id, u.username, u.profile_pic, u.type, u.store_id, u.store_reg, 
+			u.store_state, 
+		    NULL,NULL 
+		    FROM user_comments c
+		    LEFT JOIN users u ON c.comm_id = u.id 
+		    WHERE c.comm_id IN(SELECT comment_id FROM user_replies WHERE user_id=:id) 
+		    OR c.user_id = :id 
+		    OR c.comm_id = :id 
+		    UNION ALL 
+		    SELECT pc.id, pc.user_id AS user_comm_id, pc.rating, pc.comm_id, 
+		    pc.comm_type, pc.orig_id, pc.comment, pc.pic, pc.vid, pc.tags, pc.created_at, 
+		    pu.id AS user_id, pu.username, pu.profile_pic, pu.type, pu.store_id, pu.store_reg, 
+			pu.store_state, 
+		    pp.id AS prod_id, pp.pic AS prod_pic 
+		    FROM prod_comments pc 
+		    LEFT JOIN users pu ON pc.comm_id = pu.id 
+		    LEFT JOIN products pp ON pc.user_id = pp.id 
+		    WHERE 
+		    pc.comm_id IN(SELECT user_id FROM prod_replies WHERE user_id=:id) 
+		    OR 
+		    pc.comm_id = :id 
+		    ORDER BY created_at DESC 
+		    LIMIT :offset, 15";
+			$statement = $this->pdo->prepare($ajaxPosts);
+			$statement->bindValue(':id',$id,PDO::PARAM_INT);
+			$statement->bindValue(':offset',$offset,PDO::PARAM_INT);
+			$statement->execute();
+			return $statement->rowCount() ? $statement->fetchAll(PDO::FETCH_ASSOC) : false;
+		}
+		
+		public function getAjaxUserPhotos($id,$offset){
+			$ajaxUserPhotos = "SELECT c.id, c.user_id AS user_comm_id, c.comm_id, 
+			c.comm_type, c.comment, c.pic, c.created_at, 
+			u.id AS user_id, u.username, u.profile_pic 
+			FROM user_comments c
+			LEFT JOIN users u ON c.comm_id = u.id 
+			WHERE c.comm_id = :id 
+			AND c.pic <> 'NULL' 
+			ORDER BY c.created_at DESC 
+			LIMIT :offset, 15";
+			$statement = $this->pdo->prepare($ajaxUserPhotos);
+			$statement->bindValue(':id',$id,PDO::PARAM_INT);
+			$statement->bindValue(':offset',$offset,PDO::PARAM_INT);
+			$statement->execute();
+			return $statement->rowCount() ? $statement->fetchAll(PDO::FETCH_ASSOC) : false;
+		}
+		
+		public function getAjaxUserVideos($userId,$offset){
+			$ajaxUserVideos = "SELECT c.id, c.user_id AS user_comm_id, 
+			c.comm_id, c.comm_type, c.comment, c.pic, c.vid, c.created_at, 
+		    u.id AS user_id, u.username, u.profile_pic 
+		    FROM user_comments c
+		    LEFT JOIN users u ON c.comm_id = u.id 
+		    WHERE (c.comm_id = :userId AND c.vid <> 'NULL')
+		    UNION ALL
+		    SELECT p.id, p.user_id AS user_comm_id, p.comm_id, 
+			p.comm_type, p.comment, p.pic, p.vid, p.created_at, 
+		    u.id AS user_id, u.username, u.profile_pic 
+		    FROM prod_comments p
+		    LEFT JOIN users u ON p.comm_id = u.id 
+		    WHERE (p.user_id = :userId AND p.vid <> 'NULL')
+		    ORDER BY created_at DESC
+		    LIMIT :offset, 15";
+			$statement = $this->pdo->prepare($ajaxUserVideos);
+			$statement->bindValue(':userId',$userId,PDO::PARAM_INT);
+			$statement->bindValue(':offset',$offset,PDO::PARAM_INT);
+			$statement->execute();
+			return $statement->rowCount() ? $statement->fetchAll(PDO::FETCH_ASSOC) : false;
+		}
+		
 		public function verifyUserEmail($email){
 			$emailCheck = "SELECT email FROM users WHERE email=:email";
 			$statement = $this->pdo->prepare($emailCheck);
@@ -451,6 +589,78 @@
 			$statement = $this->pdo->prepare($recentPosts);
 			$statement->execute();
 			return $statement->rowCount() ? $statement->fetchAll(PDO::FETCH_ASSOC) : false;
+		}
+		
+		public function updateUsername($userId,$username,$slug){
+			$updateUsername = "UPDATE users 
+			SET username=:username, slug=:slug 
+			WHERE id=:userId";
+			$statement = $this->pdo->prepare($updateUsername);
+			$statement->bindValue(':username',$username);
+			$statement->bindValue(':slug',$slug);
+			$statement->bindValue(':userId',$userId,PDO::PARAM_INT);
+			$statement->execute();
+			return $statement->rowCount() ? true : false;
+		}
+		
+		public function updateEmail($userId,$email){
+			$updateEmail = "UPDATE users SET email=:email 
+			WHERE id=:userId";
+			$statement = $this->pdo->prepare($updateEmail);
+			$statement->bindValue(':userId',$userId,PDO::PARAM_INT);
+			$statement->bindValue(':email',$email);
+			$statement->execute();
+			return $statement->rowCount() ? true : false;
+		}
+		
+		public function updatePassword($userId,$newPass,$oldPass){
+			$updatePassword = "UPDATE users 
+			SET password_digest=sha1(:newPass) 
+			WHERE id=:userId AND password_digest=sha1(:oldPass)";
+			$statement = $this->pdo->prepare($updatePassword);
+			$statement->bindValue(':userId',$userId,PDO::PARAM_INT);
+			$statement->bindValue(':newPass',$newPass);
+			$statement->bindValue(':oldPass',$oldPass);
+			$statement->execute();
+			return $statement->rowCount() ? true : false;
+		}
+		
+		public function findUserFollowers($userId){
+			$userFollowers = "SELECT 
+			u.id AS user_id, 
+			u.username, 
+			u.profile_pic, 
+			u.type, 
+			u.store_state, 
+			u.store_reg
+		    FROM users u
+		    WHERE u.id 
+			IN(SELECT follower_id FROM relationships WHERE following_id=:userId)";
+			$statement = $this->pdo->prepare($userFollowers);
+			$statement->bindValue(':userId',$userId,PDO::PARAM_INT);
+			$statement->execute();
+			return $statement->rowCount() ? $statement->fetchAll(PDO::FETCH_ASSOC) : false;
+		}
+		
+		public function insertNewFollowing($followId,$userId){
+			$addFollowing = "INSERT INTO relationships 
+			VALUES('NULL',:userId, :followId, NOW())";
+			$statement = $this->pdo->prepare($addFollowing);
+			$statement->bindValue(':followId',$followId,PDO::PARAM_INT);
+			$statement->bindValue(':userId',$userId,PDO::PARAM_INT);
+			$statement->execute();
+			return $statement->rowCount() ? true : false;
+		}
+		
+		public function deleteUserFollowing($unfollowId,$userId){
+			$removeFollowing = "DELETE FROM relationships 
+			WHERE follower_id=:userId  
+			AND following_id=:unfollowId";
+			$statement = $this->pdo->prepare($removeFollowing);
+			$statement->bindValue(':unfollowId',$unfollowId,PDO::PARAM_INT);
+			$statement->bindValue(':userId',$userId,PDO::PARAM_INT);
+			$statement->execute();
+			return $statement->rowCount() ? true : false;
 		}
 	}
 ?>

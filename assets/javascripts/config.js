@@ -46,8 +46,34 @@ function bigX(){
 }
 
 function addVideo(source,timeStamp){
-	return '<video id="video-preview'+timeStamp+'" style="margin: 0 auto; position: relative; display: block;" class="video-preview'+timeStamp+' video-js vjs-default-skin" controls preload="auto" width="516" height="516">'+
-                 '<source src='+source+'>'+
+	return '<video id="video-preview'+timeStamp+'" style="margin: 0 auto; position: relative; display: block;" class="video-preview'+timeStamp+'" video-js vjs-default-skin" controls preload="auto" width="516" height="516">'+
+                 '<source src="'+source+'">'+
                  '<p class="vjs-no-js">To view this video please enable JavaScript, and consider upgrading to a web browser that <a href="https://videojs.com/html5-video-support/" target="_blank">supports HTML5 video</a></p>'+
             '</video>';
+}
+
+function doVideo(video,photo,timeStamp){
+	return "<div class='userPicWrap'>"+
+	           "<video style='margin: 0 auto; position: relative; display: block;' id='video-preview"+timeStamp+"' class='video-js vjs-default-skin' controls preload='auto' width='281' height='281' poster='"+photo+"'>"+  
+				 "<source src='"+ video+"'>"+
+				 "<p class='vjs-no-js'>To view this video please enable JavaScript, and consider upgrading to a web browser that <a href='https://videojs.com/html5-video-support/' target='_blank'>supports HTML5 video</a></p>"+
+               "</video>"+
+               "<div class='photoInfoPane'>"+
+                   "<span class='photoReplyCount'>0 Replies</span>"+
+               "</div>"+
+           "</div>";
+}
+
+
+ 
+ 
+                                                 
+
+function doPhoto(source){
+	return "<div class='userPicWrap'>"+
+                "<img src='"+source+"'>"+
+                "<div class='photoInfoPane'>"+
+                    "<span class='photoReplyCount'>0 Replies</span>"+
+                "</div>"+
+           "</div>";
 }

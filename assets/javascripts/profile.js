@@ -9,18 +9,13 @@ $(function(){
 })
 
 //FIND BROWSER HEIGHT
-$(function(){
-  var winHeight = window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight;
-  var winWidth = window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth;
-  $("#changePhotoForm").prepend("<input type='hidden' name='winheight' value='"+winHeight+"'>")
-})
 
 function positionLightBox(){
   var top = ($(window).height() - $("#lightbox").height()) / 2;
   var left = ($(window).width() - $("#lightbox").width()) / 2;
   $("#lightbox")
-    .css({'top':top + $(document.body).scrollTop(0),'left':left})
-    .fadeIn();
+         .css({'top':top + $(document.body).scrollTop(0),'left':left})
+         .fadeIn();
 }
 
 function removeLightbox(){
@@ -34,89 +29,143 @@ function removeLightbox(){
 
 /*CHANGE PROFILE PIC*/
 $(function(){
+  ichangephoto = {
+	 changePhotoForm: $("#changePhotoForm"),
+	 userProfilePic: $("#userProfilePic"),
+	 userPicImg: $("#userPicImg"),
+	 userProfilePic: $("#userProfilePic"),
+	 newPicIcon: $(".newPic"),
+	 ajaxUploadImg: $("#ajaxUploadImg"),
+	 changeFileButton: $("#changeFileButton"),
+	 changePhotoForm: $("#changePhotoForm"),
+  }
+  var winHeight = window.innerHeight 
+		          || document.documentElement.clientHeight 
+				  || document.body.clientHeight;
+  var winWidth = window.innerWidth 
+                 || document.documentElement.clientWidth 
+				 || document.body.clientWidth;
+  ichangephoto
+	  .changePhotoForm
+      .prepend("<input type='hidden' name='winheight' value='"+winHeight+"'>")
+  
   $("#userProfilePic, #changePhotoForm, #userPicImg").hover(function(){
-    $(".newPic").css("display", "block")
+    ichangephoto
+	    .newPicIcon
+		.css("display","block");
+	//$(".newPic").css("display", "block")
   }, function(){
-    $(".newPic").css("display", "none")
+	ichangephoto
+		.newPicIcon
+		.css("display","none");
+    //$(".newPic").css("display", "none")
   });
 
   $("#changePhotoForm").ajaxForm({
     beforeSend: function(){
       $(".uploadError, .error, .success").remove();
-      $("#ajaxUploadImg").css("display", "block");
+	  ichangephoto
+	      .ajaxUploadImg
+		  .css("display","block");
+      //$("#ajaxUploadImg").css("display", "block");
     },
     success: function(result){
-      var parent = $("#userProfilePic");
-      if(result == 2 || result == 0){
-        $(".userProfilePic").append("<p class='uploadError'>Upload Error</p>");
-      } else if(result == 3){
-        $(".userProfilePic").append("<p class='uploadError'>Internal Error</p>");
-      } else if(result == 4){
-        $(".userProfilePic").append("<p class='uploadError'>File must be gif, jpg, or png smaller than 10MB</p>");
-      } else if(result == 10){
-        $(".userProfilePic").append("<p class='uploadError'>Browser window too small</p>");
-      } else {
-        var ilength = result.length;
-        var dash = result.indexOf("-");
-        var amper = result.indexOf("&");
-        var width = result.slice(0,dash);
-        var height = result.slice(dash+1, amper);
-        var photo = result.slice(amper+1, ilength);
-        var winHeight = window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight;
-        winHeight = winHeight - 250;
-        if(height > winHeight){
-          height = winHeight;
-        }
-        var winWidth = window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth;
-        document.scrollTop = 0;
-        $('html, body').css({'overflow':'hidden', 'height':'100%'});
-        $("<div id='overlay'></div>")
-          .css({
-            'top': 0,
-            'opacity': 0,
-            'z-index': 10
-          })
-          .animate({'opacity':'0.5'}, 'slow')
-          .appendTo('body')
-          
-        $("<div id='lightbox'></div>")
-          .append(
-            '<div id="newPicForm" style="width: '+width+'px; height: '+height+'px;">' +
-            '<form enctype="multipart/form-data" action="../../../add-photo.php" method="post" id="submitNewPic">' +
-            '<img style="width: '+width+'px; height:'+height+'px;" src="'+'https://www.budvibes.com/user-images/'+photo+'" id="newPic" />' +
-            '<span id="picPreview">Pic Preview</span>'+
-            '<i>(click above to crop)</i>' +
-            /*'<input type="file" name="newphoto" id="newPhotoBack"/>' +*/
-            '<input type="hidden" name="x" id="x" val=""/>' +
-            '<input type="hidden" name="y" id="y" val=""/>' +
-            '<input type="hidden" name="x2" id="x2" val=""/>' +
-            '<input type="hidden" name="y2" id="y2" val=""/>' +
-            '<input type="hidden" name="w" id="w" val=""/>' +
-            '<input type="hidden" name="h" id="h" val=""/>' +
-            '<div id="previewContain"><img src="'+'https://www.budvibes.com/user-images/'+photo+'" id="preview" /></div>'+
-            '<input type="submit" id="savePhoto" name="submit" value="Save" />' +
-            '<input type="button" id="cancelPhoto" name="cancel" value="Cancel" />' +
-            '</form>' +
-            '</div>'
-          )
-          .css('z-index', '2000')
-          .appendTo('body')
-          
-          positionLightBox();
-      }
+		console.log(result);
+		if(result){
+			$result = $.parseJSON(result) || null;
+            //var parent = $("#userProfilePic"); ichangephoto.userProfilePic
+	        var iStatus = $result.code;
+	        switch(iStatus){
+		       case 400:
+		       case 501:
+			     ichangephoto
+			       .userProfilePic
+				   .append("<p class='uploadError'>" + $result.status + "</p>");
+		       break;
+		       default:
+			     zWidth = $result.width;
+			     zHeight = $result.height;
+			     zUserId = $result.user_id;
+			     zPhoto = $result.photo;
+			     var winHeight = window.innerHeight 
+			                    || document.documentElement.clientHeight 
+						        || document.body.clientHeight;
+			     winHeight = winHeight - 250;
+			     if(zHeight > winHeight){
+				     zHeight = winHeight;
+			     }
+			     var winWidth = window.innerWidth 
+			                   || document.documentElement.clientWidth 
+						       || document.body.clientWidth;
+			     document.scrollTop = 0;
+			     $('html, body').css({'overflow':'hidden', 
+			                     'height':'100%'});
+			     $("<div id='overlay'></div>")
+				    .css({
+                        'top': 0,
+                        'opacity': 0,
+                        'z-index': 10
+                       })
+                    .animate({'opacity':'0.5'}, 
+					          'slow')
+                    .appendTo('body');
+		         $("<div id='lightbox'></div>")
+                    .append(
+                            '<div id="newPicForm" style="width: '+zWidth+'px; height: '+zHeight+'px;">' +
+                            '<form enctype="multipart/form-data" action="'+ __LOCATION__ +'/ajax/ajax_add_profile_pic.php" method="post" id="submitNewPic">' +
+                            '<img style="width: '+zWidth+'px; height:'+zHeight+'px;" src="'+ __LOCATION__ + '/assets/user-images/'+zUserId+'/'+zPhoto+'" id="newPic" />' +
+                            '<span id="picPreview">Pic Preview</span>'+
+                            '<i>(click above to crop)</i>' +
+                            '<input type="hidden" name="x" id="x" val=""/>' +
+                            '<input type="hidden" name="y" id="y" val=""/>' +
+                            '<input type="hidden" name="x2" id="x2" val=""/>' +
+                            '<input type="hidden" name="y2" id="y2" val=""/>' +
+                            '<input type="hidden" name="w" id="w" val=""/>' +
+                            '<input type="hidden" name="h" id="h" val=""/>' +
+                            '<div id="previewContain"><img src="'+ __LOCATION__ + '/assets/user-images/'+zUserId+'/'+zPhoto+'" id="preview" /></div>'+
+                            '<input type="submit" id="savePhoto" name="submit" value="Save" />' +
+                            '<input type="button" id="cancelPhoto" name="cancel" value="Cancel" />' +
+                            '</form>' +
+                            '</div>'
+                           )
+                    .css('z-index', '2000')
+                    .appendTo('body');
+			     positionLightBox();
+		        break;
+	      }
+		} else {
+			ichangephoto
+			       .userProfilePic
+				   .append("<p class='uploadError'>Internal error</p>");
+		}
     },
     complete: function(){
-      $("#changeFileButton").val("");
-      $("#ajaxUploadImg").css("display", "none");
+	  ichangephoto
+		 .changeFileButton
+		 .val("");
+      //$("#changeFileButton").val("");
+	  ichangephoto
+		 .ajaxUploadImg
+		 .css("display","none");
+      //$("#ajaxUploadImg").css("display", "none");
     }
   })
   
   /*FORCE SUBMIT ONCE PHOTO IS UPLOADED*/
-  $("#changeFileButton").change(function(){
-    if($("#changeFileButton") != ""){
-      $("#changePhotoForm").submit();
-    }
-  });
+  ichangephoto
+	    .changeFileButton
+		.change(function(){
+			if(ichangephoto.changeFileButton.val() != ""){
+				ichangephoto.changePhotoForm.submit();
+			}
+		})
+  		
+ // $("#changeFileButton").change(function(){
+ //   if($("#changeFileButton") != ""){
+ //     $("#changePhotoForm").submit();
+ //   }
+ // });
+
 })
 
 /*JCROP FOR NEW IMAGE*/
@@ -160,6 +209,9 @@ $(function(){
 
 /*SUBMIT CROP*/
 $(function(){
+  isubmitcrop = {
+	  userProfilePic: $("#userProfilePic"),
+  }
   $('body').on('submit', '#submitNewPic', function(event){
   if(!event){
     event = window.event;
@@ -179,14 +231,36 @@ $(function(){
 		type: 'POST',
 		cache: false,
 		url: url,
-		data: {x: x, y: y, x2: x2, y2: y2, w: w, h: h, pic: pic},
+		data: {x: x, 
+		       y: y, 
+			   x2: x2, 
+			   y2: y2, 
+			   w: w, 
+			   h: h, 
+			   pic: pic},
 		success: function(result){
-		removeLightbox();
-		if(result == 0){
-			$("#userProfilePic").append("<p class='uploadError'>Error uploading file</p>");
-		} else {
-			location.reload();
-		}
+			      //console.log(result);
+		          removeLightbox();
+				  if(result){
+					  $result = $.parseJSON(result);
+					  iStatus = $result.code;
+					  switch(iStatus){
+						  case 500:
+						  case 401:
+							   isubmitcrop
+								  .userProfilePic
+								  .append("<p class='uploadError'>"+ $result.status +"</p>");
+						  break;
+						  default:
+							 location.reload();
+						  break;
+					  }
+				  } else {
+					  isubmitcrop
+						 .userProfilePic
+						 .append("<p class='uploadError'>Internal error</p>");
+				  }
+		          
 		}
 	})
   })
@@ -205,6 +279,25 @@ $(function(){
 
 
 $(function(){
+   iedituser = {
+	   buttonWrap: $("div.editButtonWrap"),
+	   curUsernameBtn: $("input#newNameButton"),
+	   curUsernameBtnVal: null,
+	   curEmailBtn: $("input#newEmailButton"),
+	   curEmailBtnVal: null,
+	   curPassBtn: $("input#changePass"),
+	   curPassBtnVal: null,
+	   newNameInputField: $("input#new_username"),
+	   newNameInputFieldVal: null,
+	   newEmailInputField: $("input#new_email"),
+	   newEmailInputFieldVal: null,
+	   oldPassInputField: $("input#old_pass"),
+	   oldPassInputFieldVal: null,
+	   newPassInputField: $("input#new_pass"),
+	   newPassInputFieldVal: null,
+	   confirmPassInputField: $("input#confirm_pass"),
+	   confirmPassInputFieldVal: null,
+   }
   /*CHANGE USERNAME SUBMIT*/
   $("body").on("submit", "#editUsernameForm", function(event){
     if(!event){
@@ -212,45 +305,57 @@ $(function(){
     }
     event.preventDefault();
     $form = $(this);
-    var buttonWrap = $form.find("div.editButtonWrap");
-    var button = buttonWrap.find("input#newNameButton");
-    var buttonVal = button.val();
-    var newNameContain = $form.find("div.editTextWrap").find("input#new_username");
-    var newName = newNameContain.val();
+    iedituser.curUsernameBtnVal = iedituser
+	                                 .curUsernameBtn
+									 .val();
+	iedituser.newNameInputFieldVal = iedituser
+	                                    .newNameInputField
+										.val();
     var url = $form.attr("action");
-    //var url = url+"?username="+newName;
     $.ajax({
       beforeSend: function(){
         $(".error, .uploadError, .success").remove();
-        buttonWrap.prepend('<img class="hourglass" style="position: absolute; left: 110px; bottom: 3px; margin: 0 auto;" src="https://www.budvibes.com/images/hourglass.gif" />');
-        button.attr("disabled","disabled");
-        button.val("");
+        iedituser
+		    .curUsernameBtn
+			.attr("disabled","disabled");
+        iedituser
+		    .curUsernameBtn
+			.val("");
       },
 	  type: 'POST',
-	  data: {username: newName},
+	  data: {username: iedituser.newNameInputFieldVal},
       url: url,
       success: function(result){
-        result = result.trim();
-        if(result == 0){
-          $form.before("<p class='error'>log in to edit</p>");
-        } else if(result == 2){
-          $form.before("<p class='error'>username already taken</p>");
-        } else if(result == 3){
-          $form.before("<p class='error'>internal Error</p>");
-        } else if(result == 4){
-          $form.before("<p class='error'>invalid username</p>");
-        } else if(result == 5){
-          $form.before("<p class='error'>username cannot be blank</p>");
-        } else {
-		  window.location = 'https://www.budvibes.com/'+result+'/edit';
-          $form.before("<p class='success'>username changed successfully</p>");
-        }
-        
+		console.log(result);
+		if(result){
+			$result = $.parseJSON(result);
+			iStatus = $result.code;
+			switch(iStatus){
+				case 410:
+				case 500:
+					$form
+					  .before("<p class='error'>"+$result.status+"</p>");
+				break;
+				default:
+					iedituser
+					  .newNameInputField
+					  .val($result.username);
+					$form
+					  .before("<p class='success'>Username changed successfully</p>");
+				break;
+			}
+		} else {
+			$form
+			  .before("<p class='error'>Internal error</p>");
+		}
       },
       complete: function(){
-        buttonWrap.find("img.hourglass").remove();
-        button.attr("disabled", false);
-        button.val(buttonVal);
+        iedituser
+			.curButton
+			.attr("disabled", false);
+        iedituser
+			.curButton
+			.val(ichangusername.buttonVal);
       }
     });
   });
@@ -262,44 +367,53 @@ $(function(){
     }
     event.preventDefault();
     $form = $(this);
-    var buttonWrap = $form.find("div.editButtonWrap");
-    var button = buttonWrap.find("input#newEmailButton");
-    var buttonVal = button.val();
-    var newEmailContain = $form.find("div.editTextWrap").find("input#new_email");
-    var newEmail = newEmailContain.val();
+	iedituser.curEmailBtnVal = iedituser
+	                              .curEmailBtn
+								  .val();
+	iedituser.newEmailInputFieldVal = iedituser
+	                                     .newEmailInputField
+										 .val();
     var url = $form.attr("action");
-    //url = url+"?email="+newEmail;
-    
     $.ajax({
       beforeSend: function(){
         $(".error, .uploadError, .success").remove();
-        buttonWrap.prepend('<img class="hourglass" style="position: absolute; left: 110px; bottom: 3px; margin: 0 auto;" src="https://www.budvibes.com/images/hourglass.gif" />');
-        button.attr("disabled","disabled");
-        button.val("");
+        iedituser
+		   .curEmailBtn
+		   .attr("disabled","disabled");
+		iedituser
+		   .curEmailBtn
+		   .val("");
       },
 	  type: 'POST',
-	  data: {email: newEmail},
+	  data: {email: iedituser.newEmailInputFieldVal},
       url: url,
       success: function(result){
-        if(result == 0){
-          $form.before("<p class='error'>log in to edit</p>");
-        } else if(result == 2){
-          $form.before("<p class='error'>email currently registered</p>");
-        } else if(result == 3){
-          $form.before("<p class='error'>internal Error</p>");
-        } else if(result == 4){
-          $form.before("<p class='error'>invalid email</p>");
-        } else if(result == 5){
-          $form.before("<p class='error'>email cannot be blank</p>");
-        } else {
-          newEmailContain.val(result);
-          $form.before("<p class='success'>email changed successfully</p>");
-        }
+		if(result){
+			$result = $.parseJSON(result);
+			iStatus = $result.code;
+			switch(iStatus){
+				case 401:
+				case 500:
+					$form.before("<p class='error'>"+ $result.status +"</p>");
+				break;
+				default: 
+					iedituser
+					   .newEmailInputField
+					   .val($result.email);
+					$form.before("<p class='success'>"+ $result.status +"</p>");
+				break;
+			}
+		} else {
+			$form.before("<p class='error'>Internal error</p>");
+		}
       },
       complete: function(){
-        buttonWrap.find("img.hourglass").remove();
-        button.attr("disabled", false);
-        button.val(buttonVal);
+        iedituser
+		   .curEmailBtn
+		   .attr("disabled",false);
+		iedituser
+		   .curEmailBtn
+		   .val(iedituser.curEmailBtnVal);
       }
     })
   });
@@ -311,51 +425,68 @@ $(function(){
     }
     event.preventDefault();
     $form = $(this);
-    var buttonWrap = $form.find("div.editButtonWrap");
-    var button = buttonWrap.find("input#changePass");
-    var buttonVal = button.val();
-    var oldPassBox = $form.find("div.oldPassWrap").find("input#old_pass");
-    var oldPass = $form.find("div.oldPassWrap").find("input#old_pass").val();
-    var newPassBox = $form.find("div.newPassWrap").find("input#new_pass")
-    var newPass = $form.find("div.newPassWrap").find("input#new_pass").val();
-    var confirmPassBox = $form.find("div.confirmWrap").find("input#confirm_pass")
-    var confirmPass = $form.find("div.confirmWrap").find("input#confirm_pass").val();
+    iedituser.curPassBtnVal            = iedituser
+	                                       .curPassBtn
+								           .val();
+    iedituser.oldPassInputFieldVal     = iedituser
+	                                       .oldPassInputField
+										   .val();
+    iedituser.newPassInputFieldVal     = iedituser
+										   .newPassInputField
+										   .val();
+    iedituser.confirmPassInputFieldVal = iedituser
+	                                       .confirmPassInputField
+										   .val();
     var url = $form.attr("action");
     
     $.ajax({
       beforeSend: function(){
         $(".error, .uploadError, .success").remove();
-        buttonWrap.prepend('<img class="hourglass" style="position: absolute; left: 110px; bottom: 3px; margin: 0 auto;" src="https://www.budvibes.com/images/hourglass.gif" />');
-        button.attr("disabled","disabled");
-        button.val("");
+        iedituser
+		   .curPassBtn
+		   .attr("disabled","disabled")
+        iedituser
+		   .curPassBtn
+		   .val("");
       },
       type: 'POST',
-      data: {old_pass: oldPass, new_pass: newPass, confirm: confirmPass},
+      data: {old_pass: iedituser.oldPassInputFieldVal, 
+	         new_pass: iedituser.newPassInputFieldVal, 
+			 confirm: iedituser.confirmPassInputFieldVal},
       url: url,
       success: function(result){
-        if(result == 0){
-          $form.before("<p class='error'>Log in to edit</p>");
-        } else if(result == 1){
-          $form.before("<p class='success'>Password successfully changed</p>");
-          oldPassBox.val("");
-          newPassBox.val("");
-          confirmPassBox.val("");
-        } else if(result == 2){
-          $form.before("<p class='error'>internal Error</p>");
-        } else if(result == 3){
-          $form.before("<p class='error'>invalid password</p>");
-        } else if(result == 4){
-          $form.before("<p class='error'>passwords do not match</p>");
-        } else if(result == 5){
-          $form.before("<p class='error'>invalid password</p>");
-        } else if(result == 6){
-          $form.before("<p class='error'>one or more fields blank</p>");
-        }
+		if(result){
+			$result = $.parseJSON(result);
+			iStatus = $result.code;
+			switch(iStatus){
+				case 401:
+				case 500:
+					$form.before("<p class='error'>"+$result.status+"</p>");
+				break;
+				default: 
+					iedituser
+					   .oldPassInputField
+					   .val("");
+					iedituser
+					   .newPassInputField
+					   .val("");
+					iedituser
+					   .confirmPassInputField
+					   .val("");
+					$form.before("<p class='success'>"+$result.status+"</p>");
+				break;
+			}
+		} else {
+			$form.before("<p class='error'>Internal error</p>");
+		}
       },
       complete: function(){
-        buttonWrap.find("img.hourglass").remove();
-        button.attr("disabled", false);
-        button.val(buttonVal);
+		iedituser
+		   .curPassBtn
+		   .attr("disabled",false);
+		iedituser
+		   .curPassBtn
+		   .val(iedituser.curPassBtnVal);
       }
     })
   });
@@ -381,7 +512,7 @@ $(function(){
     google.maps.event.trigger(storedMarker[pop_up], "click");
   });
   
-  /*NAVIGATOR GEOLOCATION*/
+  /*NAVIGATOR GEOLOCATION
   if(geoPosition.init()){
       geoPosition.getCurrentPosition(success_callback,error_callback,{enableHighAccuracy:true});
   }
@@ -402,6 +533,7 @@ $(function(){
   }
   
    //freezePane();
+   */
 });
 
 
@@ -445,17 +577,14 @@ $(function(){
     var curWallId = buttonClass.slice(dash+1,strEnd);
     var curWallUser = buttonClass.slice(0,dash);
     //XHR TYPE
-    //var xhrType = buttonWrap.siblings("input.xhr_type").val();
 	var xhrType = iaddphoto
 				      .xhrType
 					  .val();
     //POST TYPE(PROD OR USER)
-    //var postType = buttonWrap.siblings("input.post_type").val();
 	var postType = iaddphoto
 					  .postType
 					  .val();
     //TAG PANE
-    //var userCurPane = buttonWrap.siblings("div.tagPane");
     //USER PHOTO
     var userPhotoImg = iaddphoto
 						 .tagPane
@@ -481,13 +610,11 @@ $(function(){
     linkSource.remove();
     var linkHtml = userLinkWrap.html();
     //USER COMMENT
-    //var userPostBox = buttonWrap.siblings("textarea#userFeedBox");
     var userPost = iaddphoto
 					.userPostBox
 					.val();
     //TAGS
     var tags = Array();
-    //var tagPane = buttonWrap.siblings("div.submittedTags");
     var curTags = iaddphoto
 					.submittedTags
 					.find("span.newTag");
@@ -598,8 +725,15 @@ $(function(){
 		}
       },
       complete: function(){
-        $button.attr("disabled",false).html(buttonVal);
-		iaddphoto.buttonToggleInputs.attr("disabled",false);
+        $button
+			.attr("disabled",false)
+			.html(buttonVal);
+		iaddphoto
+			.buttonToggleInputs
+			.attr("disabled",false);
+		iaddphoto
+			.submittedTags
+			.html("");
       }
     });
     
@@ -636,8 +770,6 @@ $(function(){
     $.ajax({
       beforeSend: function(){
         $("p.error").remove();
-        //buttonWrap.append("<img class='replygear' src='https://www.budvibes.com/images/postgear.gif'>");
-        //buttonWrap.append("<img class='replygear' src='http://www.budmapz.com/images/geargray.gif'>");
         $button.attr("disabled", "disabled");
         $button.html("");
       },
@@ -704,7 +836,6 @@ $(function(){
 	
     var timeoutId = setTimeout(function(){
       if(e.val() != "" && e.val() != inputCache){
-        //$("div.buttonToggle").find("input").attr("disabled", "disabled");
 		iaddphoto
 			.buttonToggleInputs.attr("disabled","disabled");
         elink = inputCache = e.val();
@@ -1029,7 +1160,6 @@ $(function(){
         success: function(result){
 		  console.log(result);
 		  isrc = $.parseJSON(result) || null;
-		  
 		  if(isrc){
 			  iStatus = isrc.code
 			  switch(iStatus){
@@ -1164,7 +1294,13 @@ $(function(){
         return false;
       }
       
-      curText = curText.replace(/&/g, "&amp;").replace(/>/g, "&gt;").replace(/</g, "<").replace(/"/g, "").replace(/'/g, "").replace(/#/g, "")
+      curText = curText
+	             .replace(/&/g, "&amp;")
+				 .replace(/>/g, "&gt;")
+				 .replace(/</g, "<")
+				 .replace(/"/g, "")
+				 .replace(/'/g, "")
+				 .replace(/#/g, "");
       if(curText == ""){
         return false;
       }
@@ -1178,8 +1314,14 @@ $(function(){
       curText = curText.replace(/<\/div>/g, "");
       //alert(curText);
       $pane.html("");
-      $(".submittedTags").find("br,p,div").remove();
-      $(".submittedTags").prepend("<span class='newTag' style='margin-left: 5px; padding: 5px 0px; display: inline-block;'>"+curText+"</span>");
+	  iaddphoto
+		 .submittedTags
+		 .find("br,p,div")
+		 .remove();
+	  iaddphoto
+		 .submittedTags
+		 .prepend("<span class='newTag' style='margin-left: 5px; padding: 5px 0px; display: inline-block;'>"+curText+"</span>");
+	  return false;
     }
   })
   $("body").on("click", "span.newTag", function(){
@@ -1261,46 +1403,7 @@ $(function(){
           //console.log(result);
           if(result == 0){
             $(".chatBoxWrap").remove();
-            $("body").append(
-              '<div class="chatBoxWrap" id="thread-no">'+
-              '<div class="chatBoxHead clearfix"><span class="chatName" id="chat-none">Sign Up</span><span class="chatClose">X</span></div>'+
-              '<div class="chatBoxBody">'+
-                '<div id="signInMenu" class="signUpMenu">'+
-                  '<h3><img src="https://www.budvibes.com/images/sign-up-head.png" alt="User Sign Up"></h3>'+
-                  '<form action="../../../sign-up.php" method="post" id="signUpForm">'+
-                    '<input type="text" class="signInput" name="username" placeholder="Username">'+
-                    '<input type="text" class="signInput" name="email" placeholder="Email">'+
-                    '<input type="password" class="signInput" name="pass" placeholder="Password">'+
-                    '<input type="password" class="signInput" name="confirmpass" placeholder="Confirm Password">'+
-                    '<input type="submit" class="signSubmit" name="signup" value="Sign Up">'+
-                  '</form>'+
-                  '<div id="signUp">'+
-                    '<a href="https://www.budvibes.com/sign-in.php" id="signInLink">&#8592; Sign In</a>'+
-                  '</div>'+
-                '</div>'+
-              '</div>'+
-              '<div class="chatBoxPostWrap">'+
-                '<div class="chatReplyBoxWrap clearfix">'+
-                  '<div class="chatBox" contenteditable="true"></div>'+
-                '</div>'+
-              '</div>'+
-              '<div class="chatButtons clearfix">'+
-                '<div class="chatCamWrap">'+
-                  '<form id="chatPic" action="./add-message.php" type="post">'+
-                    '<input type="file" name="pic" class="chatCamFile" />'+
-                    '<input type="hidden" name="message" value="NULL" />'+
-                    '<input type="hidden" name="emoji" value="NULL" />'+
-                    '<input type="hidden" name="thread" value="none" />'+
-                    '<input type="hidden" name="user" value="none" />'+
-                    '<img class="chatCamImg" src="https://www.budvibes.com/images/chat-cam.png" />'+
-                  '</form>'+
-                '</div>'+
-                '<div class="chatEmoWrap">'+
-                  '<img class="chatEmoImg" src="https://www.budvibes.com/images/chat-smile.png" />'+
-                '</div>'+
-              '</div>'+
-            '</div>'
-            );
+            $("body").append(doSignUpBox());
           } else {
             parent.append('<span class="smokingnow"><span class="nowtext">now smoking</span> '+result+'</span>');
           }

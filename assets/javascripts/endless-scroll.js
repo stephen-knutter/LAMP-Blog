@@ -1,15 +1,12 @@
 /*ENDLESS SCROLLING*/
 $(function(){
-	
 	function freeze(){
 		//FREEZE TOP USER PANNEL
-		//var winWidth = document.documentElement.clientWidth;
 	    var topPosters = $("div.topPosters");
 	    var offset = topPosters.offset();
 	    var w = $(window).scrollTop();
 	    pane = offset.top;
 	    win = w
-	    //alert(w);
 	    if(win > pane){
 	      paneSet = pane;
 	      topPosters.css({
@@ -28,18 +25,20 @@ $(function(){
 	
   var appendPane = $("div.dropPane");
   appendPane = appendPane.length ? appendPane : $("#rightInfoPane");
-  var ipane = appendPane.data("pane");
-  var istartWrap = appendPane.attr("id");
+  if(appendPane.length){
+	  var ipane = appendPane.data("pane");
+      var istartWrap = appendPane.attr("id");
   
-  var feedStart = istartWrap.indexOf("-")+1
-  var feedEnd = istartWrap.length;
-  var istart = istartWrap.slice(feedStart,feedEnd);
-  istart = Number(istart);
+      var feedStart = istartWrap.indexOf("-")+1
+      var feedEnd = istartWrap.length;
+      var istart = istartWrap.slice(feedStart,feedEnd);
+      istart = Number(istart);
   
-  var strSplit = ipane.indexOf("-");
-  var strEnd = ipane.length;
-  var iuser = ipane.slice(strSplit+1,strEnd)
-  var iscriptType = ipane.slice(0,strSplit);
+      var strSplit = ipane.indexOf("-");
+      var strEnd = ipane.length;
+      var iuser = ipane.slice(strSplit+1,strEnd)
+      var iscriptType = ipane.slice(0,strSplit);
+  }
   
   var rightPaneHeight = 0;
   var leftPaneHeight = 0;
@@ -50,24 +49,19 @@ $(function(){
   var paneSet = 0;
   var firstLoad = true;
   
-  if(iscriptType == 'photos' || iscriptType == 'strainphotos' || iscriptType == 'videos' || iscriptType == 'strainvideos'){
-    var didScroll = true;
+  if(iscriptType == 'photos' 
+     || iscriptType == 'strainphotos' 
+	 || iscriptType == 'videos' 
+	 || iscriptType == 'strainvideos'){
+     var didScroll = true;
   } else {
-    var didScroll = false;
+     var didScroll = false;
   }
   var gifStop = false;
   
   $(window).scroll(function(){
     didScroll = true;
-
-	if(firstLoad){
-		setTimeout(function(){
-			freeze();
-			firstLoad = false;
-		},5000);
-	} else {
-		freeze();
-	}
+	freeze();
   });
   
   setInterval(function(){
@@ -80,165 +74,156 @@ $(function(){
       iscrollTop = $(window).scrollTop();
       if(iscrollTop >= idocHeight - istartAjax){
         var iTime = new Date().getTime();
-        if(iscriptType == 'feed' || iscriptType == 'posts' || iscriptType == 'strains' 
-			|| iscriptType == 'search' || iscriptType == 'forums' || iscriptType == 'front'){
-          url = 'https://www.budvibes.com/ajax-feed.php?"'+iTime+'"';
-		  	switch(iscriptType){
-				case 'feed':
-					type = 'feed';
-				break;
-				case 'posts':
-					type = 'posts';
-				break;
-				case 'strains':
-					type = 'strains';
-				break;
-				case 'search':
-					type = 'search';
-					word = appendPane.data("word");
-				break;
-				case 'forums':
-					type = 'forums';
-					word = appendPane.data("word");
-				break;
-				case 'front':
-					type = 'front';
-				break;
-				default: 
-					type = 'NULL';
-				break;
-			}
-        } else if(iscriptType == 'photos'){
-          url = 'https://www.budvibes.com/ajax-photos.php?"'+iTime+'"';
-        } else if(iscriptType == 'strainphotos'){
-          url = 'https://www.budvibes.com/ajax-photos.php?"'+iTime+'"';
-          type = 'strain';
-        } else if(iscriptType == 'videos'){
-          url = 'https://www.budvibes.com/ajax-videos.php?"'+iTime+'"';
-        } else if(iscriptType == 'strainvideos'){
-          url = 'https://www.budvibes.com/ajax-videos.php?"'+iTime+'"';
-          type = 'strain';
-        } 
-        
+		switch(iscriptType){
+			case 'feed':
+			case 'posts':
+			case 'search':
+			case 'forums':
+			case 'front':
+				switch(iscriptType){
+					case 'feed':
+			        case 'posts':
+			        case 'strains':
+					case 'front':
+						type = iscriptType;
+						if(iscriptType == 'strains'){
+							url = __LOCATION__ + '/ajax/ajax_strain_feed.php?'+iTime;  
+						} else {
+							url = __LOCATION__ + '/ajax/ajax_user_feed.php?'+iTime; 
+						}
+					break;
+			        case 'search':
+			        case 'forums':
+						type = iscriptType;
+						word = appendPane.data("word");
+					break;	
+					break;
+					default:
+						type = 'NULL';
+					break;
+				}
+			break;
+			case 'photos':
+				url = __LOCATION__ + '/ajax/ajax_user_photos.php?'+iTime;
+			break;
+			case 'strainphotos':
+				url = __LOCATION__ + '/ajax/ajax_strain_photos.php?'+iTime;
+			    type = 'strain';
+			break;
+			case 'videos':
+				url = __LOCATION__ + '/ajax/ajax_user_videos.php?'+iTime;
+			break;
+			case 'strainvideos':
+				url = __LOCATION__ + '/ajax/ajax_strain_videos.php?'+iTime;
+				type = 'strain';
+			break;
+			
+		}
         if(!gifStop){
           $.ajax({
             beforeSend: function(){
               if(!gifStop){
                 gifStop = true;
-                appendPane.append("<img class='defaultspinner' style='display: block; margin: 0 auto; clear:left;' src='https://www.budvibes.com/images/defaultspinner.gif' />")
+                appendPane
+				  .append("<i class='fa fa-refresh fa-spin fa-3x fa-fw margin-bottom defaultspinner'></i>");
               }
             },
             type: 'POST',
             cache: 'false',
-            data: {user: iuser, start: istart, type: type, word: word},
+            data: {user: iuser, 
+			       start: istart, 
+				   type: type, 
+				   word: word},
             url: url,
             success: function(result){
-              //alert(result);
-              if(result == 0){
-                //STOP LOADING GIF
-                gifStop = true;
-              } else if(iscriptType == 'photos' || iscriptType == 'strainphotos'){
-                photoBatch = $.parseJSON(result);
-                $.each(photoBatch, function(i,v){
-                  var newPhoto = photoBatch[i];
-                  if(rightPaneHeight == leftPaneHeight && (newPhoto.photo && newPhoto.iheight)){
-                    leftPane.append(
-                      "<div class='userPicWrap'>"+
-                        "<img src='"+newPhoto.photo+"'>"+
-                        "<div class='photoInfoPane'>"+
-                          "<span class='photoReplyCount'>0 Replies</span>"+
-                        "</div>"+
-                      "</div>"
-                    );
-                    leftPaneHeight += newPhoto.iheight;
-                    //leftPaneHeight += newHeight;
-                  } else if(rightPaneHeight < leftPaneHeight && (newPhoto.photo && newPhoto.iheight)){
-                    rightPane.append(
-                      "<div class='userPicWrap'>"+
-                        "<img src='"+newPhoto.photo+"'>"+
-                        "<div class='photoInfoPane'>"+
-                          "<span class='photoReplyCount'>0 Replies</span>"+
-                        "</div>"+
-                      "</div>"
-                    );
-                    rightPaneHeight += newPhoto.iheight;
-                    //rightPaneHeight += newHeight;
-                  } else if(rightPaneHeight > leftPaneHeight && (newPhoto.photo && newPhoto.iheight)){
-                    leftPane.append(
-                      "<div class='userPicWrap'>"+
-                        "<img src='"+newPhoto.photo+"'>"+
-                        "<div class='photoInfoPane'>"+
-                          "<span class='photoReplyCount'>0 Replies</span>"+
-                        "</div>"+
-                      "</div>"
-                    );
-                    leftPaneHeight += newPhoto.iheight;
-                    //leftPaneHeight += newHeight;
-                  }
-                });
-                gifStop = false;
-              } else if(iscriptType == 'videos' || iscriptType == 'strainvideos'){
-                //VIDEO
-                photoBatch = $.parseJSON(result);
-                var j = 1;
-                $.each(photoBatch, function(i,v){
-                  var newPhoto = photoBatch[i];
-                  var timeStamp = (new Date()).getTime();
-                  if(j%2){
-                    if(newPhoto.vidtype == 'user'){
-                      leftPane.append(
-                        "<div class='userPicWrap'>"+
-                          '<video style="margin: 0 auto; position: relative; display: block;" id="video-preview'+timeStamp+'" class="video-js vjs-default-skin" controls preload="auto" width="281" height="281" poster="'+newPhoto.photo+'">'+
-                           '<source src="'+newPhoto.video+'">'+
-                           '<p class="vjs-no-js">To view this video please enable JavaScript, and consider upgrading to a web browser that <a href="https://videojs.com/html5-video-support/" target="_blank">supports HTML5 video</a></p>'+
-                          '</video>'+
-                          "<div class='photoInfoPane'>"+
-                            "<span class='photoReplyCount'>0 Replies</span>"+
-                          "</div>"+
-                        "</div>"
-                      );
-                      videojs('video-preview'+timeStamp,{},function(){});
-                    } else {
-                      leftPane.append(
-                        "<div class='userPicWrap'>"+
-                          newPhoto.photo+
-                        "</div>"
-                      );
-                    }
-                  } else {
-                    if(newPhoto.vidtype == 'user'){
-                      rightPane.append(
-                        "<div class='userPicWrap'>"+
-                          '<video style="margin: 0 auto; position: relative; display: block;" id="video-preview'+timeStamp+'" class="video-js vjs-default-skin" controls preload="auto" width="281" height="281" poster="'+newPhoto.photo+'">'+
-                           '<source src="'+newPhoto.video+'">'+
-                           '<p class="vjs-no-js">To view this video please enable JavaScript, and consider upgrading to a web browser that <a href="https://videojs.com/html5-video-support/" target="_blank">supports HTML5 video</a></p>'+
-                          '</video>'+
-                          "<div class='photoInfoPane'>"+
-                            "<span class='photoReplyCount'>0 Replies</span>"+
-                          "</div>"+
-                        "</div>"
-                      );
-                      videojs('video-preview'+timeStamp,{},function(){});
-                    } else {
-                      rightPane.append(
-                        "<div class='userPicWrap'>"+
-                          newPhoto.photo+
-                        "</div>"
-                      );
-                    }
-                  }
-                  j++;
-                });
-                gifStop = false;
-              } else {
-                appendPane.append(result);
-                gifStop = false;
-              }
+			  if(result){
+				 //console.log(result);
+				 $result = $.parseJSON(result);
+				 iStatus = $result.code;
+				 iscriptType = $result.type;
+				 switch(iStatus){
+					 case 401:
+					 case 500:
+					 case 201:
+					  //DO NOTHING
+					 break;
+					 default:
+						switch(iscriptType){
+							case 'photos':
+							case 'strainphotos':
+								photoBatch = $.parseJSON(result);
+                                $.each(photoBatch, function(i,v){
+                                      var newPhoto = photoBatch[i];
+                                      if(rightPaneHeight == leftPaneHeight 
+				                        && (newPhoto.photo && newPhoto.iheight)){
+                                        leftPane.append(doPhoto(newPhoto.photo));
+                                        leftPaneHeight += newPhoto.iheight;
+                                      } else if(rightPaneHeight < leftPaneHeight 
+				                        && (newPhoto.photo && newPhoto.iheight)){
+                                        rightPane.append(doPhoto(newPhoto.photo));
+                                        rightPaneHeight += newPhoto.iheight;
+                                      } else if(rightPaneHeight > leftPaneHeight 
+				                        && (newPhoto.photo && newPhoto.iheight)){
+                                        leftPane.append(doPhoto(newPhoto.photo));
+                                        leftPaneHeight += newPhoto.iheight;
+                                     }
+                               });
+                               gifStop = false;
+							break;
+							case 'videos':
+							case 'strainvideos':
+							   //VIDEO
+                               var j=1;
+                               $.each($result, function(i,v){
+                                  var newVideo = $result[i];
+                                  var timeStamp = (new Date()).getTime();
+                                  if(j%2){
+                                     if(newVideo.vidtype == 'user' 
+									 && newVideo.video
+									 && newVideo.photo){
+                                       leftPane
+									     .append(doVideo(newVideo.video,newVideo.photo,timeStamp));
+                                       videojs('video-preview'+timeStamp,{},function(){});
+                                    } else if(newVideo.photo){
+                                       leftPane
+									     .append("<div class='userPicWrap'>"
+										         +newVideo.photo
+												 +"</div>");
+                                    } 
+                                  } else {
+                                     if(newVideo.vidtype == 'user' 
+									 && newVideo.video 
+									 && newVideo.photo){
+                                       rightPane
+										 .append(doVideo(newVideo.video,newVideo.photo,timeStamp));
+                                       videojs('video-preview'+timeStamp,{},function(){});
+                                     } else if(newVideo.photo) {
+                                       rightPane
+										 .append("<div class='userPicWrap'>"
+										         +newVideo.photo
+												 +"</div>");
+                                     }
+                                  }
+                                j++;
+                               });
+                               gifStop = false;
+							break;
+							default: 
+							   appendPane
+							     .append($result.message);
+							   gifStop = false;
+							break;
+						}
+					 break;
+				 }
+			  } else {
+				gifStop = true; 
+			  }
             },
             complete: function(){
               istart = istart+15;
               appendPane.attr("id",'start-'+istart);
-              appendPane.find("img.defaultspinner").remove();
+              appendPane.find("i.defaultspinner").remove();
             }
           })
         }

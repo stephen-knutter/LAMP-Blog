@@ -27,6 +27,30 @@
 			return $download_array;
 		}
 		
+		public function calculateImageRatio($image){
+			if(file_exists($image)){
+				list($width,$height) = @getimagesize($image);
+				if($width && $height){
+					$ratio = $width/$height;
+					return $ratio;
+				} else {
+					return false;
+				}
+			} else {
+				return false;
+			}
+		}
+		
+		public function createUrl($text){
+			$text = strtolower($text);
+			$text = preg_replace('/\&amp;/', 'and', $text);
+			$text = preg_replace('/\&/', 'and', $text);
+			$text = preg_replace('/\'/', '', $text);
+			$text = preg_replace('/\&39;/', '', $text);
+			$text = preg_replace('/\s+/','-',$text);
+			return $text;
+		}
+		
 		public function createToken(){
 			$token = md5(uniqid(rand(), true));
 			return $token;
@@ -140,14 +164,36 @@
 			return stripslashes(preg_replace("#($bad_attr)(\s*)(?==)#is", 'NOPE', $input));
 		}
 		
-		public function getPhoto($path){
-			$photo = strrchr($path,'/');
-			$photo = substr($photo,1);
-			return $photo;
+		public function getFileFromFilePath($path){
+			$file = strrchr($path,'/');
+			$file = substr($file,1);
+			return $file;
+		}
+		
+		public function getFileNameNoExtension($file){
+			$dot = strpos($file,'.');
+			$fileName = substr($file,0,$dot);
+			return $fileName;
 		}
 		
 		public function getExtension($item){
-				return strtolower(strrchr($item,'.'));
+			return strtolower(strrchr($item,'.'));
+		}
+		
+		public function addVideoPic($newVideo,$userId){
+		  //$fileName = $this->getFileFromFilePath($newVideo);
+	      $fileName = $this->getFileNameNoExtension($newVideo);
+	      $newFileName = $fileName . '.jpg';
+	      $vidPath = 'C:\\wamp\\www\\bv_mvc\\lamp-blog\\assets\\user-images\\'.$userId.'\\'.$fileName.'.mp4';
+	      $picPath = 'C:\\wamp\\www\\bv_mvc\\lamp-blog\\assets\\user-images\\'.$userId.'\\'.$newFileName;
+	      $output = array();
+	      $cmd = "C:\\wamp\\ffmpeg\\ffmpeg64 -i $vidPath -an -ss 00:00:01 -r 1 -vframes 1 -y $picPath";
+	      exec($cmd,$output,$retval);
+	      if(file_exists($picPath)){
+		    return $newFileName;
+	      } else {
+		     return false;
+	      }
 		}
 		
 		public function cropPhoto($path,$photo){
@@ -175,6 +221,62 @@
 			} else {
 					return false; 
 			}
+		}
+		
+		public function cropProfilePhoto($path){
+			$profilePic = new \bv\resize($path);
+			$profilePic->resizeImage(190,190);
+			$profilePic->saveImage($path,100);
+			if(file_exists($path)){
+				return true;
+			} else {
+				return false;
+			}
+		}
+		
+		public function cropProfilePhotoExact($userdir,$tempPhoto,$x,$y,$w,$h){
+			$curTempPath = $userdir.$tempPhoto;
+			$newPicPath = $userdir.'budvibes-'.$tempPhoto;
+			$profilePic = new \bv\resize($curTempPath);
+			$profilePic->resizeImage(190,190,'exact',$x,$y,$w,$h,false);
+			$profilePic->saveImage($newPicPath,100);
+			if(file_exists($newPicPath)){
+				return true;
+			} else {
+				return false;
+			}
+		}
+		
+		public function cropProfilePicThumbs($userdir,$photo){
+			$curProfilePic = $userdir.$photo;
+			$relationLink = $userdir.'relation-'.$photo;
+			$relationPic = new \bv\resize($curProfilePic);
+			$relationPic->resizeImage(100,100);
+			$relationPic->saveImage($relationLink,100);
+			
+			$topLink = $userdir.'top-'.$photo;
+			$topPic = new \bv\resize($curProfilePic);
+			$topPic->resizeImage(110,110);
+			$topPic->saveImage($topLink,100);
+			
+			$thumbLink = $userdir.'thumb-'.$photo;
+			$thumbPic = new \bv\resize($curProfilePic);
+			$thumbPic->resizeImage(60,60);
+			$thumbPic->saveImage($thumbLink,100);
+			
+			$smallThumbLink = $userdir.'thumbsmall-'.$photo;
+			$smallThumbPic = new \bv\resize($curProfilePic);
+			$smallThumbPic->resizeImage(45,45);
+			$smallThumbPic->saveImage($smallThumbLink,100);
+			
+			if(file_exists($relationLink) &&
+			   file_exists($topLink) &&
+			   file_exists($thumbLink) && 
+			   file_exists($smallThumbLink)){
+				   return true;
+			   } else {
+				   return false;
+			   }
 		}
 		
 		public function isLoggedIn(){

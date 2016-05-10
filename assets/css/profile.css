@@ -80,6 +80,14 @@ span.fa{
 	font-size: 23px;
 }
 
+i.fa.fa-refresh.fa-spin.defaultspinner{
+	clear: both;
+	display: block;
+	margin: 0 auto;
+	color: #82BD2D;
+	font-size: 30px;
+}
+
 .message-user, .now-smoking{
 	position: absolute;
 	/*
@@ -255,7 +263,7 @@ td.topicCount{
 
 .follow-message span.unfollowText{
 	left: 10%;
-	background: transparent url('../../images/unfollow-icon.png') 0 5% no-repeat;
+	background: transparent url('../../assets/images/unfollow-icon.png') 0 5% no-repeat;
 	padding-left: 20px;
 	color: #000000;
 }
@@ -393,7 +401,7 @@ h3.latestHead{
 	border-top: 5px solid #5FB02D;
 	border-bottom: 1px solid #c7c7c7;
 	margin: 0;
-	background: #fff url('../../images/news.png') no-repeat 98% 25%;
+	background: #fff url('../images/news.png') no-repeat 98% 25%;
 	font-family: Verdana;
 }
 
@@ -698,6 +706,27 @@ span.deliveryStoreName a:hover{
 	-o-border-radius: 3px;
 	margin-bottom: 10px;
 	position: relative;
+}
+
+.userProfileBasic{
+	background-color: #fff;
+	position: relative;
+	width: 100%;
+	box-sizing: border-box;
+	padding: 20px 0;
+	border: 1px solid #c7c7c7;
+	border-radius: 3px;
+	-moz-border-radius: 3px;
+	-webkit-border-radius: 3px;
+	-o-border-radius: 3px;
+}
+
+#userPicImg{
+	position: relative;
+	width: 190px;
+	height: 190px;
+	margin: 0 auto;
+	display: block;
 }
 
 #rightInfoPane{
@@ -1419,7 +1448,7 @@ div.postFeedHead h3{
 	border-bottom: 1px solid #c7c7c7;
 	font-size: 14px;
 	color: #299a0b;
-	background: #e8e8e8 url('../images/posts.png') 99% 45% no-repeat;
+	background: #fff url('../images/posts.png') 99% 45% no-repeat;
 	font-family: Verdana;
 }
 
@@ -1432,7 +1461,7 @@ div.photoFeedHead h3{
 	border-bottom: 1px solid #c7c7c7;
 	font-size: 14px;
 	color: #299a0b;
-	background: #e8e8e8 url('../images/pictures.png') 99% 45% no-repeat;
+	background: #fff url('../images/pictures.png') 99% 45% no-repeat;
 	font-family: Verdana;
 }
 
@@ -1458,7 +1487,7 @@ div.followersFeedHead h3{
 	border-bottom: 1px solid #c7c7c7;
 	font-size: 14px;
 	color: #299a0b;
-	background: #e8e8e8 url('../images/followers.png') 99% 45% no-repeat;
+	background: #fff url('../images/followers.png') 99% 45% no-repeat;
 	font-family: Verdana;
 }
 
@@ -3143,9 +3172,10 @@ span.relationButton:hover{
 /*EDIT.PHP*/
 #editWrap{
 	width: 239px;
-	margin: 5px auto;
+	margin:75px auto 5px auto;
 	padding: 0;
 	position: relative;
+	clear: both;
 }
 
 #editProfileHead{
@@ -3170,23 +3200,31 @@ span.relationButton:hover{
 
 #editWrap #changeFileButton, #editWrap img.newPic{
 	left:27px;
+	bottom: 23px;
+	position: absolute;
+	background-color: rgba(255,255,255,0.5);
+	padding: 2px 5px;
 }
 
 #editWrap #ajaxUploadImg{
-	left:24px;
+	left:22px;
 	top: 20px;
 }
 
 #new_username, #new_email, #old_pass, #new_pass, #confirm_pass, #new_phone{
 	width: 230px;
 	background-color: #ffffff;
-	border: 1px solid #dddddd;
+	border: 1px solid #c7c7c7;
 	margin: 5px 0px;
-	padding: 3px;
+	padding: 8px 3px;
 	color: #299a0b;
 	font-family: Verdana;
 	font-size: 12px;
 	font-weight: bold;
+	-moz-border-radius: 3px;
+	-webkit-border-radius: 3px;
+	-o-border-radius: 3px;
+	border-radius: 3px;
 }
 
 .editButtonWrap{
@@ -3203,6 +3241,10 @@ span.relationButton:hover{
 	font-weight: bold;
 	display: table-cell;
 	vertical-align: middle;
+	border-radius: 3px;
+	-moz-border-radius: 3px;
+	-webkit-border-radius: 3px;
+	-o-border-radius: 3px;
 	background: rgb(254,254,254);
     background: -moz-linear-gradient(top, rgba(254,254,254,1) 4%, rgba(241,241,241,1) 8%, rgba(241,241,241,1) 18%, rgba(246,247,248,1) 100%);
     background: -webkit-gradient(linear, left top, left bottom, color-stop(4%,rgba(254,254,254,1)), color-stop(8%,rgba(241,241,241,1)), color-stop(18%,rgba(241,241,241,1)), color-stop(100%,rgba(246,247,248,1)));
