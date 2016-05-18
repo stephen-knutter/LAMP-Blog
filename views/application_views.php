@@ -67,6 +67,7 @@ class ApplicationViews{
 			$html .= 	'<script type="text/javascript" src="'. __LOCATION__ .'/assets/javascripts/global-fns.js"></script>';
 			$html .=	'<script type="text/javascript" src="'. __LOCATION__ .'/assets/javascripts/profile.js"></script>';
 			$html .= 	'<script type="text/javascript" src="'. __LOCATION__ .'/assets/javascripts/infobubble.js"></script>';
+			$html .=	'<script type="text/javascript" src="'. __LOCATION__ .'/assets/javascripts/chat.js"></script>';
 			$html .= 	'<script type="text/javascript" src="'. __LOCATION__ .'/assets/javascripts/search.js"></script>';
 			$html .=	'<script type="text/javascript" src="'. __LOCATION__ .'/assets/javascripts/jquery.form.min.js"></script>';
 			$html .=	'<script type="text/javascript" src="'. __LOCATION__ .'/assets/javascripts/jquery.Jcrop.min.js"></script>';
@@ -1346,7 +1347,7 @@ class ApplicationViews{
 						}
 						$head .= "</p>";
 					} else {
-						$head .=	"<p class='singcomm'><a class='grab user-icon' href='".$link."'>".$username."</a><br/><span class='explain'>&nbsp;posted &bull; ".$date." </span></p>";			
+						$head .=	"<p class='singcomm'><a class='grab user-icon' href='".$link."'>".$username."</a><br/><span class='explain'>posted &bull; ".$date." </span></p>";			
 					}
 				} else {
 					if($commType == 'sf' || $commType == 'st' || $commType == 'sp' || 
@@ -1465,6 +1466,69 @@ class ApplicationViews{
 			}
 		echo '</div>';
 	  }
+  }
+  
+  public function generateToolTip($curUser,$curUserPics,$relationStatus){
+	$i=1;
+	$sessionId = $_SESSION['logged_in_id'];
+	$username = $curUser['username'];
+	$userId = $curUser['id'];
+	$userProfilePic = $curUser['profile_pic'];
+	$storeState = $curUser['store_state'];
+	$storeRegion = $curUser['store_reg'];
+	$type = $curUser['type'];
+	$nameLink = $this->Helper->createUrl($username);
+	if($type == 'store'){
+		$userLink = __LOCATION__ . '/' . $storeState . '/' . $storeRegion . '/' . $nameLink;
+		$actionType = 'typeStore-'.$userId;
+	} else {
+		$userLink = __LOCATION__ . '/' . $nameLink;
+		$actionType = 'typeUser-'.$userId;
+	}
+	if($userProfilePic == 'no-profile.png'){
+		$picLink = __LOCATION__ . '/assets/images/relation-'.$userProfilePic;
+	} else {
+		$picLink = __LOCATION__ . '/assets/user-images/'.$userId.'/relation-'.$userProfilePic;
+	}
+	echo '<div class="userToolTip">';
+	echo 	'<div class="relationImg clearfix">';
+	echo 		'<img src="'.$picLink.'" alt="'.$username.'">';
+	echo 	'</div>';
+	echo 	'<div class="relationBody">';
+	echo 		'<p><a href="'.$userLink.'">'.$username.'</a></p>';
+	echo 		'<div class="midSection">';
+				if($curUserPics){
+					echo '<div class="relationPics">';
+							foreach($curUserPics as $pic){
+								$curUserPic = $pic['pic'];
+								$smallPicLink = __LOCATION__ . '/assets/user-images/'.$userId.'/'.$curUserPic;
+								echo '<img src="'.$smallPicLink.'">';
+							}
+					echo '</div>';
+				}
+	echo		'</div>';
+	echo 	'</div>';
+	echo '<div class="userRelationBar clearfix">';
+			if($relationStatus){
+				echo '<div class="relationButtonWrap" id="'.$actionType.'">';
+				echo 	'<span class="unfollow-'.$userId.' relationButton">';
+				echo 		'&minus; Unfollow';
+				echo	'</span>';
+				echo '</div>';
+			} else if($sessionId == $userId){
+				echo '<div class="whiteBox relationButtonWrap">';
+				echo 	'<span class="whiteButton">+</span>';
+				echo '</div>';
+			} else {
+				echo '<div class="relationButtonWrap" id="'.$actionType.'">';
+				echo 	'<span class="follow-'.$userId.' relationButton">';
+				echo 		'&#43; Follow';
+				echo	'</span>';
+				echo '</div>';
+			}
+	echo '</div>';
+	echo '</div>';
+	
   }
   
 } //END ApplicationViews Class

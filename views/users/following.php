@@ -36,7 +36,7 @@
 				$Views->generateProfilePic($user['id'], $user['username'], $user['profile_pic'],$form);
 					
 				/*INFO BAR*/
-				$UsersCtrl->generateUserCountBar($user['id'],$user['slug'],'follower');
+				$UsersCtrl->generateUserCountBar($user['id'],$user['slug'],'following');
 			?>
 				
 			<!-- TOP STRAINS -->
@@ -53,15 +53,15 @@
 			
 		<div id="rightInfoPane">
 			<?php
-				$userFollow = $UsersCtrl->getUserFollowers($user['id']);
+				$userFollow = $UsersCtrl->getUserFollowing($user['id']);
 				if(empty($userFollow)){
-					$followerCount = 0;
+					$followingCount = 0;
 				} else {
-					$followerCount = $UsersCtrl->getUserFollowersCount($user['id']);
+					$followingCount = $UsersCtrl->getUserFollowingCount($user['id']);
 				}
 			?>
 			<div class="followersFeedHead">
-				  <h3><?php  echo 'Followers [ '. $followerCount .' ]'; ?></h3>
+				  <h3><?php  echo 'Following [ '. $followingCount .' ]'; ?></h3>
 			</div>
 			<div class="dropPane" data-pane="none-<?php echo $user['id']; ?>" id="start-0">
 				<div class="followingWrap">

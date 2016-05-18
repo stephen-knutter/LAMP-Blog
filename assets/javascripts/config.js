@@ -41,6 +41,70 @@ function doSignUpBox(){
               '</div>'		
 }
 
+function doChatBox(parent,chatWithId,chatWithUsername,chatMessages){
+	if(chatMessages){
+		messages = doChatMsg(chatMessages);
+	} else {
+		messages = '';
+	}
+	return '<div class="chatBoxWrap" id="thread-'+parent+'">'+
+				'<div class="chatBoxHead clearfix">'+
+					'<span class="chatName" id="chat-'+chatWithId+'">'+chatWithUsername+'</span>'+
+					'<span class="chatClose">X</span>'+
+				'</div>'+
+				'<div class="chatBody">'+messages+'</div>'+
+				'<div class="chatBoxPostWrap">'+
+					'<div class="chatReplyBoxWrap clearfix">'+
+						'<div class="chatBox" contenteditable="true" placeholder="message"></div>'+
+					'</div>'+
+				'</div>'+
+				'<div class="chatButtons">'+
+					'<div class="chatCamWrap">'+
+						'<form id="chatPic" action="'+__LOCATION__+'/ajax/ajax_add_message.php" type="post">'+
+							'<input type="file" name="pic" class="chatCamFile" />'+
+							'<input type="hidden" name="message" value="NULL" />'+
+							'<input type="hidden" name="emoji" value="NULL" />'+
+							'<input type="hidden" name="thread" value="'+parent+'"/>'+
+							'<input type="hidden" name="user" value="'+chatWithId+'"/>'+
+							'<img class="chatCamImg" src="'+ __LOCATION__+'/assets/images/chat-cam.png">'+
+						'</form>'+
+					'</div>'+
+					'<div class="chatEmoWrap">'+
+						'<img class="chatCamImg" src="'+__LOCATION__ +'/assets/images/chat-smile.png" />'+
+					'</div>'+
+				'</div>'+
+		   '</div>';
+}
+
+function doChatMsg(chatMessages){
+		oMessage = null;
+		iMessages = chatMessages['messages'].length;
+		for($i=0;$i < iMessages;$i++){
+			curMessage = chatMessages['messages'][$i];
+			zProfilePic = curMessage['profile_pic'];
+			zUseId = curMessage['user_id'];
+			zDate = curMessage['date'];
+			zMsgType = curMessage['msg_type'];
+			zMsgText = curMessage['msg_text'];
+			zChatPic = curMessage['pic'];
+			zThumb = curMessage['thumb'];
+			zThumbClass = curMessage['thumb_class'];
+			zBodyClass = curMessage['body_class'];
+			zImageClass = curMessage['image_class'];
+			oMessage += '<div class="chatMsgWrap clearfix">'+
+				         '<div class="'+zBodyClass+'">';
+					      if(zMsgType == 'mt'){
+						    oMessage += '<span class="chatMsg">'+zMsgText+'</span>';
+					      } else {
+						    oMessage += '<img class="'+zImageClass+'" src="'+zChatPic+'" />';
+					      }
+			oMessage +=	 '</div>'+
+				        '<p class="chatDate">'+zDate+'</p>'+
+			           '</div>';
+		}
+		return oMessage;
+}
+
 function bigX(){
 	return "<i class='bigx fa fa-times fa-3x' ></i>";
 }

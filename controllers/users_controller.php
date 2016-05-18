@@ -130,6 +130,11 @@
 			}
 		}
 		
+		public function getUserById($userId){
+			$user = $this->UserModel->getUserById($userId);
+			return $user;
+		}
+		
 		public function generateRelationButtons($id,$user) {
 			$relation = $this->UserModel->getRelation($id);
 			if($relation == 1){
@@ -358,6 +363,12 @@
 			}
 		}
 		
+		
+		public function getUserFollowersCount($userId){
+			$followerCount = $this->UserModel->findUserFollowerCount($userId);
+			return $followerCount;
+		}
+		
 		public function addUserFollowing($followId,$userId){
 			$addFollowing = $this->UserModel->insertNewFollowing($followId,$userId);
 			return $addFollowing;
@@ -366,6 +377,35 @@
 		public function removeUserFollowing($unfollowId,$userId){
 			$removeFollowing = $this->UserModel->deleteUserFollowing($unfollowId,$userId);
 			return $removeFollowing;
+		}
+		
+		public function getUserFollowing($userId){
+			$userFollowing = $this->UserModel->findUserFollowing($userId);
+			if($userFollowing){
+				return $userFollowing;
+			} else {
+				return false;
+			}
+		}
+		
+		public function getUserFollowingCount($userId){
+			$followingCount = $this->UserModel->findUserFollowingCount($userId);
+			return $followingCount;
+		}
+		
+		public function getUserBuds($userId){
+			$userBuds = $this->UserModel->findUserBuds($userId);
+			return $userBuds;
+		}
+		
+		public function getRecentBudPics($budId){
+			$budPics = $this->UserModel->findUserBudPics($budId);
+			return $budPics;
+		}
+		
+		public function findUserBySlug($userSlug){
+			$userInfo = $this->UserModel->findUserBySlug($userSlug);
+			return $userInfo;
 		}
 		
 		/*
@@ -385,5 +425,24 @@
 			$this->Views->generateRecentPosts($recent);
 		}
 		
+		public function getRecentUserPics($userId,$limit=2){
+			$pics = $this->UserModel->findRecentUserPics($userId,$limit);
+			return $pics;
+		}
+		
+		public function checkChatThread($sessionId,$chatWithId){
+			$chatThread = $this->UserModel->getChatStatus($sessionId,$chatWithId);
+			return $chatThread;
+		}
+		
+		public function markChatToRead($sessionId,$parent){
+			$markAsRead = $this->UserModel->setChatToRead($sessionId,$parent);
+			return $markAsRead;
+		}
+		
+		public function getChatThread($parent){
+			$chatThread = $this->UserModel->findChatThread($parent);
+			return $chatThread;
+		}
 	}//END UserCtrl Class
 ?>

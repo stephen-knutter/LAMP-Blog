@@ -30,7 +30,7 @@
 		}
 		$info = parse_url($link);
 		$iframe = "";
-		if(!$info['host'] || $info['host'] == ''){
+		if(!@$info['host'] || $info['host'] == ''){
 			$frameDoc = new DOMDocument();
 			$frameDoc->loadHTML($link);
 			@$src = $frameDoc->getElementsByTagName('iframe')->item(0)->getAttribute('src');
@@ -81,6 +81,12 @@
 			
 			/*NOMRAL NON-VIDEO LINKS*/
 			$html = $Helper->fileGetContentscUrl($link);
+			if(!$html){
+				$error['status'] = 'Bad link provided';
+				$error['code'] = 500;
+				echo json_encode($error);
+				exit();
+			}
 			$doc = new DOMDocument();
 			@$doc->loadHTML(mb_convert_encoding($html, 'HTML-ENTITIES', 'UTF-8'));
 			/*TITLE*/

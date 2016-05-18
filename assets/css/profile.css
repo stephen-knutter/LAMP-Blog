@@ -62,7 +62,7 @@ body{
 }
 
 .fa-camera, .fa-video-camera, .fa-link{
-	color: #5FB02D;
+	color: #999;
 	position: absolute;
 	left: 20%;
 	top: 20%;
@@ -108,7 +108,7 @@ i.fa.fa-refresh.fa-spin.defaultspinner{
 	background: -ms-linear-gradient(top,  rgba(255,255,255,1) 0%,rgba(246,246,246,1) 5%,rgba(227,227,227,1) 10%,rgba(243,243,243,1) 100%); /* IE10+ */
 	background: linear-gradient(to bottom,  rgba(255,255,255,1) 0%,rgba(246,246,246,1) 5%,rgba(227,227,227,1) 10%,rgba(243,243,243,1) 100%); /* W3C */
 	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffffff', endColorstr='#f3f3f3',GradientType=0 ); /* IE6-9 */
-	border: 1px solid #dddddd;
+	border: 1px solid #c7c7c7;
 }
 
 .message-user img{
@@ -1474,7 +1474,7 @@ div.budFeedHead h3{
 	border-bottom: 1px solid #c7c7c7;
 	font-size: 14px;
 	color: #299a0b;
-	background: #e8e8e8 url('../images/greenleaf.png') 99% 45% no-repeat;
+	background: #fff url('../images/greenleaf.png') 99% 45% no-repeat;
 	font-family: Verdana;
 }
 
@@ -2131,6 +2131,7 @@ div.commHeadName a{
 	font-weight: 600;
 	font-family: Verdana;
 	line-height: 14px;
+	margin-right: 5px;
 }
 
 div.commHeadName p.singcomm{
@@ -3260,12 +3261,12 @@ span.relationButton:hover{
 	position: relative;
 	margin: 0 0 10px 0px;
 	padding: 5px;
-	width: 180px;
+	width: 179.5px;
 	float: left;
 	border: 1px solid;
     border-color: #d7d9dd #d1d3d8 #c3c4c9;
     border-radius: 3px;
-    background-color: #e8e8e8;
+    background-color: #fff;
 }
 
 .prodPic{

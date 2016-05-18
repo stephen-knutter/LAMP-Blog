@@ -15,21 +15,25 @@ $(function(){
 			username = username.replace(/\&/g, 'and');
 			username = username.replace(/\'/g, '');
 			if(linkClass.indexOf("-") > 0){
-				url = 'https://www.budvibes.com/prod-tooltip.php?user='+username;
+				url = __LOCATION__ +'/ajax/ajax_prod_tooltip.php';
 			} else {
-				url = 'https://www.budvibes.com/user-tooltip.php?user='+username;
+				url = __LOCATION__+'/ajax/ajax_user_tooltip.php';
 			}
 			$.ajax({
 				url: url,
+				type: 'POST',
+				data: {user: username},
 				success: function(result){
-					$("body").append(result);
-					var offset = $link.offset();
-					var iTop = offset.top;
-					var iLeft = offset.left;
-					$(".userToolTip").css({
-						'top':iTop+33+"px",
-						'left':iLeft-120+"px"
-					})
+					if(result){
+					  $("body").append(result);
+					  var offset = $link.offset();
+					  var iTop = offset.top;
+					  var iLeft = offset.left;
+					  $(".userToolTip").css({
+						  'top':iTop+33+"px",
+						  'left':iLeft-120+"px"
+					  })
+				    }
 				}
 			})
 		},150)

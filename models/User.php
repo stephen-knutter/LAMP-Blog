@@ -153,8 +153,19 @@
 			}
 		}
 		
+		public function getUserById($userId){
+			$sql = "SELECT id, username, slug, profile_pic, email, type, 
+					store_id, store_reg, store_state, verified 
+					FROM users WHERE id=:userId";
+					  
+			$statement = $this->pdo->prepare($sql);
+			$statement->bindValue(':userId', $userId,PDO::PARAM_INT);
+			$statement->execute();
+			return $statement->rowCount() ? $statement->fetch(PDO::FETCH_ASSOC) : false;
+		}
+		
 		public function getRelation($id){
-			$relation = "SELECT follower_id, following_id
+			$relation = "SELECT follower_id, following_id 
 			FROM relationships 
 			WHERE follower_id= :user_id 
 			AND following_id= :following_id";
@@ -629,6 +640,7 @@
 			$userFollowers = "SELECT 
 			u.id AS user_id, 
 			u.username, 
+			u.slug,
 			u.profile_pic, 
 			u.type, 
 			u.store_state, 
@@ -640,6 +652,46 @@
 			$statement->bindValue(':userId',$userId,PDO::PARAM_INT);
 			$statement->execute();
 			return $statement->rowCount() ? $statement->fetchAll(PDO::FETCH_ASSOC) : false;
+		}
+		
+		public function findUserFollowerCount($userId){
+			$followerCount = "SELECT COUNT(*) 
+			FROM users u 
+			WHERE u.id 
+			IN(SELECT follower_id FROM relationships WHERE following_id=:userId)";
+			$statement = $this->pdo->prepare($followerCount);
+			$statement->bindValue(':userId',$userId,PDO::PARAM_INT);
+			$statement->execute();
+			return $statement->rowCount() ? $statement->fetchColumn(0) : 0;
+		}
+		
+		public function findUserFollowing($userId){
+			$userFollowing = "SELECT 
+			u.id AS user_id, 
+			u.username, 
+			u.slug, 
+			u.profile_pic, 
+			u.type, 
+			u.store_state, 
+			u.store_reg
+		    FROM users u
+		    WHERE u.id 
+			IN(SELECT following_id FROM relationships WHERE follower_id=:userId)";
+			$statement = $this->pdo->prepare($userFollowing);
+			$statement->bindValue(':userId',$userId,PDO::PARAM_INT);
+			$statement->execute();
+			return $statement->rowCount() ? $statement->fetchAll(PDO::FETCH_ASSOC) : false;
+		}
+		
+		public function findUserFollowingCount($userId){
+			$followingCount = "SELECT COUNT(*) 
+			FROM users u 
+			WHERE u.id 
+			IN(SELECT following_id FROM relationships WHERE follower_id=:userId)";
+			$statement = $this->pdo->prepare($followingCount);
+			$statement->bindValue(':userId',$userId,PDO::PARAM_INT);
+			$statement->execute();
+			return $statement->rowCount() ? $statement->fetchColumn(0) : 0;
 		}
 		
 		public function insertNewFollowing($followId,$userId){
@@ -661,6 +713,166 @@
 			$statement->bindValue(':userId',$userId,PDO::PARAM_INT);
 			$statement->execute();
 			return $statement->rowCount() ? true : false;
+		}
+		
+		public function findRecentUserPics($userId,$limit){
+			$recentPics = "SELECT u.username, c.comm_id, 
+			c.comm_type, c.orig_id, c.pic, c.created_at 
+			FROM user_comments c
+			LEFT JOIN users u 
+			ON u.id = c.comm_id
+			WHERE user_id=:userId  
+			AND pic <> 'NULL' 
+			AND c.comm_type <> 'rvf' 
+			AND c.comm_type <> 'pvf' 
+			AND c.comm_type <> 'svf' 
+			AND c.comm_type <> 'rvv' 
+			AND c.comm_type <> 'pvv' 
+			AND c.comm_type <> 'svv' 
+			AND c.comm_type <> 'shpvv' 
+			AND c.comm_type <> 'shpvf' 
+			AND c.comm_type <> 'shsvf' 
+			AND c.comm_type <> 'shsvv' 
+			AND c.comm_type <> 'shpf' 
+			AND c.comm_type <> 'shrf' 
+			AND c.comm_type <> 'shsf' 
+			AND c.comm_type <> 'shpt' 
+			AND c.comm_type <> 'shrt' 
+			AND c.comm_type <> 'shst'
+			AND c.comm_type <> 'shpp' 
+		    AND c.comm_type <> 'shrp' 
+			AND c.comm_type <> 'shsp' 
+			AND c.comm_type <> 'shpvf'  
+			AND c.comm_type <> 'shrvf' 
+			AND c.comm_type <> 'shsvf' 
+			AND c.comm_type <> 'shpvv'  
+			AND c.comm_type <> 'shrvv' 
+			AND c.comm_type <> 'shsvv' 
+			AND c.comm_type <> 'shpll' 
+			AND c.comm_type <> 'shrll' 
+			AND c.comm_type <> 'shsll' 
+			AND c.comm_type <> 'shplf'  
+			AND c.comm_type <> 'shrlf' 
+			AND c.comm_type <> 'shslf' 
+			AND c.comm_type <> 'shsmk' 
+			AND c.comm_type <> 'shfg' 
+			AND c.comm_type <> 'smk' 
+			AND c.comm_type <> 'fg' 
+			ORDER BY c.created_at 
+			DESC LIMIT :limit";
+			$statement = $this->pdo->prepare($recentPics);
+			$statement->bindValue(':userId',$userId,PDO::PARAM_INT);
+			$statement->bindValue(':limit',$limit,PDO::PARAM_INT);
+			$statement->execute();
+			return $statement->rowCount() ? $statement->fetchAll(PDO::FETCH_ASSOC) : false;
+		}
+		
+		public function findUserBuds($userId){
+			$userBuds = "SELECT p.id, p.name, p.type, 
+			p.avg_price, p.avg_thc, p.pic,p.descrip
+		    FROM products p WHERE p.id 
+			IN(SELECT prod_id FROM prod_relationships WHERE user_id=:userId) 
+		    ORDER BY p.name ASC";
+			$statement = $this->pdo->prepare($userBuds);
+			$statement->bindValue(':userId',$userId,PDO::PARAM_INT);
+			$statement->execute();
+			return $statement->rowCount() ? $statement->fetchAll(PDO::FETCH_ASSOC) : false;
+		}
+		
+		public function findUserBudPics($budId){
+			$budPics = "SELECT id, user_id, 
+			comm_type,comm_id, pic, created_at 
+		    FROM prod_comments 
+		    WHERE user_id = :budId  
+		    AND pic <> 'NULL' 
+		    AND comm_type <> 'rvv' 
+		    AND comm_type <> 'svv' 
+		    AND comm_type <> 'pvv' 
+		    AND comm_type <> 'rvf' 
+		    AND comm_type <> 'svf' 
+		    AND comm_type <> 'pvf' 
+		    AND comm_type <> 'shpvv' 
+		    AND comm_type <> 'shpvf' 
+		    AND comm_type <> 'shsvf' 
+		    AND comm_type <> 'shsvv' 
+		    AND comm_type <> 'shpf' 
+		    AND comm_type <> 'shrf' 
+		    AND comm_type <> 'shsf' 
+		    AND comm_type <> 'shpt' 
+		    AND comm_type <> 'shrt' 
+		    AND comm_type <> 'shst'
+		    AND comm_type <> 'shpp' 
+		    AND comm_type <> 'shrp' 
+		    AND comm_type <> 'shsp' 
+		    AND comm_type <> 'shpvf'  
+		    AND comm_type <> 'shrvf' 
+		    AND comm_type <> 'shsvf' 
+		    AND comm_type <> 'shpvv'  
+		    AND comm_type <> 'shrvv' 
+		    AND comm_type <> 'shsvv' 
+		    AND comm_type <> 'shpll' 
+		    AND comm_type <> 'shrll' 
+		    AND comm_type <> 'shsll' 
+		    AND comm_type <> 'shplf'  
+		    AND comm_type <> 'shrlf' 
+		    AND comm_type <> 'shslf' 
+		    AND comm_type <> 'shsmk' 
+		    AND comm_type <> 'shfg' 
+		    AND comm_type <> 'smk' 
+		    AND comm_type <> 'fg' 
+		    ORDER BY created_at DESC
+		    LIMIT 3";
+			$statement = $this->pdo->prepare($budPics);
+			$statement->bindValue(':budId',$budId,PDO::PARAM_INT);
+			$statement->execute();
+			return $statement->rowCount() ? $statement->fetchAll(PDO::FETCH_ASSOC) : false;
+		}
+		
+		public function findUserBySlug($userSlug){
+			$findUser = "SELECT u.id, u.username, u.slug, 
+			u.profile_pic, u.type, u.store_state, u.store_reg
+			FROM users u WHERE u.slug=:userSlug";
+			$statement = $this->pdo->prepare($findUser);
+			$statement->bindValue(':userSlug',$userSlug);
+			$statement->execute();
+			return $statement->rowCount() ? $statement->fetch(PDO::FETCH_ASSOC) : false;
+		}
+		
+		public function getChatStatus($sessionId,$chatWithId){
+			$chatStatus = "SELECT id FROM messages 
+			WHERE user_one IN(SELECT user_one FROM messages WHERE user_one=:sessionId AND user_two=:chatWithId) 
+			OR user_one IN(SELECT user_one FROM messages WHERE user_one=:chatWithId AND user_two=:sessionId) 
+			AND parent=0";
+			$statement = $this->pdo->prepare($chatStatus);
+			$statement->bindValue(':sessionId',$sessionId,PDO::PARAM_INT);
+			$statement->bindValue(':chatWithId',$chatWithId,PDO::PARAM_INT);
+			$statement->execute();
+			return $statement->rowCount() ? $statement->fetch(PDO::FETCH_ASSOC) : false;
+		}
+		
+		public function setChatToRead($sessionId,$parent){
+			$setChatRead = "UPDATE messages SET status='r' 
+			WHERE parent=:parent  
+			AND user_two=:sessionId";
+			$statement = $this->pdo->prepare($setChatRead);
+			$statement->bindValue(':parent',$parent,PDO::PARAM_INT);
+			$statement->bindValue(':sessionId',$sessionId,PDO::PARAM_INT);
+			$statement->execute();
+			return $statement->rowCount() ? true : false;
+		}
+		
+		public function findChatThread($parent){
+			$chatThread = "SELECT m.id, m.parent, m.user_one, 
+			m.user_two, m.message_type, m.comm_text, m.pic, m.created_at, 
+			u.id AS user_id, u.username, u.profile_pic FROM messages m 
+		    INNER JOIN users u ON u.id = m.user_one 
+		    WHERE m.id=:parent 
+		    OR m.parent=:parent 
+			ORDER BY m.created_at DESC";
+			$statement = $this->pdo->prepare($chatThread);
+			$statement->bindValue(':parent',$parent,PDO::PARAM_INT);
+			$statement->execute();
+			return $statement->rowCount() ? $statement->fetchAll(PDO::FETCH_ASSOC) : false;
 		}
 	}
 ?>

@@ -36,7 +36,7 @@
 				$Views->generateProfilePic($user['id'], $user['username'], $user['profile_pic'],$form);
 					
 				/*INFO BAR*/
-				$UsersCtrl->generateUserCountBar($user['id'],$user['slug'],'follower');
+				$UsersCtrl->generateUserCountBar($user['id'],$user['slug'],'bud');
 			?>
 				
 			<!-- TOP STRAINS -->
@@ -52,25 +52,18 @@
 		</div>
 			
 		<div id="rightInfoPane">
-			<?php
-				$userFollow = $UsersCtrl->getUserFollowers($user['id']);
-				if(empty($userFollow)){
-					$followerCount = 0;
-				} else {
-					$followerCount = $UsersCtrl->getUserFollowersCount($user['id']);
-				}
-			?>
-			<div class="followersFeedHead">
-				  <h3><?php  echo 'Followers [ '. $followerCount .' ]'; ?></h3>
+			<div class="budFeedHead">
+				  <h3><?php  echo $user['username']; ?>'s Buds</h3>
 			</div>
+			<?php
+				$userBuds = $UsersCtrl->getUserBuds($user['id']);
+			?>
 			<div class="dropPane" data-pane="none-<?php echo $user['id']; ?>" id="start-0">
-				<div class="followingWrap">
 					<?php
-						if(!empty($userFollow)){
-							include('_followers.inc.php');
+						if(!empty($userBuds)){
+							include dirname(__DIR__) . '/products/_buds.inc.php';
 						}
 					?>
-				</div>
 			</div>
 		</div>
 			
