@@ -5,19 +5,19 @@ $(function(){
 	
 	var customIcons = {
 		rec: {
-			icon: 'https://www.budvibes.com/images/rec_icon_40.png' 
+			icon: __LOCATION__ + '/assets/images/rec_icon_40.png' 
 		},
 		rdel: {
-			icon: 'https://www.budvibes.com/images/rec_icon_del_60.png'
+			icon: __LOCATION__ + '/assets/images/rec_icon_del_60.png'
 		},
 		med:{
-			icon: 'https://www.budvibes.com/images/med_icon_40.png'
+			icon: __LOCATION__ + '/assets/images/med_icon_40.png'
 		},
 		mdel:{
-			icon: 'https://www.budvibes.com/images/med_icon_del_60.png'
+			icon: __LOCATION__ + '/assets/images/med_icon_del_60.png'
 		},
 		tou:{
-			icon: 'https://www.budvibes.com/images/tour-icon.png'
+			icon: __LOCATION__ + '/assets/images/tour-icon.png'
 		}
 	};
 	
@@ -35,71 +35,71 @@ $(function(){
 			if(currentPage == 'denver' || currentPage == 'telluride' || currentPage == 'colorado-springs' || currentPage == 'ft-collins' 
 			|| currentPage == 'aspen' || currentPage == 'breckenridge' || currentPage == 'boulder' || currentPage == 'pueblo'){
 				//COLORADO
-				window.location = 'https://www.budvibes.com/colorado/'+currentPage
+				window.location = __LOCATION__ + '/colorado/'+currentPage
 			} else if(currentPage == 'seattle' || currentPage == 'spokane' || currentPage == 'olympia' || currentPage == 'tacoma'){
 				//WASHINGTON
-				window.location = 'https://www.budvibes.com/washington/'+currentPage
+				window.location = __LOCATION__ + '/washington/'+currentPage
 			} else if(currentPage == 'portland' || currentPage == 'bend' || currentPage == 'medford' || currentPage == 'eugene' || currentPage == 'la-grande'){
 				//OREGON
-				window.location = 'https://www.budvibes.com/oregon/'+currentPage
+				window.location = __LOCATION__ + '/oregon/'+currentPage
 			} else if(currentPage == 'los-angeles' || currentPage == 'san-fernando' || currentPage == 'orange-county' || currentPage == 'inland-empire' || 
 					  currentPage == 'norcal' || currentPage == 'bay-area' || currentPage == 'central-cal' || currentPage == 'sacramento' || currentPage == 'san-diego'){
 				//CALIFORNIA
-				window.location = 'https://www.budvibes.com/california/'+currentPage
+				window.location = __LOCATION__ + '/california/'+currentPage
 			} else if(currentPage == 'vancouver'){
 				//VANCOUVER, BC
-				window.location = 'https://www.budvibes.com/british-columbia/'+currentPage
+				window.location = __LOCATION__ + '/british-columbia/'+currentPage
 			} else if(currentPage == 'vancouver-island'){
-					window.location = 'https://www.budvibes.com/british-columbia/'+currentPage
+					window.location = __LOCATION__ + '/british-columbia/'+currentPage
 			} else if(currentPage == 'detroit' || currentPage == 'ann-arbor' || currentPage == 'flint' || currentPage == 'lansing' || 
 					  currentPage == 'grand-rapids' || currentPage == 'north-michigan'){
 				//MICHIGAN
-				window.location = 'https://www.budvibes.com/michigan/'+currentPage
+				window.location = __LOCATION__ + '/michigan/'+currentPage
 			} else if(currentPage == 'phoenix' || currentPage == 'flagstaff' || currentPage == 'bullhead-city' || currentPage == 'tucson'){
 				//ARIZONA
-				window.location = 'https://www.budvibes.com/arizona/'+currentPage
+				window.location = __LOCATION__ + '/arizona/'+currentPage
 			} else if(currentPage == 'las-vegas' || currentPage == 'reno'){
 				//NEVADA
-				window.location = 'https://www.budvibes.com/nevada/'+currentPage
+				window.location = __LOCATION__ + '/nevada/'+currentPage
 			} else if(currentPage == 'hartford'){
 				//CONNECTICUT
-				window.location = 'https://www.budvibes.com/connecticut/'+currentPage
+				window.location = __LOCATION__ + '/connecticut/'+currentPage
 			} else if(currentPage == 'wilmington'){
 				//DELAWARE
-				window.location = 'https://www.budvibes.com/delaware/'+currentPage
+				window.location = __LOCATION__ + '/delaware/'+currentPage
 			} else if(currentPage == 'chicago'){
 				//ILLINOIS
-				window.location = 'https://www.budvibes.com/illinois/'+currentPage
+				window.location = __LOCATION__ + '/illinois/'+currentPage
 			} else if(currentPage == 'amsterdam'){
 				//NETHERLANDS
-				window.location = 'https://www.budvibes.com/netherlands/'+currentPage
+				window.location = __LOCATION__ + '/netherlands/'+currentPage
 			} else if(currentPage == 'anchorage'){
 				//ALASKA
-				window.location = 'https://www.budvibes.com/alaska/'+currentPage
+				window.location = __LOCATION__ + '/alaska/'+currentPage
 			} else if(currentPage == 'washington'){
 				//DISTRICT OF COLUMBIA
-				window.location = 'https://www.budvibes.com/district-of-columbia/'+currentPage
+				window.location = __LOCATION__ + '/district-of-columbia/'+currentPage
 			} else if(currentPage == 'boston'){
 				//MASSACHUSETTS
-				window.location = 'https://www.budvibes.com/massachusetts/'+currentPage
+				window.location = __LOCATION__ + '/massachusetts/'+currentPage
 			} else if(currentPage == 'minneapolis'){
 				//MINNESOTA
-				window.location = 'https://www.budvibes.com/minnesota/'+currentPage
+				window.location = __LOCATION__ + '/minnesota/'+currentPage
 			} else if(currentPage == 'montana'){
 				//MONTANA
-				window.location = 'https://www.budvibes.com/montana/'+currentPage
+				window.location = __LOCATION__ + '/montana/'+currentPage
 			} else if(currentPage == 'newark'){
 				//NEW JERSEY
-				window.location = 'https://www.budvibes.com/new-jersey/'+currentPage
+				window.location = __LOCATION__ + '/new-jersey/'+currentPage
 			} else if(currentPage == 'albuquerque'){
 				//NEW MEXICO
-				window.location = 'https://www.budvibes.com/new-mexico/'+currentPage
+				window.location = __LOCATION__ + '/new-mexico/'+currentPage
 			} else if(currentPage == 'augusta'){
 				//MAINE
-				window.location = 'https://www.budvibes.com/maine/'+currentPage
+				window.location = __LOCATION__ + '/maine/'+currentPage
 			} else if(currentPage == 'barcelona'){
 				//SPAIN
-				window.location = 'https://www.budvibes.com/spain/'+currentPage
+				window.location = __LOCATION__ + '/spain/'+currentPage
 			}
 		}
 	});
@@ -1384,7 +1384,7 @@ function displayMap(region,filter){
 			            position: geolocpoint,
 			            map: map,
 			            title: 'Your geolocation',
-			            icon: 'https://www.budvibes.com/images/smoke_icon_75.png'
+			            icon: __LOCATION__ + '/assets/images/smoke_icon_75.png'
 			        });
 			
 					google.maps.event.addListener(geolocation, 'click', function(){
@@ -1394,12 +1394,12 @@ function displayMap(region,filter){
 					});
 			    });
 			}
-		var url = "https://www.budvibes.com/weed-dbinfo.php?storeType="+filter+"&reg="+region+"&map="+mapType
+		var url = __LOCATION__ +  "/weed-dbinfo.php?storeType="+filter+"&reg="+region+"&map="+mapType
 		//alert(url);
 	$.ajax({
 		type: "GET",
 		dataType: "xml",
-		url : "https://www.budvibes.com/weed-dbinfo.php?storeType="+filter+"&reg="+region+"&map="+mapType,
+		url : __LOCATION__ + "/weed-dbinfo.php?storeType="+filter+"&reg="+region+"&map="+mapType,
 		
 		success : function(xml){
 			var markers = xml.documentElement.getElementsByTagName("marker");
@@ -1415,8 +1415,8 @@ function displayMap(region,filter){
 				var url_name = markers[i].getAttribute("url_name");
 				var region = markers[i].getAttribute("region");
 				var website = (markers[i].getAttribute("website") == 'N/A') ? '' : markers[i].getAttribute("website");
-				var cash = (markers[i].getAttribute("cash") == 'd') ? "<span>Debit Card</span>" + "<div class='cash_image_debit clearfix'><img src='https://www.budvibes.com/images/debit.png' class='cash_image'/></div>" : 
-				"<span>ATM</span>" + "<div class='cash_image_atm clearfix'><img src='https://www.budvibes.com/images/atm.png'/></div>";
+				var cash = (markers[i].getAttribute("cash") == 'd') ? "<span>Debit Card</span>" + "<div class='cash_image_debit clearfix'><img src='"+ __LOCATION__ +"/assets/images/debit.png' class='cash_image'/></div>" : 
+				"<span>ATM</span>" + "<div class='cash_image_atm clearfix'><img src='"+ __LOCATION__ + "/assets/images/atm.png'/></div>";
 				var lat = parseFloat(markers[i].getAttribute("lat"));
 				var lng = parseFloat(markers[i].getAttribute("lng"));
 				var point = new google.maps.LatLng(
@@ -1429,170 +1429,170 @@ function displayMap(region,filter){
 				
 				switch(region){
 					case 'dev':
-						directory = 'https://www.budvibes.com/colorado/denver';
+						directory = __LOCATION__ + '/colorado/denver';
 					break;
 					case 'bld':
-						directory = 'https://www.budvibes.com/colorado/boulder';
+						directory = __LOCATION__ + '/colorado/boulder';
 					break;
 					case 'csp':
-						directory = 'https://www.budvibes.com/colorado/colorado-springs';
+						directory = __LOCATION__ + '/colorado/colorado-springs';
 					break;
 					case 'tel':
-						directory = 'https://www.budvibes.com/colorado/telluride';
+						directory = __LOCATION__ + '/colorado/telluride';
 					break;
 					case 'asp':
-						directory = 'https://www.budvibes.com/colorado/aspen';
+						directory = __LOCATION__ + '/colorado/aspen';
 					break;
 					case 'ftc':
-						directory = 'https://www.budvibes.com/colorado/ft-collins';
+						directory = __LOCATION__ + '/colorado/ft-collins';
 					break;
 					case 'brk':
-						directory = 'https://www.budvibes.com/colorado/breckenridge';
+						directory = __LOCATION__ + '/colorado/breckenridge';
 					break;
 					case 'pue':
-						directory = 'https://www.budvibes.com/colorado/pueblo';
+						directory = __LOCATION__ + '/colorado/pueblo';
 					break;
 					case 'sea':
-						directory = 'https://www.budvibes.com/washington/seattle';
+						directory = __LOCATION__ + '/washington/seattle';
 					break;
 					case 'tac':
-						directory = 'https://www.budvibes.com/washington/tacoma';
+						directory = __LOCATION__ + '/washington/tacoma';
 					break;
 					case 'oly':
-						directory = 'https://www.budvibes.com/washington/olympia';
+						directory = __LOCATION__ + '/washington/olympia';
 					break;
 					case 'spk':
-						directory = 'https://www.budvibes.com/washington/spokane';
+						directory = __LOCATION__ + '/washington/spokane';
 					break;
 					case 'por':
-						directory = 'https://www.budvibes.com/oregon/portland';
+						directory = __LOCATION__ + '/oregon/portland';
 					break;
 					case 'bnd':
-						directory = 'https://www.budvibes.com/oregon/bend';
+						directory = __LOCATION__ + '/oregon/bend';
 					break;
 					case 'mef':
-						directory = 'https://www.budvibes.com/oregon/medford';
+						directory = __LOCATION__ + '/oregon/medford';
 					break;
 					case 'eug':
-						directory = 'https://www.budvibes.com/oregon/eugene';
+						directory = __LOCATION__ + '/oregon/eugene';
 					break;
 					case 'lgr':
-						directory = 'https://www.budvibes.com/oregon/la-grande';
+						directory = __LOCATION__ + '/oregon/la-grande';
 					break;
 					case 'los':
-						directory = 'https://www.budvibes.com/california/los-angeles';
+						directory = __LOCATION__ + '/california/los-angeles';
 					break;
 					case 'sfv':
-						directory = 'https://www.budvibes.com/california/san-fernando';
+						directory = __LOCATION__ + '/california/san-fernando';
 					break;
 					case 'org':
-						directory = 'https://www.budvibes.com/california/orange-county';
+						directory = __LOCATION__ + '/california/orange-county';
 					break;
 					case 'emp':
-						directory = 'https://www.budvibes.com/california/inland-empire';
+						directory = __LOCATION__ + '/california/inland-empire';
 					break;
 					case 'nca':
-						directory = 'https://www.budvibes.com/california/norcal';
+						directory = __LOCATION__ + '/california/norcal';
 					break;
 					case 'sfc':
-						directory = 'https://www.budvibes.com/california/bay-area';
+						directory = __LOCATION__ + '/california/bay-area';
 					break;
 					case 'cca':
-						directory = 'https://www.budvibes.com/california/central-cal';
+						directory = __LOCATION__ + '/california/central-cal';
 					break;
 					case 'sac':
-						directory = 'https://www.budvibes.com/california/sacramento';
+						directory = __LOCATION__ + '/california/sacramento';
 					break;
 					case 'san':
-						directory = 'https://www.budvibes.com/california/san-diego';
+						directory = __LOCATION__ + '/california/san-diego';
 					break;
 					case 'det':
-						directory = 'https://www.budvibes.com/michigan/detroit';
+						directory = __LOCATION__ + '/michigan/detroit';
 					break;
 					case 'ann':
-						directory = 'https://www.budvibes.com/michigan/ann-arbor';
+						directory = __LOCATION__ + '/michigan/ann-arbor';
 					break;
 					case 'fln':
-						directory = 'https://www.budvibes.com/michigan/flint';
+						directory = __LOCATION__ + '/michigan/flint';
 					break;
 					case 'lan':
-						directory = 'https://www.budvibes.com/michigan/lansing';
+						directory = __LOCATION__ + '/michigan/lansing';
 					break;
 					case 'grp':
-						directory = 'https://www.budvibes.com/michigan/grand-rapids';
+						directory = __LOCATION__ + '/michigan/grand-rapids';
 					break;
 					case 'nmi':
-						directory = 'https://www.budvibes.com/michigan/north-michigan';
+						directory = __LOCATION__ + '/michigan/north-michigan';
 					break;
 					case 'pnx':
-						directory = 'https://www.budvibes.com/arizona/phoenix';
+						directory = __LOCATION__ + '/arizona/phoenix';
 					break;
 					case 'flg':
-						directory = 'https://www.budvibes.com/arizona/flagstaff';
+						directory = __LOCATION__ + '/arizona/flagstaff';
 					break;
 					case 'bull':
-						directory = 'https://www.budvibes.com/arizona/bullhead-city';
+						directory = __LOCATION__ + '/arizona/bullhead-city';
 					break;
 					case 'tuc':
-						directory = 'https://www.budvibes.com/arizona/tucson';
+						directory = __LOCATION__ + '/arizona/tucson';
 					break;
 					case 'las':
-						directory = 'https://www.budvibes.com/nevada/las-vegas';
+						directory = __LOCATION__ + '/nevada/las-vegas';
 					break;
 					case 'rno':
-						directory = 'https://www.budvibes.com/nevada/reno';
+						directory = __LOCATION__ + '/nevada/reno';
 					break;
 					case 'htf':
-						directory = 'https://www.budvibes.com/connecticut/hartford';
+						directory = __LOCATION__ + '/connecticut/hartford';
 					break;
 					case 'wil':
-						directory = 'https://www.budvibes.com/delaware/wilmington';
+						directory = __LOCATION__ + '/delaware/wilmington';
 					break;
 					case 'chi':
-						directory = 'https://www.budvibes.com/illinois/chicago';
+						directory = __LOCATION__ + '/illinois/chicago';
 					break;
 					case 'ams':
-						directory = 'https://www.budvibes.com/netherlands/amsterdam';
+						directory = __LOCATION__ + '/netherlands/amsterdam';
 					break;
 					case 'anc':
-						directory = 'https://www.budvibes.com/alaska/anchorage';
+						directory = __LOCATION__ + '/alaska/anchorage';
 					break;
 					case 'wsh':
-						directory = 'https://www.budvibes.com/district-of-columbia/washington';
+						directory = __LOCATION__ + '/district-of-columbia/washington';
 					break;
 					case 'aug':
-						directory = 'https://www.budvibes.com/maine/augusta';
+						directory = __LOCATION__ + '/maine/augusta';
 					break;
 					case 'bos':
-						directory = 'https://www.budvibes.com/massachusetts/boston';
+						directory = __LOCATION__ + '/massachusetts/boston';
 					break;
 					case 'min':
-						directory = 'https://www.budvibes.com/minnesota/minneapolis';
+						directory = __LOCATION__ + '/minnesota/minneapolis';
 					break;
 					case 'boz':
-						directory = 'https://www.budvibes.com/montana/bozeman';
+						directory = __LOCATION__ + '/montana/bozeman';
 					break;
 					case 'new':
-						directory = 'https://www.budvibes.com/new-jersey/newark';
+						directory = __LOCATION__ + '/new-jersey/newark';
 					break;
 					case 'abq':
-						directory = 'https://www.budvibes.com/new-mexico/albuquerque';
+						directory = __LOCATION__ + '/new-mexico/albuquerque';
 					break;
 					case 'van':
-						directory = 'https://www.budvibes.com/british-columbia/vancouver';
+						directory = __LOCATION__ + '/british-columbia/vancouver';
 					break;
 					case 'vci':
-						directory = 'https://www.budvibes.com/british-columbia/vancouver-island';
+						directory = __LOCATION__ + '/british-columbia/vancouver-island';
 					break;
 					case 'bar':
-						directory = 'https://www.budvibes.com/spain/barcelona';
+						directory = __LOCATION__ + '/spain/barcelona';
 					break;
 				}
 				
 				var html = "<div class='info'>";
 				var ihtml = "<div class='info clearfix'>";
 				ihtml += "<div class='infoPicWrap'>";
-				ihtml += "<img class='infoPic' src='https://www.budvibes.com/images/no-store.png' alt='"+name+" marijuana dispensary'/>";
+				ihtml += "<img class='infoPic' src='"+ __LOCATION__ +"/assets/images/no-store.png' alt='"+name+" marijuana dispensary'/>";
 				ihtml += "</div>";
 				ihtml += "<div class='infoWrap'>";
 				if(name != 'Colorado Marijuana Tours'){
@@ -1799,7 +1799,7 @@ function calculateRoute(from, to) {
 			var marker = new google.maps.Marker({
 				position: myRoute.steps[0].start_point,
 				map: mapObject,
-				icon: 'https://www.budvibes.com/images/smoke_icon_75.png',
+				icon: __LOCATION__ + '/assets/images/smoke_icon_75.png',
 				title: 'Your Location'
 			});
 			markerArray.push(marker);
@@ -1807,7 +1807,7 @@ function calculateRoute(from, to) {
 		var marker = new google.maps.Marker({
 			position: myRoute.steps[i - 1].end_point,
 			map: mapObject,
-			icon: 'https://www.budvibes.com/images/leaf_icon_75.png'
+			icon: __LOCATION__ + '/assets/images/leaf_icon_75.png'
 		});
 
 	}
