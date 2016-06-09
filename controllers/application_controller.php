@@ -286,6 +286,11 @@
 			return $newProfilePic;
 		}
 		
+		public function doRelationButtons($id){
+			$relation = $this->Model->findRelation($id);
+			return $relation;
+		}
+		
 	}//END APPLICATION CONTROLLER CLASS
 ?>
 

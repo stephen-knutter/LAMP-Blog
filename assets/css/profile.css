@@ -1005,6 +1005,10 @@ span.infoLink:hover{
 	position: relative;
 }
 
+#posterHeadText{
+	margin-bottom: 10px;
+}
+
 .addHeadWrap h3{
 	margin: 0;
 	padding: 0 0 0 10px;
@@ -1181,7 +1185,7 @@ span.deliverySite a:hover{
 	width: 100%;
 	margin: 0 0 10px 0;
 	padding: 5px 0px;
-	background-color: #e8e8e8;
+	background-color: #fff;
 	border-top: 5px solid #5FB02D;
 	border-bottom: 1px solid #c7c7c7;
 	position: relative;
@@ -3167,13 +3171,12 @@ span.relationButton:hover{
 	width: 100%;
 	position: relative;
 	clear: both;
-
 }
 
 /*EDIT.PHP*/
 #editWrap{
 	width: 239px;
-	margin:75px auto 5px auto;
+	margin:10px auto 5px auto;
 	padding: 0;
 	position: relative;
 	clear: both;
@@ -3380,7 +3383,9 @@ h4.prodInfoHead a:hover{
 .chatBoxBody{
 	padding: 0px;
 	height: 258px;
-	overflow: scroll;
+	overflow-y: scroll;
+	overflow-x: hidden;
+	box-sizing: border-box;
 }
 
 .chatBoxPostWrap{
@@ -3469,10 +3474,9 @@ h4.prodInfoHead a:hover{
 
 
 .chatMsgWrap{
-	width: 300px;
+	width: 290px;
 	margin: 10px 0px;
 	padding: 0;
-
 }
 
 /*RIGHT CHAT*/

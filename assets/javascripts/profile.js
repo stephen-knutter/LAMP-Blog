@@ -765,7 +765,7 @@ $(function(){
     /*USER COMMENT*/
     var userPostBox = buttonWrap.siblings("textarea.userReplyBox");
     var userPost = userPostBox.val();
-    var url = 'https://www.budvibes.com/add-reply.php';
+    var url = __LOCATION__ + '.com/add-reply.php';
     
     $.ajax({
       beforeSend: function(){
@@ -889,7 +889,7 @@ $(function(){
 							  (result.iframe)){
 					//IFRAME ONLY
 						html += "<div class='userLink'>";
-						html += "<img class='iframephoto' id='iframenophoto' style='display:none;' src='https://www.budvibes.com/images/videoholder.png' />";
+						html += "<img class='iframephoto' id='iframenophoto' style='display:none;' src='"+__LOCATION__+"/assets/images/videoholder.png' />";
 						html += result.iframe;
 						html += "<div>";
 					} else if(((result.ogimage) || 
@@ -1158,9 +1158,8 @@ $(function(){
         cache: false,
         processData: false,
         success: function(result){
-		  console.log(result);
-		  isrc = $.parseJSON(result) || null;
-		  if(isrc){
+		  if(result){
+			  isrc = $.parseJSON(result);
 			  iStatus = isrc.code
 			  switch(iStatus){
 				case 500:
@@ -1359,7 +1358,8 @@ $(function(){
       beforeSend: function(){
         $("div.shareMsg").remove();
       },
-      url: 'https://www.budvibes.com/share.php',
+	  //*** NEEDS ATTN ***
+      url: __LOCATION__ + '/share.php',
       type: 'POST',
       data: {share_id: ishare, post_type: postType},
       success: function(result){
@@ -1396,9 +1396,8 @@ $(function(){
       $.ajax({
         beforeSend: function(){
           sending = true;
-          //alert('Sending...');
         },
-        url: 'https://www.budvibes.com/now-smoking.php?user='+smokingId,
+        url: __LOCATION__ + '/now-smoking.php?user='+smokingId,
         success: function(result){
           //console.log(result);
           if(result == 0){
@@ -1442,7 +1441,7 @@ $(function(){
 		curId = curInfo[1];
 		curPostType = curInfo[2];
 		
-		var url = 'https://www.budvibes.com/delete-post.php';
+		var url = __LOCATION__ + '/delete-post.php';
 		var data = {post_id: curId, post_type: curPostType};
 		
 		if(editClick){

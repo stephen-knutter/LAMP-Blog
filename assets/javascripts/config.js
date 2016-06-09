@@ -52,7 +52,7 @@ function doChatBox(parent,chatWithId,chatWithUsername,chatMessages){
 					'<span class="chatName" id="chat-'+chatWithId+'">'+chatWithUsername+'</span>'+
 					'<span class="chatClose">X</span>'+
 				'</div>'+
-				'<div class="chatBody">'+messages+'</div>'+
+				'<div class="chatBoxBody">'+messages+'</div>'+
 				'<div class="chatBoxPostWrap">'+
 					'<div class="chatReplyBoxWrap clearfix">'+
 						'<div class="chatBox" contenteditable="true" placeholder="message"></div>'+
@@ -60,12 +60,10 @@ function doChatBox(parent,chatWithId,chatWithUsername,chatMessages){
 				'</div>'+
 				'<div class="chatButtons">'+
 					'<div class="chatCamWrap">'+
-						'<form id="chatPic" action="'+__LOCATION__+'/ajax/ajax_add_message.php" type="post">'+
+						'<form id="chatPic" action="'+__LOCATION__+'/ajax/ajax_chat_new_pic_msg.php" type="post" enctype="multipart/form-data">'+
 							'<input type="file" name="pic" class="chatCamFile" />'+
-							'<input type="hidden" name="message" value="NULL" />'+
-							'<input type="hidden" name="emoji" value="NULL" />'+
-							'<input type="hidden" name="thread" value="'+parent+'"/>'+
-							'<input type="hidden" name="user" value="'+chatWithId+'"/>'+
+							'<input type="hidden" name="parent" value="'+parent+'"/>'+
+							'<input type="hidden" name="user_id" value="'+chatWithId+'"/>'+
 							'<img class="chatCamImg" src="'+ __LOCATION__+'/assets/images/chat-cam.png">'+
 						'</form>'+
 					'</div>'+
@@ -77,10 +75,13 @@ function doChatBox(parent,chatWithId,chatWithUsername,chatMessages){
 }
 
 function doChatMsg(chatMessages){
-		oMessage = null;
-		iMessages = chatMessages['messages'].length;
-		for($i=0;$i < iMessages;$i++){
-			curMessage = chatMessages['messages'][$i];
+		oMessage = '';
+		var count = chatMessages.length;
+		if(!count){
+			count = 1;
+		}
+		for($i=0;$i < count;$i++){
+			curMessage = chatMessages[$i];
 			zProfilePic = curMessage['profile_pic'];
 			zUseId = curMessage['user_id'];
 			zDate = curMessage['date'];
@@ -99,10 +100,33 @@ function doChatMsg(chatMessages){
 						    oMessage += '<img class="'+zImageClass+'" src="'+zChatPic+'" />';
 					      }
 			oMessage +=	 '</div>'+
-				        '<p class="chatDate">'+zDate+'</p>'+
-			           '</div>';
+				         '<p class="chatDate">'+zDate+'</p>'+
+			            '</div>';
 		}
 		return oMessage;
+}
+
+function doEmojiList(emojis){
+	oEmojis = '';
+	var count = emojis.length;
+	oEmojis += '<div class="emojis">'+
+					'<div class="emojiClose clearfix">'+
+						'<img src="'+__LOCATION__+'/assets/images/add-emoji.png" alt="Add Emoticon">'+
+						'<span class="closex">X</span>'+
+					'</div>'+
+					'<div class="emojiListWrap">';
+					for($i=0;$i < count;$i++){
+						curEmoji = emojis[$i];
+						oEmojis += '<div class="emojiIconWrap clearfix" id="emoji-'+curEmoji['id']+'">'+
+										'<div class="emojiIconPic">'+
+											'<img src="'+curEmoji['pic_link']+'" alt="'+curEmoji['name']+'">'+
+										'</div>'+
+										'<div class="emojiText">'+curEmoji['name']+'</div>'+
+								   '</div>';
+					}
+	oEmojis +=     '</div>'+
+				'</div>';
+	return oEmojis;
 }
 
 function bigX(){
@@ -128,11 +152,6 @@ function doVideo(video,photo,timeStamp){
            "</div>";
 }
 
-
- 
- 
-                                                 
-
 function doPhoto(source){
 	return "<div class='userPicWrap'>"+
                 "<img src='"+source+"'>"+
@@ -140,4 +159,101 @@ function doPhoto(source){
                     "<span class='photoReplyCount'>0 Replies</span>"+
                 "</div>"+
            "</div>";
+}
+
+function doFlwrMenu(editType){
+	return '<input type="hidden" name="prod_type" id="prod_type" value="'+editType+'" />'+
+	'<input type="hidden" name="prod_id" id="prod_id" value=0>'+
+	'<input type="text" name="item_name" id="item_name" value="" placeholder="Item Name" autocomplete="off"/><br/>'+
+	'<span class="priceBox price_gram">G $<span class="selectDollar">00</span></span>'+
+	'<span class="priceBox price_eigth">1/8 $<span class="selectDollar">00</span></span>'+
+	'<span class="priceBox price_fourth">1/4 $<span class="selectDollar">00</span></span>'+
+	'<span class="priceBox price_half">1/2 $<span class="selectDollar">00</span></span>'+
+	'<span class="priceBox price_ounce">Oz $<span class="selectDollar">00</span></span>'+
+	'<span class="priceBox menuType">med</span><br/>'+
+	'<input type="submit" id="addMenuItem" value="Add New" />'
+}
+
+function doNewFlwrItem(itemId,storeId,prodId,prodLabel,itemName, usedFor,
+					   g,e,f,h,o){
+	return '<div class="editItemWrap clearfix">'+
+	'<input type="hidden" name="menu_id" class="menu_id" value="'+itemId+'">'+
+	'<input type="hidden" name="store_id" class="store_id" value="'+storeId+'" />'+
+	'<input type="hidden" name="prod_id" class="prod_id" value="'+prodId+'">'+
+	'<input type="hidden" name="prod_label" class="prod_label" value="'+prodLabel+'">'+
+	'<input type="text" name="item_name" class="item_name" value="'+itemName+'" placeholder="Item Name" autocomplete="off"/><br/>'+
+	'<span class="priceBox price_gram">G $<span class="selectDollar">'+g+'</span></span>'+
+	'<span class="priceBox price_eigth">1/8 $<span class="selectDollar">'+e+'</span></span>'+
+	'<span class="priceBox price_fourth">1/4 $<span class="selectDollar">'+f+'</span></span>'+
+	'<span class="priceBox price_half">1/2 $<span class="selectDollar">'+h+'</span></span>'+
+	'<span class="priceBox price_ounce">Oz $<span class="selectDollar">'+o+'</span></span>'+
+	'<span class="priceBox menuType">'+usedFor+'</span><br/>'+
+	'<input type="submit" name="update" class="updateMenuItem" value="Update" />'+
+	'<input type="submit" name="delete" class="deleteMenuItem" value="Delete">'+
+	'</div>'
+}
+
+function doWaxMenu(editType){
+	return '<input type="hidden" name="prod_type" id="prod_type" value="'+editType+'" />'+
+	'<input type="hidden" name="prod_id" id="prod_id" value=0>'+
+	'<input type="text" name="item_name" id="item_name" value="" placeholder="Item Name" autocomplete="off"/><br/>'+
+	'<span class="priceBox price_half">.5g $<span class="selectDollar">00</span></span>'+
+	'<span class="priceBox price_gram">G $<span class="selectDollar">00</span></span>'+
+	'<span class="priceBox menuType">med</span><br/>'+
+	'<input type="submit" id="addMenuItem" value="Add New" />'
+}
+
+function doNewWaxItem(itemId,storeId,prodId,prodLabel,itemName, usedFor,
+					  g,h){
+	return '<div class="editItemWrap clearfix">'+
+	'<input type="hidden" name="menu_id" class="menu_id" value="'+itemId+'">'+
+	'<input type="hidden" name="store_id" class="store_id" value="'+storeId+'" />'+
+	'<input type="hidden" name="prod_id" class="prod_id" value="'+prodId+'">'+
+	'<input type="hidden" name="prod_label" class="prod_label" value="'+prodLabel+'">'+
+	'<input type="text" name="item_name" class="item_name" value="'+itemName+'" placeholder="Item Name" autocomplete="off"/><br/>'+
+	'<span class="priceBox price_half">.5g $<span class="selectDollar">'+h+'</span></span>'+
+	'<span class="priceBox price_gram">G $<span class="selectDollar">'+g+'</span></span>'+
+	'<span class="priceBox menuType">'+usedFor+'</span><br/>'+
+	'<input type="submit" name="update" class="updateMenuItem" value="Update" />'+
+	'<input type="submit" name="delete" class="deleteMenuItem" value="Delete">'+
+	'</div>'
+}
+
+function doSingleMenu(editType){
+	return '<input type="hidden" name="prod_type" id="prod_type" value="'+editType+'" />'+
+	'<input type="hidden" name="prod_id" id="prod_id" value=0>'+
+	'<input type="text" name="item_name" id="item_name" value="" placeholder="Item Name" autocomplete="off"/><br/>'+
+	'<span class="priceBox price_each">Each $<span class="selectDollar">00</span></span>'+
+	'<span class="priceBox menuType">med</span><br/>'+
+	'<input type="submit" id="addMenuItem" value="Add New" />'
+}
+
+function doNewSingleItem(itemId,storeId,prodId,prodLabel,itemName, usedFor,
+						 e){
+	return '<div class="editItemWrap clearfix">'+
+	'<input type="hidden" name="menu_id" class="menu_id" value="'+itemId+'">'+
+	'<input type="hidden" name="store_id" class="store_id" value="'+storeId+'" />'+
+	'<input type="hidden" name="prod_id" class="prod_id" value="'+prodId+'">'+
+	'<input type="hidden" name="prod_label" class="prod_label" value="'+prodLabel+'">'+
+	'<input type="text" name="item_name" class="item_name" value="'+itemName+'" placeholder="Item Name" autocomplete="off"/><br/>'+
+	'<span class="priceBox price_each">Each $<span class="selectDollar">'+e+'</span></span>'+
+	'<span class="priceBox menuType">'+usedFor+'</span><br/>'+
+	'<input type="submit" name="update" class="updateMenuItem" value="Update" />'+
+	'<input type="submit" name="delete" class="deleteMenuItem" value="Delete">'+
+	'</div>'
+}
+
+function doSpecial(name,desc,photo,exp){
+	return
+	'<div class="curSpecial">'+
+		'<div class="curSpecialHead">'+
+			'<span class="specialStoreName">'+name+'</span><span class="specialDescrip">'+desc+'</span>'+
+		'</div>'+
+		'<div class="curSpecialPic">'+
+			'<img class="specialPic" src="'+photo+'">'+
+		'</div>'+
+		'<div class="specialExp">'+
+			'<span class="curexpDate">EXPIRES: '+exp+'</span>'+
+		'</div>'+
+	'</div>'
 }

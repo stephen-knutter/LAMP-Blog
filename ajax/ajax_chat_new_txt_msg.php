@@ -1,9 +1,9 @@
 <?php 
 	require dirname(__DIR__) . '/bv_inc.php';
-	require dirname(__DIR__) . '/controllers/users_controller.php';
+	require dirname(__DIR__) . '/controllers/chats_controller.php';
 	require dirname(__DIR__) . '/vendor/autoload.php';
 	
-	$UsersCtrl = new UsersCtrl;
+	$ChatsCtrl = new ChatsCtrl;
 	$Views = new ApplicationViews;
 	$Helper = new ApplicationHelper;
 	
@@ -14,11 +14,14 @@
 		exit();
 	}
 	
-	$userId = $_POST['user_id'];
-	$thread = $_POST['thread'];
-	$message = $_POST['message'];
+	$sessionId = $_SESSION['logged_in_id'];
+	$chatWithId = (int)$_POST['user_id'];
+	$parent = (int)$_POST['parent'];
+	$message = trim($_POST['message']);
+	$msgType = 'mt';
+	$msgPic = 'NULL';
 	
-	if(empty($message)){
+	if(empty($message) || empty($chatWithId) || empty($parent)){
 		$error['status'] = 'No message';
 		$error['code'] = 500;
 		echo json_encode($error);
@@ -27,4 +30,24 @@
 	
 	$message = $Helper->sanitizeInput($message);
 	
-	
+	if(is_numeric($parent)){
+		$newThreadId = $ChatsCtrl->addNewThreadMsg($parent,
+												   $sessionId,
+												   $chatWithId,
+												   $msgType,
+												   $msgPic,
+												   $message);
+		if($newThreadId){
+			$chatThread = $ChatsCtrl->getChatThread($newThreadId);
+			if($chatThread){
+				$success['messages'] = $Helper->formatMessages($chatThread,$sessionId);
+				$success['code'] = 200;
+			} else {
+				$success['code'] = 500;
+				$success['messages'] = 0;
+			}
+			
+			echo json_encode($success);
+			exit();
+		}
+	}

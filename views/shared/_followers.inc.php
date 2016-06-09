@@ -1,6 +1,6 @@
 <?php
 	$i=1;
-	$sessionId = $_SESSION['logged_in_id'];
+	$sessionId = @$_SESSION['logged_in_id'];
 	foreach($userFollow as $follower){
 		  $username = $follower['username'];
 		  $userId = $follower['user_id'];
@@ -11,7 +11,7 @@
 		  $slug = $follower['slug'];
 		  //PROFILE LINK
 		  if($type == 'store'){
-			  $userLink = __LOCATION__ . '/' . $storeState . '/' . $storeRegion . '/' . $slug;
+			  $userLink = __LOCATION__ . '/dispensary/' . $storeState . '/' . $storeRegion . '/' . $slug;
 			  $actionType = 'typeStore-'.$userId; 
 		  } else {
 			  $userLink = __LOCATION__ . '/' . $slug;
@@ -37,7 +37,11 @@
 			echo 		'<p><a href="'.$userLink.'">'.$username.'</a></p>';
 			echo 	'</div>';
 			echo '<div class="relationPics">';
-					$pics = $UsersCtrl->getRecentUserPics($userId);
+					if($controller == 'user'){
+						$pics = $UsersCtrl->getRecentUserPics($userId);
+					} else if($controller == 'store'){
+						$pics = $StoresCtrl->getRecentUserPics($userId);
+					}
 					if($pics){
 						foreach($pics as $pic){
 							$picCommId = $pic['comm_id'];
@@ -50,7 +54,11 @@
 			echo '</div>';
 			echo '</div>';
 			echo '<div class="userRelationBar clearfix">';	
-				 $relation = $UsersCtrl->checkUserRelation($userId);
+				 if($controller == 'user'){
+					 $relation = $UsersCtrl->checkUserRelation($userId);
+				 } else {
+					 $relation = $StoresCtrl->checkUserRelation($userId); 
+				 }
 				 if($relation){
 			echo	'<div class="relationButtonWrap" id="'.$actionType.'">';
 			echo 		'<span class="unfollow-'.$userId.' relationButton">&minus; Unfollow</span>';

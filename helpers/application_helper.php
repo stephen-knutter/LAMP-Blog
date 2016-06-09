@@ -279,6 +279,27 @@
 			   }
 		}
 		
+		public function cropStoreSpecialPhoto($userdir,$photo){
+			$curSpecialImg = $userdir.$photo;
+			
+			$largeSpecialLink = $userdir.'budvibes-special-'.$photo;
+			$largeSpecialImg = new \bv\resize($curSpecialImg);
+			$largeSpecialImg->resizeImage(380,380);
+			$largeSpecialImg->saveImage($largeSpecialLink,80);
+			
+			$smallSpecialLink = $userdir.'small-budvibes-special-'.$photo;
+			$smallSpecialImg = new \bv\resize($curSpecialImg);
+			$smallSpecialImg->resizeImage(260,260);
+			$smallSpecialImg->saveImage($smallSpecialLink,80);
+			
+			if(file_exists($largeSpecialLink) && 
+			   file_exists($smallSpecialLink)){
+				return true;
+			} else {
+				return false;
+			}
+		}
+		
 		public function isLoggedIn(){
 			return isset($_SESSION['logged_in_id']) ? true : false;
 		}
@@ -293,9 +314,9 @@
 			$_SESSION['store_state'] = $user['store_state'];
 			$_SESSION['user_verified'] = $user['verified'];
 			if($user['type'] == 'store'){
-					$_SESSION['store'] = true;
-				} else {
-					$_SESSION['store'] = false;
+				$_SESSION['store'] = $storeType = true;
+			} else {
+				$_SESSION['store'] = $storeType = false;
 			}
 			
 			#SET COOKIES - 30Day Expiration
@@ -309,13 +330,19 @@
 			setcookie('store_reg', $user['store_reg'], time() + (60 * 60 * 24 * 30));
 			setcookie('store_state', $user['store_state'], time() + (60 * 60 * 24 * 30));
 			setcookie('user_verified', $user['verified'], time() + (60 * 60 * 24 * 30));
-			setcookie('store', $_SESSION['store'], time() + (60 * 60 * 24 * 30));
+			setcookie('store', $storeType, time() + (60 * 60 * 24 * 30));
 		}
 		
 		public function checkSession(){
 			if(!isset($_SESSION['logged_in_id'])){
-				if(isset($_COOKIE['logged_in_id']) && isset($_COOKIE['logged_in_user']) && isset($_COOKIE['user_verified']) 
-				&& isset($_COOKIE['logged_in_photo']) && isset($_COOKIE['store']) && isset($_COOKIE['store_id']) && isset($_COOKIE['store_reg']) && isset($_COOKIE['store_state'])){
+				if(isset($_COOKIE['logged_in_id']) && 
+				   isset($_COOKIE['logged_in_user']) && 
+				   isset($_COOKIE['user_verified']) && 
+				   isset($_COOKIE['logged_in_photo']) && 
+				   isset($_COOKIE['store']) && 
+				   isset($_COOKIE['store_id']) && 
+				   isset($_COOKIE['store_reg']) && 
+				   isset($_COOKIE['store_state'])){
 					$cookie_id = unobfuscateLink($_COOKIE['logged_in_id']);
 					$cookie_id = $cookie_id[1];
 					$_SESSION['logged_in_id'] = $cookie_id;
@@ -330,6 +357,76 @@
 					$_SESSION['store'] = $_COOKIE['store'];
 				}
 			}
+		}
+		
+		public function formatMessages($chats,$sessionId){
+			$i=0;
+			$success = array();
+			foreach($chats as $chat){
+				$threadId = $chat['id'];
+				$threadProfilePic = $chat['profile_pic'];
+				$threadChatId = $chat['user_id'];
+				$threadDate = $chat['created_at'];
+				$threadMsgType = $chat['message_type'];
+				$threadMsg = $chat['comm_text'];
+				$threadMsgPic = $chat['pic'];
+				$chatDate = strtotime($threadDate);
+				$chatDate = date("M d, Y",$chatDate);
+				if($threadProfilePic == 'no-profile.png'){
+					$thumbLink = __LOCATION__ . '/assets/images/thumb-no-profile.png';
+				} else {
+					$thumbLink = __LOCATION__ . '/assets/user-images/'.$threadChatId.'/thumbsmall-'.$threadProfilePic;
+				}
+				if($sessionId == $threadChatId){
+					$thumbClass = 'chatMsgThumbRight';
+					$bodyClass = 'chatMsgBodyRight';
+				} else {
+					$thumbClass = 'chatMsgThumbLeft';
+					$bodyClass = 'chatMsgBodyLeft';
+				}
+				if($threadMsgType == 'me' ){
+					$imgClass = 'emojipost';
+					$threadMsgPic = __LOCATION__ . '/assets/images/emoji/'.$threadMsgPic;
+				} elseif($threadMsgType == 'mp'){
+					$imgClass = 'picpost';
+					$threadMsgPic = __LOCATION__ . '/assets/user-images/'.$threadChatId.'/'.$threadMsgPic;
+				} else {
+					$imgClass = '';
+				}
+				$success[$i]['profile_pic'] = $threadProfilePic;
+				$success[$i]['user_id'] = $threadChatId;
+				$success[$i]['date'] = $chatDate;
+				$success[$i]['msg_type'] = $threadMsgType;
+				$success[$i]['msg_text'] = $threadMsg;
+				$success[$i]['pic'] = $threadMsgPic;
+				$success[$i]['thumb'] = $thumbLink;
+				$success[$i]['thumb_class'] = $thumbClass;
+				$success[$i]['body_class'] = $bodyClass;
+				$success[$i]['image_class'] = $imgClass;
+				$i++;
+			}
+			return $success;
+			exit();
+		}
+		
+		public function formatStoreTime($time){
+			$newTime = date("g:i a", strtotime($time));
+			return $newTime;
+		}
+		
+		public function getFormatHour($time){
+			$newHour = date("g", strtotime($time));
+			return $newHour;
+		}
+		
+		public function getFormatMinute($time){
+			$newMinute = date("i", strtotime($time));
+			return $newMinute;
+		}
+		
+		public function getFormatMeridian($time){
+			$newMeridian = date("a", strtotime($time));
+			return $newMeridian;
 		}
 	
 	}//END APPLICATION HELPER CLASS

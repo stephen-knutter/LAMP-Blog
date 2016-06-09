@@ -32,9 +32,9 @@
 	$linkdir = __LOCATION__ . '/assets/user-images/'.$userId.'/';
 	$fileTypePhoto = @$_FILES['post_photo']['type'];
 	$fileTypeVideo = @$_FILES['post_video']['type'];
-	$bytes = 1048576; //bytes per meg
-	$maxPhotoSize = $bytes * 10;
-	$maxVideoSize = $bytes * 20;
+	//$bytes = 1048576; //bytes per meg
+	$maxPhotoSize = __PHOTOBYTES__ * 10;
+	$maxVideoSize = __PHOTOBYTES__ * 20;
 	$bits = openssl_random_pseudo_bytes(4,$cstrong);
 	$hex = bin2hex($bits);
 	
@@ -50,15 +50,7 @@
 		   $fileTypePhoto == 'image/JPEG' ||
 		   $fileTypePhoto == 'image/jpeg') && 
 		   $fileSizePhoto < $maxPhotoSize){
-			   
 			   $fileError = $_FILES['post_photo']['error'];
-			   $fileName = $_FILES['post_photo']['name'];
-			   $fileSource = $_FILES['post_photo']['tmp_name'];
-			   $extension = $Helper->getExtension($fileName);
-			   $newPhotoName = 'budvibes-'.$userId.'-'.$hex.$extension;
-			   $largePhotoName = 'large-'.$newPhotoName;
-			   $smallPhotoName = 'small-'.$newPhotoName;
-			   $targetPath = $userdir.$newPhotoName;
 			   //CHECK FOR FILE UPLOAD ERROR
 			   if($fileError){
 				  $error['status'] = 'Internal error';
@@ -67,7 +59,13 @@
 				  echo $xhr ? $response : '<textarea>'.$response.'</textarea>';
 				  exit();
 			   }
-			   
+			   $fileName = $_FILES['post_photo']['name'];
+			   $fileSource = $_FILES['post_photo']['tmp_name'];
+			   $extension = $Helper->getExtension($fileName);
+			   $newPhotoName = 'budvibes-'.$userId.'-'.$hex.$extension;
+			   $largePhotoName = 'large-'.$newPhotoName;
+			   $smallPhotoName = 'small-'.$newPhotoName;
+			   $targetPath = $userdir.$newPhotoName;
 			   
 			   if(!$forumPost){
 				   $tempPic = $Controller->getTempPic($userId);
@@ -89,7 +87,7 @@
 			   }
 			   
 			   if(!file_exists($userdir)){
-				   mkdir($userdir,755);
+				   mkdir($userdir,0755);
 			   }
 			   
 			   //PROCESS NEW PHOTO

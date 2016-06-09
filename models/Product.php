@@ -1,12 +1,9 @@
 <?php
-
-	class Strain extends ApplicationModels{
+	
+	class Product extends ApplicationModels{
 		public $pdo;
-		public $token;
-		private $url;
 		private $Controller;
 		private $Helper;
-		private $errors = array();
 		
 		public function __construct(){
 			$this->pdo = $this->pdo_conn();
@@ -48,5 +45,14 @@
 			return $statement->rowCount() ? $statement->fetchAll(PDO::FETCH_ASSOC) : false;
 		}
 		
-		
+		public function suggestMenuItems($keyword){
+			$menuSuggest = "SELECT p.id, p.name, p.pic, p.tags 
+			FROM products p 
+			WHERE p.name LIKE ?  
+			LIMIT 7";
+			$statement = $this->pdo->prepare($menuSuggest);
+			$keyword = '%'.$keyword.'%';
+			$statement->execute(array($keyword));
+			return $statement->rowCount() ? $statement->fetchAll(PDO::FETCH_ASSOC) : false;
+		}
 	}

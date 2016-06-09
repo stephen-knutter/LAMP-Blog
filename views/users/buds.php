@@ -33,8 +33,7 @@
 				} else {
 					$form = false;
 				}
-				$Views->generateProfilePic($user['id'], $user['username'], $user['profile_pic'],$form);
-					
+				include '_profile_pic.php';
 				/*INFO BAR*/
 				$UsersCtrl->generateUserCountBar($user['id'],$user['slug'],'bud');
 			?>

@@ -33,8 +33,7 @@
 				} else {
 					$form = false;
 				}
-				$Views->generateProfilePic($user['id'], $user['username'], $user['profile_pic'],$form);
-					
+				include '_profile_pic.php';	
 				/*INFO BAR*/
 				$UsersCtrl->generateUserCountBar($user['id'],$user['slug'],'following');
 			?>
@@ -67,7 +66,8 @@
 				<div class="followingWrap">
 					<?php
 						if(!empty($userFollow)){
-							include('_followers.inc.php');
+							$controller = 'user';
+							include(dirname(__DIR__) . '/shared/_followers.inc.php');
 						}
 					?>
 				</div>

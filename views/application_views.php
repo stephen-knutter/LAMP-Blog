@@ -31,6 +31,35 @@ class ApplicationViews{
 					$alt = __MOBILELOCATION__ . '/' . $item['slug'];
 					$meta = $item['username'] . '&#39;s feed';
 				break;
+				case 'store':
+					if($item['type'] == 'rec'){
+						$tail = __RECTAIL__;
+					} else {
+						$tail = __MEDTAIL__;
+					}
+					$title = $item['username'] . ' | ' . $tail;
+					$uri = '/dispensary/' 
+					      . $item['store_state'] . '/' 
+						  . $item['store_reg'] . '/'
+						  . $item['slug'];
+					$url = __LOCATION__ . $uri;
+					$alt = __MOBILELOCATION__ . $uri;
+					if($item['votes'] > 0){
+						$rating = round($item['value']/$item['votes'],2);
+						$votes = $item['votes'];
+					} else {
+						$rating = 0;
+						$votes = 0;
+					}
+					$meta = $item['username'] 
+					        . ' located at ' 
+							.$item['address']
+							.' call at ' 
+							.$item['phone'] 
+							.' is rated '
+							.$rating 
+							.' out of 5 stars';
+				break;
 				case 'custom':
 					$title = $item['title'];
 					$url = __LOCATION__ . $item['location'];
@@ -57,6 +86,7 @@ class ApplicationViews{
 			$html .= 	'<link rel="stylesheet" type="text/css" href="'. __LOCATION__ .'/assets/css/search.css">';
 			$html .= 	'<link rel="stylesheet" type="text/css" href="'. __LOCATION__ .'/assets/css/profile.css">';
 			$html .=	'<link rel="stylesheet" type="text/css" href="'. __LOCATION__ .'/assets/css/sign.css">';
+			$html .=	'<link rel="stylesheet" type="text/css" href="'.__LOCATION__ .'/assets/css/store-page.css">';
 			$html .= 	'<link rel="stylesheet" type="text/css" href="'. __LOCATION__ .'/assets/css/lightbox.css">';
 			$html .= 	'<link rel="stylesheet" type="text/css" href="'. __LOCATION__ .'/assets/css/jquery.Jcrop.min.css">';
 			$html .=	'<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">';
@@ -69,11 +99,18 @@ class ApplicationViews{
 			$html .= 	'<script type="text/javascript" src="'. __LOCATION__ .'/assets/javascripts/infobubble.js"></script>';
 			$html .=	'<script type="text/javascript" src="'. __LOCATION__ .'/assets/javascripts/chat.js"></script>';
 			$html .= 	'<script type="text/javascript" src="'. __LOCATION__ .'/assets/javascripts/search.js"></script>';
+			if($type == 'store'){
+				$html .=	'<script type="text/javascript" src="'. __LOCATION__ .'/assets/javascripts/store-profile.js"></script>';
+			}
+			if($type == 'store-edit'){
+				$html .= 	'<script type="text/javascript" src="'. __LOCATION__ .'/assets/javascripts/store-edit.js"></script>';
+				$html .= 	'<script type="text/javascript" src="'. __LOCATION__ .'/assets/javascripts/search-menu.js"></script>';
+			}
 			$html .=	'<script type="text/javascript" src="'. __LOCATION__ .'/assets/javascripts/jquery.form.min.js"></script>';
 			$html .=	'<script type="text/javascript" src="'. __LOCATION__ .'/assets/javascripts/jquery.Jcrop.min.js"></script>';
 			$html .=	'<script type="text/javascript" src="'. __LOCATION__ .'/assets/javascripts/geoPosition.js"></script>';
 			$html .=	'<script type="text/javascript" src="'. __LOCATION__ .'/assets/javascripts/geoPositionSimulator.js"></script>';
-			if($type != 'profile'){
+			if($type == 'front'){
 				$html .= 	'<script type="text/javascript" src="'. __LOCATION__ .'/assets/javascripts/front-script.js"></script>';
 			}
 			$html .= 	'<script type="text/javascript" src="'. __LOCATION__ .'/assets/javascripts/relation.js"></script>';
@@ -108,7 +145,7 @@ class ApplicationViews{
 						if(isset($_SESSION['logged_in_id'])){
 							$username = $this->Controller->remove_whitespace($_SESSION['logged_in_user']);
 							if($_SESSION['store']){
-								$url = __LOCATION__ .'/'.$_SESSION['store_state'].'/'.$_SESSION['store_reg'].'/'.$username;
+								$url = __LOCATION__ .'/dispensary/'.$_SESSION['store_state'].'/'.$_SESSION['store_reg'].'/'.$username;
 							} else {
 								$url = __LOCATION__ .'/'.$username;
 							}
@@ -181,7 +218,7 @@ class ApplicationViews{
 							$linkName = $this->Controller->remove_whitespace(@$_SESSION['logged_in_user']);
 							$linkState = $this->Controller->remove_whitespace(@$_SESSION['store_state']);
 							$linkRegion = $this->Controller->remove_whitespace(@$_SESSION['store_reg']);
-							$storeUrl = __LOCATION__ . '/'.$linkState.'/'.$linkRegion.'/'.$linkName;
+							$storeUrl = __LOCATION__ . '/dispensary/'.$linkState.'/'.$linkRegion.'/'.$linkName;
 					?>
 						<span id="editLink" class="follow-<?php echo $id; ?> editText"><a href="<?php echo $storeUrl.'/edit'; ?>">Edit</a></span>
 					<?php
@@ -246,6 +283,42 @@ class ApplicationViews{
 			echo '</div>';								  
 		}
 		
+		public function generateStoreCountBar($url,$feedclass,$postclass,$photoclass,
+											 $menuclass,$followerclass,$followingclass,$videoclass,
+											 $feedCount,$postCount,$photoCount,$videoCount,
+											 $followerCount,$menuCount,$followingCount){
+			echo '<div class="infoBarWrap clearfix">';
+			echo 	'<a href="'.$url.'"> <div class="feedInfo '.$feedclass.' clearfix">
+						<span class="infoNumber">'.$feedCount.'</span>
+						<span class="infoDesc">feed</span>
+					</div></a>';
+			echo 	'<a href="'.$url.'/posts"><div class="postInfo '.$postclass.' clearfix">
+						<span class="infoNumber">'.$postCount.'</span>
+						<span class="infoDesc">posts</span>
+					</div></a>';
+			echo 	'<a href="'.$url.'/photos"><div class="photoInfo '.$photoclass.' clearfix">
+						<span class="infoNumber">'.$photoCount.'</span>
+						<span class="infoDesc">photos</span>
+					</div></a>';
+			echo 	'<a href="'.$url.'/videos"><div class="followingInfo '.$videoclass.' clearfix">
+						<span class="infoNumber">'.$videoCount.'</span>
+						<span class="infoDesc">video</span>
+					</div></a>';
+			echo 	'<a href="'.$url.'/followers"><div class="followersInfo '.$followerclass.' clearfix">
+						<span class="infoNumber">'.$followerCount.'</span>
+						<span class="infoDesc">followers</span>
+					</div></a>';
+			echo    '<a href="'.$url.'/menu"><div class="budInfo '.$menuclass.' clearfix">
+						<span class="infoNumber">'.$menuCount.'</span>
+						<span class="infoDesc">menu</span>
+					</div></a>';
+			echo 	'<a href="'.$url.'/following"><div class="followingInfo '.$followingclass.' clearfix">
+						<span class="infoNumber">'.$followingCount.'</span>
+						<span class="infoDesc">following</span>
+					</div></a>';
+			echo '</div>';
+		}
+		
 		public function doTopStrains($topStrains){
 			echo '<div class="recentStrainsWrap clearfix">';
 			echo 	'<div id="strainHeadText">';
@@ -293,7 +366,7 @@ class ApplicationViews{
 						}
 						$linkName = $this->Controller->remove_whitespace($row['username']);
 						if($row['type'] == 'store'){
-							echo '<a href="'. __LOCATION__ .'/'.$row['store_state'].'/'.$row['store_reg'].'/'.$linkName.'">';
+							echo '<a href="'. __LOCATION__ .'/dispensary/'.$row['store_state'].'/'.$row['store_reg'].'/'.$linkName.'">';
 						} else {
 							echo '<a href="'. __LOCATION__ .'/'.$linkName.'">';
 						}
@@ -445,9 +518,9 @@ class ApplicationViews{
 								if($messageUserOne == $_SESSION['logged_in_id']){
 									$msg = $this->Controller->getFirstUserMessage($messageUserTwo); 
 								} else {
-									$msg = $this->Controller->getSecondMessage($messageUserOne); 
+									$msg = $this->Controller->getSecondUserMessage($messageUserOne); 
 								}
-								$data[$i]['chat_id'] = $msg['chat_id'];
+								$data[$i]['chat_id'] = $msg['id'];
 								$data[$i]['parent'] = $msg['parent'];
 								$data[$i]['status'] = $msg['status'];
 								$data[$i]['user_one'] = $msg['user_one'];
@@ -660,27 +733,6 @@ class ApplicationViews{
 			<div id="libHeadFoot"><a href="<?php echo __LOCATION__ . '/strains/'; ?>">Go To Strains &#8689;</a></div>
 		</div>
 			<?php
-		}
-		
-		#DISPLAY PROFILE PICTURE
-		public function generateProfilePic($id,$name,$pic,$form,$type=''){
-			echo '<div class="userProfilePic">';
-			echo '<h2 id="usernameHead">'.$name.'</h2>';
-			echo 	'<img id="ajaxUploadImg" src="'. __LOCATION__ .'/assets/images/gears.gif" alt="loading..."/>';
-			if($pic == 'no-profile.png'){
-				echo 	'<img id="userPicImg" src="'. __LOCATION__ .'/assets/images/no-profile.png" alt="'.$name.'\'s profile" />';
-			} else if($type == 'product') {
-				echo 	'<img id="userPicImg" src="'. __LOCATION__ .'/assets/images/strains/'.$pic.'" alt="'.$name.' weed strain">';		
-			} else {
-				echo 	'<img id="userPicImg" src="'. __LOCATION__ .'/assets/user-images/'.$id.'/'.$pic.'" alt="'.$name.'\'s profile">';
-			}
-			if($form){
-				echo 	'<form id="changePhotoForm" action="change-photo.php" method="post" enctype="multipart/form-data" >';
-				echo		'<input type="file" id="changeFileButton" name="photo" />';
-				echo		'<img class="newPic" src="'. __LOCATION__ .'/assets/images/camera-icon.png" alt="photo upload" />';
-				echo    '</form>';
-			}
-			echo '</div>';
 		}
 		
 		public function generatePostForm($id,$username,$type){
@@ -1529,6 +1581,56 @@ class ApplicationViews{
 	echo '</div>';
 	echo '</div>';
 	
+  }
+  
+  public function appendStoreTime($day,$open,$close){
+	 echo '<li class="storeTime">
+			<span class="dayTime">'.$day.'</span>
+			<span class="openTime">'.$open.'</span>
+			&nbsp;-&nbsp;
+			<span class="closeTime">'.$close.'</span>
+		   </li>';
+  }
+  
+  public function appendStoreTimeEdit($day,$oHour,$cHour,$oMin,$cMin,$oMeridian,$cMeridian){
+	  echo '<li>
+				<span class="dayTimeEdit">'.$day.'</span>
+				<span class="openTimeEdit">
+					<span class="oHour">'.$oHour.'</span>:<span class="oMin">'.$oMin.'</span><span class="oampm">'.$oMeridian.'</span>
+				</span>
+				&nbsp;-&nbsp;
+				<span class="closeTimeEdit">
+					<span class="cHour">'.$cHour.'</span>:<span class="cMin">'.$cMin.'</span><span class="campm">'.$cMeridian.'</span>
+				</span>
+			</li>';
+  }
+  
+  
+  public function generateMenuItemList($items){
+	  $output = '<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>';
+	  $output .= '<response>';
+					foreach($items as $item){
+						$id = $item['id'];
+						$name = $item['name'];
+						$linkName = $this->Helper->createUrl($name);
+						$pic = $item['pic'];
+						$tags = $item['tags'];
+						if(strlen($tags) > 40){
+							$tags = substr($tags,0,37);
+							$tags .= '...';
+						}
+						
+						$output .= '<product ';
+						$output .= 'id="'.$id.'" ';
+						$output .= 'name="'.$name.'" ';
+						$output .= 'link_name="'.$linkName.'" ';
+						$output .= 'pic="'.$pic.'" ';
+						$output .= 'tags="'.$tags.'" ';
+						$output .= '/>';
+						
+					}
+	  $output .= '</response>';
+	  return $output;
   }
   
 } //END ApplicationViews Class

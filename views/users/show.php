@@ -7,11 +7,6 @@
 	$Views = new ApplicationViews;
 	$Helper = new ApplicationHelper;
 	
-	#FOR PRODUCTION ONLY
-	if(__MODE__ == 'PRODUCTION'){
-		$UsersCtrl->checkUrl();
-	}
-	
 	$user = $_GET['id'];
 	$user = $UsersCtrl->getUser($user);
 	
@@ -33,9 +28,8 @@
 					} else {
 						$form = false;
 					}
-					$Views->generateProfilePic($user['id'], $user['username'], $user['profile_pic'],$form);
-					
-					/*INFO BAR*/
+					include '_profile_pic.php';
+					//INFO BAR
 					$UsersCtrl->generateUserCountBar($user['id'],$user['slug'],'feed');
 				?>
 				
@@ -73,9 +67,9 @@
 				</div>
 				
 				<div class="dropPane" data-pane="feed-<?php echo $user['id']; ?>" id="start-15">
-				<?php
-					$UsersCtrl->generateFeed('feed',$user['id']);
-				?>
+					<?php
+						$UsersCtrl->generateFeed('feed',$user['id']);
+					?>
 				</div>
 			</div>
 			

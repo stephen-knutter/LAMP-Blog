@@ -7,7 +7,7 @@ $(function(){
 	$("body").on("keydown", "div.chatBox", function(event){
 		var prependPane = $("div.chatBoxBody");
 		var iKey = event.keyCode;
-		var url = __LOCATION__ . '/ajax/ajax_chat_new_txt_msg.php';
+		var url = __LOCATION__ + '/ajax/ajax_chat_new_txt_msg.php';
 		/*CHAT THREAD*/
 		var chatWrapper = $("div.chatBoxWrap");
 		var threadWrap = chatWrapper.attr("id");
@@ -15,13 +15,13 @@ $(function(){
 		var wrapEnd = threadWrap.length;
 		var curThread = threadWrap.slice(wrapStart,wrapEnd);
 		/*CHAT USER*/
-		var chatUserWrap = prependPane.siblings("div.chatBoxHead").find("span.chatName");
+		var chatUserWrap = $("div.chatBoxHead").find("span.chatName");
 		var chatUser = chatUserWrap.attr("id");
 		var strStart = chatUser.indexOf("-")+1;
 		var strEnd = chatUser.length;
 		chatUser = chatUser.slice(strStart,strEnd);
 		/*CHAT TEXT*/
-		var chatBox = prependPane.siblings("div.chatBoxPostWrap").find("div.chatReplyBoxWrap").find("div.chatBox");
+		var chatBox = $("div.chatBox");
 		var chatVal = chatBox.html();
 
 		if(iKey == 13){
@@ -31,10 +31,9 @@ $(function(){
 				$.ajax({
 					type: 'POST',
 					data: {message: chatVal, 
-						   emoji: 'NULL', 
-						   pic: 'NULL', 
-						   thread: curThread, 
-						   user_id: chatUser},
+						   parent: curThread, 
+						   user_id: chatUser,
+						   type: 'mt'},
 					url: url,
 					success: function(result){
 						if(result){
@@ -44,7 +43,7 @@ $(function(){
 								case 500:
 									//DO NOTHING
 								break;
-								case: 401:
+								case 401:
 									$("body").append(doSignUpBox());
 								break;
 								default: 
@@ -52,30 +51,36 @@ $(function(){
 								break;
 							}
 						}
-						if(result == 0){
-							//FALL THROUGH
-						} else {
-							prependPane.prepend(result);
-						}
 					}
 				})
 			}
 		}
-		
 	});
 
 	/*CHAT MSG EMOJI*/
 	$("body").on("click", "div.chatEmoWrap", function(){
 		$button = $(this);
-		var appendBody = $button.parent("div").siblings("div.chatBoxBody");
+		var appendBody = $("div.chatBoxBody");
 		if(!sending){
 			$.ajax({
 				beforeSend: function(){
 					sending = true;
 				},
-				url: 'https://www.budvibes.com/getemoji.php',
+				url: __LOCATION__ + '/ajax/ajax_chat_emoji_list.php',
 				success: function(result){
-					$("body").append(result);
+					if(result){
+						$result = $.parseJSON(result);
+						iStatus = $result.code;
+						switch(iStatus){
+							case 401:
+							case 500:
+								//DO NOTHING
+							break;
+							default:
+								$("body").append(doEmojiList($result.emojis));
+							break;
+						}
+					}
 				},
 				complete: function(){
 					sending = false;
@@ -89,7 +94,7 @@ $(function(){
 		var chatWrapper = $("div.chatBoxWrap");
 		
 		/*CHAT THREAD*/
-		var prependPane = chatWrapper.find("div.chatBoxBody");
+		var prependPane = $("div.chatBoxBody");
 		var threadWrap = chatWrapper.attr("id");
 		var wrapStart = threadWrap.indexOf("-")+1;
 		var wrapEnd = threadWrap.length;
@@ -110,13 +115,25 @@ $(function(){
 					sending = true;
 				},
 				type: 'POST',
-				data: {message: 'NULL', emoji: emojiImg, pic: 'NULL', thread: curThread, user: chatUser},
-				url: 'https://www.budvibes.com/add-message.php',
+				data: {pic: emojiImg, 
+					   parent: curThread, 
+					   user_id: chatUser,
+					   type: 'me'},
+				url: __LOCATION__ + '/ajax/ajax_chat_new_emoji_msg.php',
 				success: function(result){
-					if(result == 0){
-						//alert(result)
-					} else {
-						prependPane.prepend(result);
+					console.log(result);
+					if(result){
+						$result = $.parseJSON(result);
+						iStatus = $result.code;
+						switch(iStatus){
+							case 401:
+							case 500:
+								//DO NOTHING
+							break;
+							default:
+								prependPane.prepend(doChatMsg($result.messages));
+							break;
+						}
 					}
 				},
 				complete: function(){
@@ -136,26 +153,37 @@ $(function(){
 		}
 	});
 	$("body").on("submit", "form#chatPic", function(event){
+		if(!event){
+			event = window.event
+		}
 		event.preventDefault();
 		$form = $(this);
-		var prependPane = $form.parent("div").parent("div").siblings("div.chatBoxBody");
+		var prependPane = $("div.chatBoxBody");
 		if(!sending){
 			$.ajax({
 				beforeSend: function(){
 					sending = true;
 				},
 				type: 'POST',
-				url: 'https://www.budvibes.com/add-message.php',
-				data: new FormData(this),
+				url: $form.attr("action"), 
+				data: new FormData(this), 
 				contentType: false,
 				cache: false,
 				processData: false,
 				success: function(result){
-					//alert(result)
-					if(result == 0){
-						//alert(result)
-					} else {
-						prependPane.prepend(result);
+					console.log(result);
+					if(result){
+						$result = $.parseJSON(result);
+						iStatus = $result.code;
+						switch(iStatus){
+							case 401:
+							case 500:
+								//DO NOTHING
+							break;
+							default:
+								prependPane.prepend(doChatMsg($result.messages));
+							break;
+						}
 					}
 				},
 				complete: function(){
@@ -197,48 +225,45 @@ $(function(){
 								$chatWithUsername = $result.chat_with_username;
 								$chatMessages = $result.messages;
 								$("body").append(doChatBox($parent,$chatWithId,$chatWithUsername,$chatMessages));
-								/*
 								if(timeoutId){
 									clearInterval(timeoutId);
 								}
 								timeoutId = setInterval(function(){
 									//UPDATE CHAT
+									var appendBox = $("div.chatBoxBody");
+									//USER INFO
+								    var chatUserWrap = $("span.chatName");
+								    var chatUser = chatUserWrap.attr("id");
+									var chatUserId = chatUser.split("-")[1];
+									//CHAT THREAD INFO
+									var chatParentWrap = $("div.chatBoxWrap");
+									var chatParent = chatParentWrap.attr("id");
+									var chatParentId = chatParent.split("-")[1];
+								    $.ajax({
+									   url: __LOCATION__ + '/ajax/ajax_chat_update.php',
+									   type: 'POST',
+									   data: {user_id: chatUserId, parent: chatParentId},
+									   success: function(result){
+										 console.log(result);
+										 if(result){
+											 $result = $.parseJSON(result);
+											 iStatus = $result.code;
+											 switch(iStatus){
+												 case 401:
+												 case 500:
+													//DO NOTHING
+												 break;
+												 default:
+													appendBox.prepend(doChatMsg($result.messages));
+												 break;
+											 }
+										 }
+									   }
+								    });
 								},5000);
-								*/
 							break;
 						}
 					}
-					/*
-					if(result == 0){
-						//FALL THROUGH
-					} else {
-						$("div.chatBoxWrap").remove();
-						$("body").append(result);
-						if(timeoutId){
-							clearInterval(timeoutId);
-						}
-							timeoutId = setInterval(function(){
-								var appendBox = $("div.chatBoxBody");
-								var chatUserWrap = $("span.chatName");
-								var chatUserId = chatUserWrap.attr("id");
-								var strStart = chatUserId.indexOf("-")+1;
-								var strEnd = chatUserId.length;
-								var chatUser = chatUserId.slice(strStart,strEnd);
-								$.ajax({
-									url: 'https://www.budvibes.com/chat-update.php',
-									type: 'POST',
-									data: {user: chatUser},
-									success: function(result){
-										if(result == 0){
-											//FALL THROUGH
-										} else {
-											appendBox.prepend(result);
-										}
-									}
-								})
-							},5000)
-					}
-					*/
 				},
 				complete: function(){
 					sending = false;

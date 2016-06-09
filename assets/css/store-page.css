@@ -1,0 +1,832 @@
+div.storeInfoWrap{
+	width: 100%;
+	position: relative;
+	text-align: center;
+	padding-top: 5px;
+}
+
+div.storeInfoWrap p{
+	margin: 0;
+	padding: 0;
+	color: #ffffff;
+	display: none;
+}
+
+div.storeInfoWrap img{
+	background-color: #ffffff;
+	padding: 5px;
+	margin: 0px 0px 5px 0px;
+}
+
+h2.storeName{
+	width: 100%;
+	color: #dddddd;
+	margin: 0px 0px 5px 0px;
+	padding: 0;
+}
+
+#storeMapWrap{
+	width: 405px;
+}
+
+.smokeHead{
+	background-color: #5FB02D;
+	color: #ffffff;
+	border-bottom: 1px solid #007B21;
+}
+
+.smokeHeadText{
+	margin: 0;
+	padding: 5px;
+	font-size: 14px;
+	font-family: Verdana;
+}
+
+
+
+.smokeWrap{
+	width: 405px;
+	position: relative;
+	margin: 0;
+	padding: 0;
+}
+
+/*HOURS*/
+.editTimesWrap{
+	position: relative;
+	clear: left;
+}
+
+.timeHead,.specialsHead{
+  width: 100%;
+  margin: 10px 0 0 0;
+  padding: 5px 0px;
+  background-color: #fff;
+  border-top: 5px solid #5FB02D;
+  border-bottom: 1px solid #dddddd;
+  position: relative;
+  clear: left;
+}
+
+.timeHead h3, .specialsHead h3{
+  margin: 0;
+  padding: 0 0 0 10px;
+  font-size: 14px;
+  color: #299A0B;
+  font-family: Verdana;
+}
+
+.timeHead h3{
+	background: transparent url('../images/time-icon.png') no-repeat 98% center;
+}
+
+.specialsHead h3{
+	background: transparent url('../images/money-icon.png') no-repeat 98% center;
+}
+
+ul.timeListWrap{
+	margin: 0;
+	padding: 5px;
+	box-sizing: border-box;
+	-moz-box-sizing: border-box;
+	-webkit-box-sizing: border-box;
+}
+
+ul.timeListWrap li{
+	list-style: none;
+	padding: 5px 0;
+	border-bottom: 1px solid #dddddd;
+}
+
+.dayTime, .dayTimeEdit{
+	width: 60%;
+	font-size: 12px;
+	font-family: Verdana;
+	display: inline-block;
+	color: #888888;
+}
+
+.dayTimeEdit{
+	width: 80px;
+	margin-left: 0;
+}
+
+.openTime, .openTimeEdit, .closeTime, .closeTimeEdit{
+	font-family: Verdana;
+	font-size: 12px;
+	font-weight: bold;
+	color: #000000;
+}
+
+.oHour, .cHour{
+	background: url('../images/select-arrow.png') 1% 45% no-repeat;
+	padding-left: 19px;
+}
+
+.oMin, .cMin, .oampm, .campm{
+	background: url('../images/select-arrow.png') 99% 45% no-repeat;
+	padding-right: 19px;
+}
+
+.oampm, .campm{
+	margin-left: 5px;
+}
+
+.openTime:hover, .openTimeEdit:hover, .closeTime:hover, .closeTimeEdit:hover, 
+.oHour:hover, .cHour:hover,
+.oMin:hover, .cMin:hover, .oampm:hover, .campm:hover{
+	cursor: pointer;
+}
+
+/*STARS*/
+#addRating{
+	position: absolute;
+	left: 165px;
+	font-size: 12px;
+	color: #197E0C;
+	bottom: 6px;
+}
+
+#addRating:hover{
+	cursor: pointer;
+	text-decoration: underline;
+}
+
+.stars{
+	position: absolute;
+	left: 235px;
+	bottom: 0px;
+	display: none;
+}
+
+.stars div a{
+	background: transparent url('../../assets/images/sprite_rate.png') 0 0 no-repeat;;
+	display: inline-block;
+	height: 23px;
+	width: 12px;
+	text-indent: -999em;
+	white-space: nowrap;
+	overflow: hidden;
+}
+
+.stars a.rating-right{
+	background-position: 0 -23px;
+	padding-right: 6px;
+}
+
+.stars a.rating-over{
+	background-position: 0 -92px;
+}
+
+.stars a.rating-over.rating-right{
+	background-position: 0 -115px;
+}
+
+.stars a.rating{
+	background-position: 0 -92px;
+}
+
+.stars a.rating.rating-right{
+	background-position: 0 -115px;
+}
+
+/*MENU*/
+.menuHead{
+	margin: 5px 0px;
+	padding: 10px 0px;
+	background-color: #fff;
+	border-top: 1px solid #c7c7c7;
+	border-bottom: 1px solid #c7c7c7;
+	position: relative;
+}
+
+.menuHeadText{
+	padding-left: 10px;
+	color: #299a0b;
+	font-size: 15px;
+	font-family: Verdana;
+	font-weight: bold;
+}
+
+ul.weightList{
+	margin: 0;
+	padding: 0;
+	float: right;
+	position: relative;
+	right: 15px;
+	top: -3px;
+}
+
+ul.weightList li{
+	list-style: none;
+	float: left;
+	border: 1px solid #dddddd;
+	background-color: #fefefe;
+	font-size: 11px;
+	margin: 0 15px 0 15px;
+	padding: 5px;
+	width: 35px;
+	height: 25px;
+	text-align: center;
+	font-family: Verdana;
+	font-weight: bold;
+}
+
+ul.weightList li.eachText{
+	position: relative;
+	right: 308px;
+}
+
+ul.weightList li.waxText{
+	position: relative;
+	right: 232px;
+}
+
+span.headText{
+	position: relative;
+	top: 25%;
+}
+
+.smokeSat, .smokeInd, .smokeHyb{
+	background: transparent url('../images/cloud-icon.png') 1% 45% no-repeat;
+	padding-left: 35px;
+	margin-left: 5px;
+	line-height: 30px;
+}
+
+.waxIcon{
+	background: transparent url('../images/green-slime.png') 1% 45% no-repeat;
+	padding-left: 35px;
+	display: inline-block;
+	line-height: 30px;
+	margin-left: 5px;
+}
+
+.edibleIcon{
+	background: transparent url('../images/hamburger-icon.png') 6% 45% no-repeat;
+	padding-left: 35px;
+	display: inline-block;
+	line-height: 30px;
+	margin-left: 5px;
+}
+
+.drinkIcon{
+	background: transparent url('../images/drink-icon.png') 15% 0 no-repeat;
+	padding-left: 35px;
+	display: inline-block;
+	line-height: 30px;
+	margin-left: 5px;
+}
+
+.ointIcon{
+	background: transparent url('../images/oint-icon.png') 8% 0 no-repeat;
+	padding-left: 35px;
+	display: inline-block;
+	line-height: 30px;
+	margin-left: 5px;
+}
+
+.dropperIcon{
+	background: transparent url('../images/dropper-icon.png') 1% 45% no-repeat;
+	padding-left: 35px;
+	display: inline-block;
+	line-height: 30px;
+	margin-left: 5px;
+}
+
+.otherIcon{
+	line-height: 30px;
+	padding-left: 35px;
+	margin-left: 5px;
+}
+
+.menuPageItem{
+	border-bottom: 1px solid #c7c7c7;
+	padding: 5px 0;
+	margin: 0;
+}
+
+
+.strainMenuPic{
+	float: right;
+	margin: 0 0 0 10px;
+	width: 25px;
+    height: 25px;
+    padding: 5px;
+    border: 1px solid;
+    border-color: #d7d9dd #d1d3d8 #c3c4c9;
+    border-radius: 3px;
+    position: relative;
+}
+
+.strainMenuPic img{
+	width: 25px;
+	height: 25px;
+	display: block;
+}
+
+
+.menuName{
+	float: left;
+	clear: left;
+	font-size: 15px;
+	font-family: Verdana;
+	color: #299a0b;
+	width: 100%;
+}
+
+.menuName a{
+	color: #299a0b;
+	text-decoration: none;
+}
+
+.menuName a:hover{
+	text-decoration: underline;
+}
+
+div.priceWrap{
+	float: right;
+	position: relative;
+}
+
+.menuPrice, .singlePrice, .waxPrice{
+	position: relative;
+	display: inline-block;
+	padding: 5px 0 5px 10px;
+	margin: 0 10px;
+	font-size: 14px;
+	font-family: georgia;
+	font-weight: bold;
+	float: left;
+	background: transparent url('../images/price-icon.png') 0 40% no-repeat;
+	width: 50px;
+}
+
+.singlePrice{
+	position: relative;
+	left: -320px;
+}
+
+.waxPrice{
+	left: -240px;
+}
+
+.itemDesrip{
+	font-size: 10px;
+	color: #777777;
+	font-style: italic;
+}
+
+.textFor{
+	text-transform: uppercase;
+	color: #888888;
+	font-size: 12px;
+	float: left;
+	margin-top: 5px;
+}
+
+/*EDIT.PHP*/
+.menuFormWrap{
+	position: relative;
+}
+
+span#curType{
+	display: inline-block;
+	font-weight: bold;
+	color: #299a0b;
+	font-family: Verdana;
+	font-size: 20px;
+	padding-left: 35px;
+	background: transparent url('../images/select-arrow.png') 1% 45% no-repeat;
+}
+
+span#curType:hover{
+	cursor: pointer;
+}
+
+div.prodType, div.dollarPrice, div.centPrice, div.menuFor, div.specialMonth, div.specialDay, div.specialYear{
+	border: 1px solid #c7c7c7;
+	background-color: #e8e8e8;
+	width: 100px;
+	text-align: center;
+	display: none;
+	position: absolute;
+	z-index: 1;
+}
+
+div.padBody{
+	position: relative;
+	overflow-y: scroll;
+	overflow-x: hidden;
+	height: 200px;
+}
+
+div.specialYear div.padBody{
+	height: 105px;
+}
+
+.prodType:before, .dollarPrice:before, .centPrice:before, .menuFor:before,
+.prodType:after, .dollarPrice:after, .centPrice:after, .menuFor:after,
+.specialMonth:after, .specialMonth:before,
+.specialDay:after, .specialDay:before,
+.specialYear:after, .specialYear:before
+{
+    content: "\0020";
+    display:block;
+    position:absolute;
+    top:-7px;
+    left:40px;
+    z-index:2;
+    width: 0;
+    height: 0;
+    overflow:hidden;
+    border: solid 9px transparent;
+    border-top: 0;
+    border-bottom-color:#e8e8e8;
+}
+
+.prodType:before, .dollarPrice:before, .centPrice:before, .menuFor:before,
+.specialMonth:after, .specialDay:before, .specialYear:before
+{
+	top:-8px;
+    z-index:1;
+    border-bottom-color: #c7c7c7;
+}
+
+div.prodType span, div.dollarPrice span, 
+div.centPrice span, div.menuFor span, 
+div.mm, div.dd, div.yyyy{
+	padding: 10px 0;
+	border-top: 1px solid #ffffff;
+	border-bottom: 1px solid #c7c7c7;
+	display: block;
+	font-family: Verdana;
+	color: #000000;
+	font-size: 11px;
+	font-weight: bold;
+}
+
+div.prodType span:hover, div.dollarPrice span:hover, 
+div.centPrice span:hover, div.menuFor span:hover, 
+div.mm:hover, div.dd:hover, div.yyyy:hover{
+	cursor: pointer;
+	background-color: #dddddd;
+}
+
+div.prodType span:first-child(){
+	border-top: none;
+}
+
+#item_name,.item_name{
+	background-color: #e8e8e8;
+	border: 1px solid #c7c7c7;
+	padding: 5px;
+	font-size: 14px;
+	font-weight: bold;
+	font-family: Verdana;
+	width: 250px;
+}
+
+span.priceBox, span.dateBox{
+	border: 1px solid #c7c7c7;
+	padding: 5px;
+	margin: 5px 0;
+	background-color: #e8e8e8;
+	font-size: 13px;
+	font-family: Verdana;
+	font-weight: bold;
+	display: inline-block;
+	position: relative;
+	margin-right: 1px;
+	color: #3f4c6b;
+}
+
+span.dateBox{
+	background: #e8e8e8 url('../images/select-arrow.png') 1% 45% no-repeat;
+	padding-left: 20px;
+}
+
+span.dateBox:hover{
+	cursor: pointer;
+}
+
+.expHead{
+	position: relative;
+	width: 100%;
+	margin: 0;
+	padding: 0;
+	font-family: Verdana;
+	color: #888888;
+	font-size: 13px;
+}
+
+span.selectDollar, span.menuType, span.storeType, span.cashType{
+	padding-left: 20px;
+    background: #e8e8e8 url('../images/select-arrow.png') 1% 45% no-repeat;
+    color: #000000;
+}
+
+
+span.menuType:hover{
+	cursor: pointer;
+}
+
+span.priceDot{
+	font-weight: bold;
+	margin: 0 2px;
+}
+
+span.selectDollar:hover, span.selectCents:hover, span.storeType:hover, span.cashType:hover{
+	cursor: pointer;
+}
+
+#addMenuItem, .updateMenuItem, .deleteMenuItem{
+	float: left;
+	clear: left;
+	background: rgb(168,210,150);
+    background: -moz-linear-gradient(top, rgba(168,210,150,1) 0%, rgba(168,210,150,1) 4%, rgba(121,185,95,1) 6%, rgba(107,164,84,1) 100%);
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,rgba(168,210,150,1)), color-stop(4%,rgba(168,210,150,1)), color-stop(6%,rgba(121,185,95,1)), color-stop(100%,rgba(107,164,84,1)));
+    background: -webkit-linear-gradient(top, rgba(168,210,150,1) 0%,rgba(168,210,150,1) 4%,rgba(121,185,95,1) 6%,rgba(107,164,84,1) 100%);
+    background: -o-linear-gradient(top, rgba(168,210,150,1) 0%,rgba(168,210,150,1) 4%,rgba(121,185,95,1) 6%,rgba(107,164,84,1) 100%);
+    background: -ms-linear-gradient(top, rgba(168,210,150,1) 0%,rgba(168,210,150,1) 4%,rgba(121,185,95,1) 6%,rgba(107,164,84,1) 100%);
+    background: linear-gradient(to bottom, rgba(168,210,150,1) 0%,rgba(168,210,150,1) 4%,rgba(121,185,95,1) 6%,rgba(107,164,84,1) 100%);
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#a8d296', endColorstr='#6ba454',GradientType=0 );
+	color: #ffffff;
+    border: none;
+    padding: 3px;
+    margin-top: 4px;
+    font-weight: bold;
+    font-size: 12px;
+    border: 1px solid #002400;
+    font-family: Verdana;
+    text-shadow: 1px 1px 1px #000000;
+    margin-bottom: 10px;
+    width: 68px;
+}
+
+.deleteMenuItem{
+  clear: none;
+  margin-left: 5px;
+  background: rgb(254,254,254); /* Old browsers */
+  background: -moz-linear-gradient(top,  rgba(254,254,254,1) 4%, rgba(241,241,241,1) 8%, rgba(241,241,241,1) 18%, rgba(246,247,248,1) 100%); /* FF3.6+ */
+  background: -webkit-gradient(linear, left top, left bottom, color-stop(4%,rgba(254,254,254,1)), color-stop(8%,rgba(241,241,241,1)), color-stop(18%,rgba(241,241,241,1)), color-stop(100%,rgba(246,247,248,1))); /* Chrome,Safari4+ */
+  background: -webkit-linear-gradient(top,  rgba(254,254,254,1) 4%,rgba(241,241,241,1) 8%,rgba(241,241,241,1) 18%,rgba(246,247,248,1) 100%); /* Chrome10+,Safari5.1+ */
+  background: -o-linear-gradient(top,  rgba(254,254,254,1) 4%,rgba(241,241,241,1) 8%,rgba(241,241,241,1) 18%,rgba(246,247,248,1) 100%); /* Opera 11.10+ */
+  background: -ms-linear-gradient(top,  rgba(254,254,254,1) 4%,rgba(241,241,241,1) 8%,rgba(241,241,241,1) 18%,rgba(246,247,248,1) 100%); /* IE10+ */
+  background: linear-gradient(to bottom,  rgba(254,254,254,1) 4%,rgba(241,241,241,1) 8%,rgba(241,241,241,1) 18%,rgba(246,247,248,1) 100%); /* W3C */
+  filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#fefefe', endColorstr='#f6f7f8',GradientType=0 ); /* IE6-9 */
+  color: #000000;
+  text-shadow: none;
+}
+
+.curMenuItems{
+	padding: 5px 0;
+	margin: 0;
+	border-top: 1px solid #dddddd;
+	clear: left;
+}
+
+.editItemWrap{
+	border-bottom: 1px solid #dddddd;
+	padding-top: 5px;
+	position: relative;
+}
+
+.smokesHead, .waxesHead, .drinksHead, .edibleHead, 
+.tincturesHead, .ointmentsHead, .othersHead{
+	margin: 0;
+	padding: 0;
+	color: #299a0b;
+	background-color: #fff;
+	border-top: 1px solid #c7c7c7;
+	border-bottom: 1px solid #c7c7c7;
+	margin: 5px 0;
+	padding: 5px 0 5px 5px;
+	clear: left;
+	line-height: 35px;
+}
+
+.smokesHead{
+	background: #fff url('../images/cloud-icon.png') 1% 45% no-repeat;
+	padding-left: 35px;
+}
+
+.drinksHead{
+	background: #fff url('../images/drink-icon.png') 2% 40% no-repeat;
+	padding-left: 35px;
+}
+
+.waxesHead{
+	background: #fff url('../images/green-slime.png') 1% 45% no-repeat;
+	padding-left: 35px;
+}
+
+.edibleHead{
+	background: #fff url('../images/hamburger-icon.png') 1% 45% no-repeat;
+	padding-left: 35px;
+}
+
+.tincturesHead{
+	background: #fff url('../images/dropper-icon.png') 1% 45% no-repeat;
+	padding-left: 35px;
+}
+
+.ointmentsHead{
+	background: #fff url('../images/oint-icon.png') 1% 45% no-repeat;
+	padding-left: 35px;
+}
+
+.replygear, .editItemWrap .replygear{
+	position: absolute;
+	left: 16px;
+	bottom: 5px;
+}
+
+.editItemWrap .deletegear{
+	position: absolute;
+	left: 92px;
+	bottom: 5px;
+}
+
+/*TIME STYLES*/
+div.ampmType, div.storeMin, div.storeHour, div.storeSelect, div.cashSelect{
+	position: relative;
+	border: 1px solid #c7c7c7;
+	background-color: #e8e8e8;
+	width: 100px;
+	text-align: center;
+	display: none;
+	position: absolute;
+	z-index: 1;
+}
+
+div.padBody{
+	position: relative;
+	overflow-y: scroll;
+	overflow-x: hidden;
+	height: 200px;
+}
+
+.ampmType div.padBody, .storeSelect div.padBody, .cashSelect div.padBody{
+	height: 69px;
+}
+
+.ampmType:before, .storeMin:before, .storeHour:before,
+.ampmType:after, .storeMin:after, .storeHour:after,
+.storeSelect:after, .storeSelect:before,
+ .cashSelect:after, .cashSelect:before
+{
+    content: "\0020";
+    display:block;
+    position:absolute;
+    top:-7px;
+    left:40px;
+    z-index:2;
+    width: 0;
+    height: 0;
+    overflow:hidden;
+    border: solid 9px transparent;
+    border-top: 0;
+    border-bottom-color:#e8e8e8;
+}
+
+.ampmType:before, .storeMin:before, .storeHour:before, .storeSelect:before, .cashSelect:after{
+	top:-8px;
+    z-index:1;
+    border-bottom-color: #c7c7c7;
+}
+
+
+div.ampmType span, div.storeMin span, 
+div.storeHour span, div.storeSelect span, 
+div.cashSelect span{
+	padding: 10px 0;
+	border-top: 1px solid #ffffff;
+	border-bottom: 1px solid #c7c7c7;
+	display: block;
+	font-family: Verdana;
+	color: #000000;
+	font-size: 11px;
+	font-weight: bold;
+}
+
+div.ampmType span:hover, div.storeMin span:hover, 
+div.storeHour span:hover, div.storeSelect span:hover,
+div.cashSelect span:hover{
+	cursor: pointer;
+	background-color: #dddddd;
+}
+
+.specialsWrap{
+	position: relative;
+}
+
+#special{
+	position: relative;
+	background-color: #f1f1f1;
+	border: 1px solid #dddddd;
+	width: 403px;
+	clear: left;
+	margin: 10px 0 0 0;
+}
+
+#special #userFeedBox{
+	width: 391px;
+	border-left: 1px solid #dddddd;
+	border-right: 1px solid #dddddd;
+	margin-top: 0;
+}
+
+#special .tagPane{
+	width: 380px;
+	position: relative;
+	margin: 10px auto;
+	
+}
+
+#special .tagPane .postImgPreview{
+	position: relative;
+	width: 380px;
+	height: 380px;
+}
+
+#special #photoFileButtonWrap{
+	left: 270px;
+	bottom: 5px;
+}
+
+.curSpecial{
+	position: relative;
+	width: 100%;
+	margin: 10px 0;
+	padding: 0;
+}
+
+.curSpecialHead{
+	position: relative;
+}
+
+.specialStoreName, .specialDescrip{
+	font-weight: bold;
+	font-size: 13px;
+	font-family: Verdana;
+}
+
+.specialDescrip{
+	font-weight: normal;
+	padding-left: 5px;
+}
+
+.curSpecialPic{
+	width: 100%;
+	position: relative;
+	margin: 5px 0;
+	padding: 10px 0;
+	background-color: #e8e8e8;
+}
+
+.curSpecialPic img.specialPic{
+	width: 380px;
+	height: 380px;
+	display: block;
+	margin: 0 auto;
+}
+
+.curexpDate{
+	text-transform: uppercase;
+	color: #888888;
+	font-size: 12px;
+	font-family: Verdana;
+	padding-left: 25px;
+	background: transparent url('../images/exp-calendar.png') 1% 45% no-repeat;
+	display: block;
+	line-height: 20px;
+}
+
+.webFront{
+	font-size: 11px;
+	font-weight: bold;
+	font-family: Verdana;
+	float: left;
+	color: #299a0b;
+}
+
+#new_website{
+	font-size: 12px;
+	color: #299a0b;
+	font-weight: bold;
+	font-family: Verdana;
+	width: 180px;
+	border-top: none;
+	border-left: none;
+	border-right: none;
+	border-bottom: 1px solid #c7c7c7;
+	position: relative;
+	top: -3px;
+}
+
+
+
+
+
+

@@ -102,7 +102,12 @@
 			$user = $this->UserModel->checkUserCredentials($this->email,$this->password);
 			if($user && is_array($user)){
 				$this->Helper->logIn($user);
-				$url = __LOCATION__ .'/'. $user['slug'];
+				if($user['type'] == 'store'){
+					$url = __LOCATION__ . '/dispensary/'.$user['store_state'].'/'.$user['store_reg'].'/'.$user['slug'];
+				} else {
+					$url = __LOCATION__ .'/'. $user['slug'];
+				}
+				
 				header('Location: ' . $url);
 			} else {
 				$this->errors['login'] = 'Incorrect username and password combination';
@@ -127,17 +132,13 @@
 				return $user;
 			} else {
 				header('Location: ' . __LOCATION__);
+				exit();
 			}
-		}
-		
-		public function getUserById($userId){
-			$user = $this->UserModel->getUserById($userId);
-			return $user;
 		}
 		
 		public function generateRelationButtons($id,$user) {
 			$relation = $this->UserModel->getRelation($id);
-			if($relation == 1){
+			if($relation){
 				$this->Views->generateFollowingButtons($id,$user);			
 			} else if(@$_SESSION['logged_in_id'] == $id) {
 				$this->Views->generateEditButtons($id,$user);			
@@ -226,7 +227,7 @@
 					}
 				break;
 				case 'posts':
-					$results = $this->UserModel->getPostsFeed();
+					$results = $this->UserModel->getPostsFeed($id);
 					if($results){
 						$this->Views->generateFeed($results,$feedType);
 					} else {
@@ -363,7 +364,6 @@
 			}
 		}
 		
-		
 		public function getUserFollowersCount($userId){
 			$followerCount = $this->UserModel->findUserFollowerCount($userId);
 			return $followerCount;
@@ -429,20 +429,6 @@
 			$pics = $this->UserModel->findRecentUserPics($userId,$limit);
 			return $pics;
 		}
-		
-		public function checkChatThread($sessionId,$chatWithId){
-			$chatThread = $this->UserModel->getChatStatus($sessionId,$chatWithId);
-			return $chatThread;
-		}
-		
-		public function markChatToRead($sessionId,$parent){
-			$markAsRead = $this->UserModel->setChatToRead($sessionId,$parent);
-			return $markAsRead;
-		}
-		
-		public function getChatThread($parent){
-			$chatThread = $this->UserModel->findChatThread($parent);
-			return $chatThread;
-		}
+
 	}//END UserCtrl Class
 ?>

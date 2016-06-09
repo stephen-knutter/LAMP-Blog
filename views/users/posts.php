@@ -33,8 +33,7 @@
 					} else {
 						$form = false;
 					}
-					$Views->generateProfilePic($user['id'], $user['username'], $user['profile_pic'],$form);
-					
+					include '_profile_pic.php';
 					/*INFO BAR*/
 					$UsersCtrl->generateUserCountBar($user['id'],$user['slug'],'post');
 				?>
@@ -57,7 +56,7 @@
 				</div>
 				<div class="dropPane clearfix" style="clear: left;" data-pane="posts-<?php echo $user['id']; ?>" id="start-15">
 				<?php
-					$UsersCtrl->generateFeed('feed',$user['id']);
+					$UsersCtrl->generateFeed('posts',$user['id']);
 				?>
 				</div>
 			</div>
