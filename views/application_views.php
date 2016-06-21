@@ -843,7 +843,7 @@ class ApplicationViews{
 					}
 				?>
 				<div class="postButtonWrap">
-				   <button id="<?php echo $button_id; ?>" class="<?php echo $username; ?>-<?php echo $id; ?>"><?php echo $post_text; ?></button>
+				   <button id="<?php echo $button_id; ?>" class="<?php echo $username; ?>|<?php echo $id; ?>"><?php echo $post_text; ?></button>
 				</div>
 			</form>
 	<?php
@@ -1328,7 +1328,7 @@ class ApplicationViews{
 		$head .=		"<img src='".$picLink."' alt='".$username."' />";
 		$head .=	"</div>";
 		$head .= 	"<div class='commHeadName'>";
-				if($userCommId == $commId && !($nullRow) || $commType == 'fg' 
+				if( ($userCommId == $commId && !($nullRow) ) || $commType == 'fg' 
 				|| $commType == 'shfg' || $commType == 'smk' || $commType == 'shsmk' || 
 				$commType == 'shsf' || $commType == 'shst' || $commType == 'shsp' || 
 				$commType == 'shsll' || $commType == 'shslf' || $commType == 'shsvv' || 
@@ -1336,7 +1336,7 @@ class ApplicationViews{
 					if($type == 'user'){
 						$link = __LOCATION__ .'/'. $linkName;
 					} else {
-						$link = __LOCATION__ .'/'. $storeState.'/'.$storeRegion.'/'.$linkName;
+						$link = __LOCATION__ .'/dispensary/'. $storeState.'/'.$storeRegion.'/'.$linkName;
 					}
 								
 					//SINGLE POST
@@ -1421,7 +1421,7 @@ class ApplicationViews{
 						} else {
 							$secondStoreRegion = $secondUser['store_reg'];
 							$secondStoreState = $secondUser['store_state'];
-							$wallLink = __LOCATION__ .'/'. $secondStoreState.'/'.$secondStoreRegion.'/'.$linkName;
+							$wallLink = __LOCATION__ .'/dispensary/'. $secondStoreState.'/'.$secondStoreRegion.'/'.$linkName;
 							$iconClass = 'store-icon';
 						}
 					}
@@ -1438,7 +1438,7 @@ class ApplicationViews{
 					if($type == 'user'){
 						$link = __LOCATION__ .'/'. $linkName;
 					} else {
-						$link = __LOCATION__ .'/'. $storeState.'/'.$storeRegion.'/'.$linkName;
+						$link = __LOCATION__ .'/dispenary/'. $storeState.'/'.$storeRegion.'/'.$linkName;
 					}
 					if($commType == 'rf' || $commType == 'rt' || $commType == 'rp' || $commType == 'rvf' || 
 						$commType == 'rvv' || $commType == 'rll' || $commType == 'rlf' || $commType == 'rllv' || 
@@ -1592,8 +1592,9 @@ class ApplicationViews{
 		   </li>';
   }
   
-  public function appendStoreTimeEdit($day,$oHour,$cHour,$oMin,$cMin,$oMeridian,$cMeridian){
-	  echo '<li>
+  public function appendStoreTimeEdit($day,$oHour,$cHour,$oMin,$cMin,
+									  $oMeridian,$cMeridian,$liClass){
+	  echo '<li class="'.$liClass.'">
 				<span class="dayTimeEdit">'.$day.'</span>
 				<span class="openTimeEdit">
 					<span class="oHour">'.$oHour.'</span>:<span class="oMin">'.$oMin.'</span><span class="oampm">'.$oMeridian.'</span>

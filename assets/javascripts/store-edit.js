@@ -50,7 +50,7 @@ $(function(){
 		
 		if(!storeClick){
 			$(".storeSelect").css({
-				"top": offTop  - 110 +"px",
+				"top": offTop  - 390 +"px",
 				"left": offLeft - 195 +"px",
 				"display" : "block"
 			});
@@ -82,25 +82,35 @@ $(function(){
 		var newTypeContain = $form.find("div.editTextWrap").find("span.storeType")
 		var newType = newTypeContain.html();
 		var url = $form.attr("action");
-		var url = url+"?type="+newType;
 		
 		$.ajax({
 			beforeSend: function(){
 				$(".error, .uploadError, .success").remove();
-				buttonWrap.prepend('<img class="hourglass" style="position: absolute; left: 110px; bottom: 3px; margin: 0 auto;" src="https://www.budvibes.com/images/hourglass.gif" />');
 				button.attr("disabled","disabled");
 				button.val("");
 			},
+			data: {type: newType},
+			type: 'POST',
 			url: url,
 			success: function(result){
-				if(result == 0){
-					$form.before("<p class='error'>internal error</p>");
-				} else if(result == 1){
-					$form.before("<p class='success'>updated successfully</p>");
-				} 
+				if(result){
+					$result = $.parseJSON(result);
+					iStatus = $result.code;
+					switch(iStatus){
+						case 401:
+						case 500:
+						case 501:
+							$form.before("<p class='error'>"+$result.status+"</p>");
+						break;
+						case 200:
+							$form.before("<p class='success'>"+$result.status+"</p>");
+						break;
+					}
+				} else {
+					$form.before("<p class='error'>Internal error</p>");
+				}
 			},
 			complete: function(){
-				buttonWrap.find("img.hourglass").remove();
 				button.attr("disabled", false);
 				button.val(buttonVal);
 			}
@@ -134,7 +144,7 @@ $(function(){
 		
 		if(!cashClick){
 			$(".cashSelect").css({
-				"top": offTop  - 110 +"px",
+				"top": offTop  - 390 +"px",
 				"left": offLeft - 195 +"px",
 				"display" : "block"
 			});
@@ -166,25 +176,36 @@ $(function(){
 		var newCashContain = $form.find("div.editTextWrap").find("span.cashType")
 		var newCash = newCashContain.html();
 		var url = $form.attr("action");
-		var url = url+"?cash="+newCash;
 		
 		$.ajax({
 			beforeSend: function(){
 				$(".error, .uploadError, .success").remove();
-				buttonWrap.prepend('<img class="hourglass" style="position: absolute; left: 110px; bottom: 3px; margin: 0 auto;" src="https://www.budvibes.com/images/hourglass.gif" />');
 				button.attr("disabled","disabled");
 				button.val("");
 			},
+			data: {cash: newCash},
+			type: 'POST',
 			url: url,
 			success: function(result){
-				if(result == 0){
-					$form.before("<p class='error'>internal error</p>");
-				} else if(result == 1){
-					$form.before("<p class='success'>updated successfully</p>");
-				} 
+				console.log(result);
+				if(result){
+					$result = $.parseJSON(result);
+					iStatus = $result.code;
+					switch(iStatus){
+						case 401:
+						case 500:
+						case 501:
+							$form.before("<p class='error'>"+$result.status+"</p>");
+						break;
+						case 200:
+							$form.before("<p class='success'>"+$result.status+"</p>");
+						break;
+					}
+				} else {
+					$form.before("<p class='error'>Internal error</p>");
+				}
 			},
 			complete: function(){
-				buttonWrap.find("img.hourglass").remove();
 				button.attr("disabled", false);
 				button.val(buttonVal);
 			}
@@ -204,12 +225,10 @@ $(function(){
 		var newNameContain = $form.find("div.editTextWrap").find("input#new_username")
 		var newName = newNameContain.val();
 		var url = $form.attr("action");
-		//var url = url+"?username="+newName;
 		
 		$.ajax({
 			beforeSend: function(){
 				$(".error, .uploadError, .success").remove();
-				buttonWrap.prepend('<img class="hourglass" style="position: absolute; left: 110px; bottom: 3px; margin: 0 auto;" src="https://www.budvibes.com/images/hourglass.gif" />');
 				button.attr("disabled","disabled");
 				button.val("");
 			},
@@ -217,7 +236,23 @@ $(function(){
 			data: {username: newName},
 			url: url,
 			success: function(result){
-				//result = result.trim();
+				if(result){
+					$result = $.parseJSON(result);
+					iStatus = $result.code;
+					switch(iStatus){
+						case 500:
+						case 501:
+						case 400:
+							$form.before("<p class='error'>"+$result.status+"</p>");
+						break;
+						case 200:
+							$form.before("<p class='success'>"+$result.status+"</p>");
+						break;
+					}
+				} else {
+					$form.before("<p class='error'>Internal error</p>");
+				}
+				/*
 				if(result == 0){
 					$form.before("<p class='error'>log in to edit</p>");
 				} else if(result == 2){
@@ -230,13 +265,12 @@ $(function(){
 					$form.before("<p class='error'>username cannot be blank</p>");
 				} else {
 					//newNameContain.val(result);
-					window.location = result;
+					//window.location = result;
 					$form.before("<p class='success'>username changed successfully</p>");
 				}
-				
+				*/
 			},
 			complete: function(){
-				buttonWrap.find("img.hourglass").remove();
 				button.attr("disabled", false);
 				button.val(buttonVal);
 			}
@@ -256,12 +290,10 @@ $(function(){
 		var newEmailContain = $form.find("div.editTextWrap").find("input#new_email")
 		var newEmail = newEmailContain.val();
 		var url = $form.attr("action");
-		//url = url+"?email="+newEmail;
 		
 		$.ajax({
 			beforeSend: function(){
 				$(".error, .uploadError, .success").remove();
-				buttonWrap.prepend('<img class="hourglass" style="position: absolute; left: 110px; bottom: 3px; margin: 0 auto;" src="https://www.budvibes.com/images/hourglass.gif" />');
 				button.attr("disabled","disabled");
 				button.val("");
 			},
@@ -269,23 +301,24 @@ $(function(){
 			data : {email: newEmail},
 			url: url,
 			success: function(result){
-				if(result == 0){
-					$form.before("<p class='error'>log in to edit</p>");
-				} else if(result == 2){
-					$form.before("<p class='error'>email currently registered</p>");
-				} else if(result == 3){
-					$form.before("<p class='error'>internal Error</p>");
-				} else if(result == 4){
-					$form.before("<p class='error'>invalid email</p>");
-				} else if(result == 5){
-					$form.before("<p class='error'>email cannot be blank</p>");
+				if(result){
+					$result = $.parseJSON(result);
+					iStatus = $result.code;
+					switch(iStatus){
+						case 401:
+						case 500:
+						case 501:
+							$form.before("<p class='error'>"+$result.status+"</p>");
+						break;
+						case 200:
+							$form.before("<p class='success'>"+$result.status+"</p>");
+						break;
+					}
 				} else {
-					newEmailContain.val(result);
-					$form.before("<p class='success'>email changed successfully</p>");
+					$form.before("<p class='error'>Internal error</p>");
 				}
 			},
 			complete: function(){
-				buttonWrap.find("img.hourglass").remove();
 				button.attr("disabled", false);
 				button.val(buttonVal);
 			}
@@ -305,7 +338,6 @@ $(function(){
 		var newWebsiteContain = $form.find("div.editTextWrap").find("input#new_website");
 		var newWebsite = newWebsiteContain.val();
 		var url = $form.attr("action");
-		//url = url+"?website="+newWebsite;
 		
 		$.ajax({
 			beforeSend: function(){
@@ -318,16 +350,21 @@ $(function(){
 			data: {website: newWebsite},
 			url: url,
 			success: function(result){
-				if(result == 0){
-					$form.before("<p class='error'>internal error</p>");
-				} else if(result == 1){
-					$form.before("<p class='success'>website changed successfully</p>");
-					newWebsiteContain.val("");
-				} else if(result == 2){
-					$form.before("<p class='error'>invalid web address</p>")
+				if(result){
+					$result = $.parseJSON(result);
+					iStatus = $result.code;
+					switch(iStatus){
+						case 401:
+						case 500:
+						case 501:
+							$form.before("<p class='error'>"+$result.status+"</p>");
+						break;
+						case 200:
+							$form.before("<p class='success'>"+$result.status+"</p>");
+						break;
+					}
 				} else {
-					newWebsiteContain.val(result);
-					$form.before("<p class='success'>website changed successfully</p>");
+					$form.before("<p class='error'>Internal error</p>");
 				}
 			},
 			complete: function(){
@@ -351,12 +388,10 @@ $(function(){
 		var newPhoneContain = $form.find("div.editTextWrap").find("input#new_phone");
 		var newPhone = newPhoneContain.val();
 		var url = $form.attr("action");
-		//url = url+"?phone="+newPhone;
 		
 		$.ajax({
 			beforeSend: function(){
 				$(".error, .uploadError, .success").remove();
-				buttonWrap.prepend('<img class="hourglass" style="position: absolute; left: 110px; bottom: 3px; margin: 0 auto;" src="https://www.budvibes.com/images/hourglass.gif" />');
 				button.attr("disabled","disabled");
 				button.val("");
 			},
@@ -364,19 +399,24 @@ $(function(){
 			data: {phone: newPhone},
 			url: url,
 			success: function(result){
-				if(result == 0){
-					$form.before("<p class='error'>internal error</p>");
-				} else if(result == 2){
-					$form.before("<p class='error'>one or more fields blank</p>");
-				} else if(result == 3){
-					$form.before("<p class='error'>invalid email</p>")
+				if(result){
+					$result = $.parseJSON(result);
+					iStatus = $result.code;
+					switch(iStatus){
+						case 401:
+						case 500:
+						case 501:
+							$form.before("<p class='error'>"+$result.status+"</p>");
+						break;
+						case 200:
+							$form.before("<p class='success'>"+$result.status+"</p>");
+						break;
+					}
 				} else {
-					newPhoneContain.val(result);
-					$form.before("<p class='success'>number changed successfully</p>");
+					$form.before("<p class='error'>Internal error</p>");
 				}
 			},
 			complete: function(){
-				buttonWrap.find("img.hourglass").remove();
 				button.attr("disabled", false);
 				button.val(buttonVal);
 			}
@@ -830,7 +870,6 @@ $(function(){
 			type: 'POST',
 			data: data,
 			success: function(result){
-				console.log(result);
 				if(result){
 					$result = $.parseJSON(result);
 					iStatus = $result.code;
@@ -922,7 +961,7 @@ $(function(){
 		
 		if(!hourClick){
 			$(".storeHour").css({
-				"top": offTop - 890 +"px",
+				"top": offTop - 1065 +"px",
 				"left": offLeft - 112+"px",
 				"display" : "block"
 			});
@@ -972,7 +1011,7 @@ $(function(){
 		
 		if(!minClick){
 			$(".storeMin").css({
-				"top": offTop - 890+"px",
+				"top": offTop - 1065+"px",
 				"left": offLeft - 92+"px",
 				"display" : "block"
 			});
@@ -1022,7 +1061,7 @@ $(function(){
 		
 		if(!minClick){
 			$(".ampmType").css({
-				"top": offTop - 890+"px",
+				"top": offTop - 1065+"px",
 				"left": offLeft - 88+"px",
 				"display" : "block"
 			});
@@ -1158,26 +1197,35 @@ $(function(){
 			sun_chour: sunChour, sun_cmin: sunCmin, sun_campm: sunCampm,
 		}
 		
-		url = 'https://www.budvibes.com/change-store-time.php';
+		url = __LOCATION__ + '/ajax/ajax_store_change_store_time.php';
 		
 		$.ajax({
 			beforeSend: function(){
 				$(".error,.success").remove();
-				timeWrap.append("<img class='replygear' src='https://www.budvibes.com/images/postgear.gif'>");
 				$button.attr("disabled","disabled").val("");
 			},
 			type: 'POST',
 			url: url,
 			data: data,
 			success: function(result){
-				if(result == 0){
-					timeListWrap.before("<p class='error'>internal error</p>");
+				if(result){
+					$result = $.parseJSON(result);
+					iStatus = $result.code;
+					switch(iStatus){
+						case 401:
+						case 500:
+						case 501:
+							timeListWrap.before("<p class='error'>"+$result.status+"</p>");
+						break;
+						case 200:
+							timeListWrap.before("<p class='success'>"+$result.status+"</p>");
+						break;
+					}
 				} else {
-					timeListWrap.before("<p class='success'>updated successfully</p>");
+					timeListWrap.before("<p class='error'>Internal error</p>");
 				}
 			},
 			complete: function(){
-				$("img.replygear").remove()
 				$button.attr("disabled",false).val(buttonText);
 			}
 		})
@@ -1367,7 +1415,6 @@ $(function(){
 			data: data,
 			type: 'POST',
 			success: function(result){
-				console.log(result);
 				if(result){
 					$result = $.parseJSON(result);
 					iStatus = $result.code;
@@ -1381,6 +1428,7 @@ $(function(){
 							//CLEAR OUT FORM
 							specialOfferBox.val("");
 							tagPane.find("img").remove();
+							tagPane.find("i").remove();
 							expDate.find("span#expMonth").html("MM");
 							expDate.find("span#expDay").html("DD");
 							expDate.find("span#expYear").html("YYYY");
@@ -1390,7 +1438,7 @@ $(function(){
 							  desc = $result.desc,
 							  photo = $result.photo,
 							  date = $result.exp;
-							  curSpecialWrap.html(doSpecial(name,desc,photo,exp));
+							  curSpecialWrap.html(doSpecial(name,desc,photo,date));
 						break;
 					}
 				} else {

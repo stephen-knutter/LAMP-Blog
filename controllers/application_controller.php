@@ -291,6 +291,27 @@
 			return $relation;
 		}
 		
+		public function getStoreIdFromUserId($userId){
+			$storeId = $this->Model->getStoreId($userId);
+			return $storeId;
+		}
+		
+		public function getStoreRating($storeId){
+			$storeRating = $this->Model->getStoreRating($storeId);
+			return $storeRating;
+		}
+		
+		public function updateStoreRating($storeId,$rating,$curValue,$curVotes){
+			$curVotes = (int)($curVotes + 1);
+			$curValue = (int)($curValue + $rating);
+			$updateRating = $this->Model->changeStoreRating($storeId,$curValue,$curVotes);
+			return $updateRating;
+		}
+		
+		public function addStoreRating($storeId,$rating){
+			$insertRating = $this->Model->insertStoreRating($storeId,$rating);
+			return $insertRating;
+		}
 	}//END APPLICATION CONTROLLER CLASS
 ?>
 

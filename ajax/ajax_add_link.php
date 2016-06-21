@@ -159,7 +159,7 @@
 						if(file_exists($userdir.$linkName)){
 							//RESIZE PHOTO
 							$linkPhoto = new \bv\resize($userdir.$linkName);
-							$linkPhoto->resizeImage(516,516);
+							$linkPhoto->resizeImage(516,516,'landscape',0,0,0,0,false);
 							$linkPhoto->saveImage($userdir.$linkName,80);
 							$link_data['ogimage'] = __LOCATION__ . '/assets/user-images/'.$_SESSION['logged_in_id'].'/'.$linkName;
 						}

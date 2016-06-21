@@ -36,7 +36,7 @@
 			$optimalWidth = $optionArray['optimalWidth'];
 			$optimalHeight = $optionArray['optimalHeight'];
 			
-			if($mes == true){
+			if($mes == true || $option == 'portrait' || $option == 'landscape'){
 				$src_width = $this->width;
 				$src_height = $this->height;
 			} else {
@@ -92,25 +92,25 @@
 				case 'exact':
 					$optimalWidth = $newWidth;
 					$optimalHeight = $newHeight;
-					break;
+				break;
 				case 'portrait':
 					$optimalWidth = $this->getSizeByFixedHeight($newHeight);
 					$optimalHeight = $newHeight;
-					break;
+				break;
 				case 'landscape':
 					$optimalWidth = $newWidth;
 					$optimalHeight = $this->getSizeByFixedWidth($newWidth);
-					break;
+				break;
 				case 'auto':
 					$optionArray = $this->getSizeByAuto($newWidth, $newHeight);
 					$optimalWidth = $optionArray['optimalWidth'];
 					$optimalHeight = $optionArray['optimalHeight'];
-					break;
+				break;
 				case 'crop':
 					$optionArray = $this->getOptimalCrop($newWidth, $newHeight);
 					$optimalWidth = $optionArray['optimalWidth'];
 					$optimalHeight = $optionArray['optimalHeight'];
-					break;
+				break;
 			}
 			return array('optimalWidth' => $optimalWidth, 'optimalHeight' => $optimalHeight);
 		}

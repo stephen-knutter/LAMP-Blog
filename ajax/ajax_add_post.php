@@ -64,7 +64,18 @@
 	//USER RATING
 	$rating = trim($_POST['rating']);
 	if(is_numeric($rating) && $rating != 'NULL' && !empty($rating)){
-		$rating = $rating / 2;
+		$rating = (int)($rating / 2);
+		$storeId = $Controller->getStoreIdFromUserId($curWallId);
+		if($storeId){
+			$curRating = $Controller->getStoreRating($storeId);
+			if($curRating){
+				$curValue = $curRating['value'];
+				$curVotes = $curRating['votes'];
+				$addRating = $Controller->updateStoreRating($storeId,$rating,$curValue,$curVotes);
+			} else {
+				$addRating = $Controller->addStoreRating($storeId,$rating);
+			}
+		}
 	} else {
 		$rating = 0;
 	}

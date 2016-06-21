@@ -29,6 +29,7 @@
 		
 		public function validateUser($username,$email,$password,$confirmation){
 			$this->username = $username;
+			$this->slug = $slug;
 			$this->email = $email;
 			$this->password = $password;
 			$this->confirmation = $confirmation;
@@ -52,7 +53,8 @@
 			}
 			
 			if(empty($this->errors)){
-				$user = $this->UserModel->addUser($this->username, $this->email, $this->password);
+				$this->slug = $this->Helper->createUrl($this->username);
+				$user = $this->UserModel->addUser($this->username, $this->slug, $this->email, $this->password);
 				if($user){
 					#SESSIONS AND REDIRECT
 					$this->Helper->logIn($user);
@@ -62,6 +64,7 @@
 					exit();
 				} else {
 					$this->errors['internal'] = 'Internal error';
+					//$this->errors['internal'] = $this->username.'*'.$this->email.'*'.$this->password;
 					return $this->errors;
 				}
 			} else {

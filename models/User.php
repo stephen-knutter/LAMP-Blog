@@ -3,11 +3,10 @@
 	class User extends ApplicationModels{
 		
 		public $pdo;
+		public $Helper;
 		public $token;
 		private $url;
 		private $Controller;
-		private $Helper;
-		private $errors = array();
 		
 		public function __construct(){
 			$this->pdo = $this->pdo_conn();
@@ -17,58 +16,13 @@
 		
 		#VERIFY USERNAME
 		public function validateUsername($username){
-			if( (strlen($username) >= 4) && (strlen($username) <=29) ){
-				#$reserved_words = array("sign-up", "sign-in", "privacy", "terms", "claim", "finish", "tags", "users", "weed", "stores", 
-				#"forums", "profile", "posts", "photos", "videos", "buds", "followers", "following", "edit", "menu", "forgot");
-				$reserved_words = array();
-				if(in_array($username, $reserved_words)){
-					$this->$errors['username'] = 'Invalid username';
-					$this->$errors['success'] = false;
-				} else {
-					$regex = "/^[a-zA-Z0-9 \-\'\&]+$/";
-					if(!preg_match($regex, $username)){
-						$this->errors['username'] = 'Invalid username';
-						$this->errors['success'] = false;
-					} else {
-						$this->url = $this->create_url($username);
-						$usernameCheck = "SELECT slug FROM users WHERE slug=:slug";
-						$statement = $this->pdo->prepare($usernameCheck);
-						$statement->bindValue(':slug',$this->url);
-						$statement->execute();
-						$num = $statement->rowCount();
-						if($num){
-							$this->errors['username'] = 'Username already in use';
-							$this->errors['success'] = false;
-						} else {
-							$this->errors['success'] = true;
-						}
-					}
-				}
-			} else {
-				$this->errors['username'] = 'Username must be 4 to 29 characters';
-				$this->errors['success'] = false;
-			}
-			return $this->errors;
+			$errors = $this->checkUniqueUsername($username);
+			return $errors;
 		}
 		#VERIFY EMAIL
 		public function validateEmail($email){
-			if(filter_var($email, FILTER_VALIDATE_EMAIL)){
-				$emailCheck = "SELECT email FROM users WHERE email=:email";
-				$statement = $this->pdo->prepare($emailCheck);
-				$statement->bindValue(':email',$email);
-				$statement->execute();
-				$num = $statement->rowCount();
-				if($num){
-					$this->errors['email'] = 'Email has been registered';
-					$this->errors['success'] = false;
-				} else {
-					$this->errors['success'] = true;
-				}
-			} else {
-				$this->errors['email'] = 'Invalid email';
-				$this->errors['success'] = false;
-			}
-			return $this->errors;
+			$errors = $this->checkUniqueEmail($email);
+			return $errors;
 		}
 		#VERIFY PASSWORD
 		public function validatePassword($password,$confirmation){
@@ -86,19 +40,19 @@
 			return $this->errors;
 		}
 		#ADD NEW USER
-		public function addUser($username,$email,$password){
+		public function addUser($username,$slug,$email,$password){
 			$this->token = $this->Helper->createToken();
 			$newUser = "INSERT INTO users (username,slug, profile_pic, 
-					 email, type, store_id, store_reg, store_state, 
-					 password_digest, verified, reg_digest, created_at,updated_at)
-					 VALUES(:username, :slug, 'no-profile.png',
-					 :email, 'user', 0, 0, 0, sha1(:password), 0, sha1(:token), NOW(), NOW())";
+			email, type, store_id, store_reg, store_state, 
+			password_digest, verified, reg_digest, created_at,updated_at)
+			VALUES(:username, :slug, 'no-profile.png',
+			:email, 'user', 0, 0, 0, sha1(:password), 0, sha1(:token), NOW(), NOW())";
 			$statement = $this->pdo->prepare($newUser);
 			$statement->bindValue(':username',$username);
 			$statement->bindValue(':email',$email);
 			$statement->bindValue(':token', $this->token);
 			$statement->bindValue(':password',$password);
-			$statement->bindValue(':slug',$this->url);
+			$statement->bindValue(':slug',$slug);
 			$statement->execute();
 			$newId = $this->pdo->lastInsertId();
 			if($newId){

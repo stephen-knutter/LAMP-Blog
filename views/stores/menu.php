@@ -80,6 +80,13 @@
 			<div class="dropPane" style="width: 596px;" data-pane="none-0" id="start-0">
 				<?php
 					$menuCheck = $StoresCtrl->checkMenuCount($store['id']);
+					$smoke = false;
+					$tincture = false;
+					$other = false;
+					$ointment = false;
+					$wax = false;
+					$edible = false;
+					$drink = false;
 					if(!$menuCheck){
 						$storeAvaliable = $StoresCtrl->getStoreAvaliable($store['id']);
 						if($storeAvaliable){
@@ -107,7 +114,10 @@
 							if($smoke){
 								echo '<div class="shareMsg">Available</div>';
 							} else if($menuCheck){
-								
+								$menItems = $StoresCtrl->getMenuItems($store['id'],'sativa');
+								if($menItems){
+									include '_menu_items_grams.php';
+								}
 							}
 						?>
 						
@@ -121,7 +131,10 @@
 							if($smoke){
 								echo '<div class="shareMsg">Available</div>';
 							} else if($menuCheck){
-									
+								$menItems = $StoresCtrl->getMenuItems($store['id'],'indica');
+								if($menItems){
+									include '_menu_items_grams.php';
+								}
 							}
 						?>
 						<div class="menuHead">
@@ -134,7 +147,10 @@
 							if($smoke){
 								echo '<div class="shareMsg">Available</div>';
 							} else if($menuCheck){
-									
+								$menItems = $StoresCtrl->getMenuItems($store['id'],'hybrid');
+								if($menItems){
+									include '_menu_items_grams.php';
+								}
 							}
 						?>
 					</div>
@@ -150,7 +166,10 @@
 							if($wax){
 								echo '<div class="shareMsg">Available</div>';
 							} else if($menuCheck){
-									
+								$menItems = $StoresCtrl->getMenuItems($store['id'],'wax');
+								if($menItems){
+									include '_menu_items_wax.php';
+								}	
 							}
 						?>
 					</div>
@@ -166,7 +185,10 @@
 							if($edible){
 								echo '<div class="shareMsg">Available</div>';
 							} else if($menuCheck){
-									
+								$menItems = $StoresCtrl->getMenuItems($store['id'],'edible');
+								if($menItems){
+									include '_menu_items_each.php';
+								}
 							}
 						?>
 					</div>
@@ -182,7 +204,10 @@
 							if($drink){
 								echo '<div class="shareMsg">Available</div>';
 							} else if($menuCheck){
-									
+								$menItems = $StoresCtrl->getMenuItems($store['id'],'drink');
+								if($menItems){
+									include '_menu_items_each.php';
+								}	
 							}
 						?>
 					</div>
@@ -198,7 +223,10 @@
 							if($tincture){
 								echo '<div class="shareMsg">Available</div>';
 							} else if($menuCheck){
-									
+								$menItems = $StoresCtrl->getMenuItems($store['id'],'tincture');
+								if($menItems){
+									include '_menu_items_each.php';
+								}
 							}
 						?>
 					</div>
@@ -214,7 +242,10 @@
 							if($ointment){
 								echo '<div class="shareMsg">Available</div>';
 							} else if($menuCheck){
-									
+								$menItems = $StoresCtrl->getMenuItems($store['id'],'ointment');
+								if($menItems){
+									include '_menu_items_each.php';
+								}	
 							}
 						?>
 					</div>
@@ -230,7 +261,10 @@
 							if($other){
 								echo '<div class="shareMsg">Available</div>';
 							} else if($menuCheck){
-									
+								$menItems = $StoresCtrl->getMenuItems($store['id'],'other');
+								if($menItems){
+									include '_menu_items_each.php';
+								}
 							}
 						?>
 					</div>

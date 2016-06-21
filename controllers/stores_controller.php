@@ -401,6 +401,79 @@
 																$dateString);
 			return $addSpecial;
 		}
+		
+		public function addNewTime($storeId,
+								   $mondayOpen,$mondayClose,
+								   $tuesdayOpen,$tuesdayClose,
+								   $wednesdayOpen,$wednesdayClose,
+								   $thursdayOpen,$thursdayClose,
+								   $fridayOpen,$fridayClose,
+								   $saturdayOpen,$saturdayClose,
+								   $sundayOpen,$sundayClose){
+			$newTimes = $this->StoreModel->insertNewTimes($storeId,
+								                         $mondayOpen,$mondayClose,
+								                         $tuesdayOpen,$tuesdayClose,
+								                         $wednesdayOpen,$wednesdayClose,
+								                         $thursdayOpen,$thursdayClose,
+								                         $fridayOpen,$fridayClose,
+								                         $saturdayOpen,$saturdayClose,
+								                         $sundayOpen,$sundayClose);
+			return $newTimes;
+		}
+		
+		#USERNAME
+		public function validateUsername($username){
+			return $this->StoreModel->validateUsername($username);
+		}
+		
+		public function updateUsername($username,$slug,$userId,$storeId){
+			$updateUsername = $this->StoreModel->changeUsername($username,$slug,$userId,$storeId);
+			return $updateUsername;
+		}
+		
+		#EMAIL
+		public function validateEmail($email){
+			return $this->StoreModel->validateEmail($email);
+		}
+		
+		public function updateEmail($userId,$storeId,$email){
+			$updateEmail = $this->StoreModel->changeEmail($userId,$storeId,$email);
+			return $updateEmail;
+		}
+		
+		#WEBSITE
+		public function updateWebsite($storeId,$website){
+			$updateWebsite = $this->StoreModel->changeWebsite($storeId,$website);
+			return $updateWebsite;
+		}
+		
+		#PHONE
+		public function updatePhone($storeId,$phone){
+			$updatePhone = $this->StoreModel->changePhone($storeId,$phone);
+			return $updatePhone;
+		}
+		
+		#STORE TYPE
+		public function updateStoreType($storeId,$type,$pic){
+			$updateType = $this->StoreModel->changeStoreType($storeId,$type,$pic);
+			return $updateType;
+		}
+		
+		#CASH TYPE
+		public function updateCashType($storeId,$cash){
+			$updateCash = $this->StoreModel->changeCashType($storeId,$cash);
+			return $updateCash;
+		}
+		
+		public function getMenuItems($storeId,$type){
+			$menuItems = $this->StoreModel->findMenuItems($storeId,$type);
+			return $menuItems;
+		}
+		
+		public function getBasicProdInfo($prodId){
+			$prodInfo = $this->StoreModel->findBasicProdInfo($prodId);
+			return $prodInfo;
+		}
 	}
 	
 	

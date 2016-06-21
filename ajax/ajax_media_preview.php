@@ -32,7 +32,6 @@
 	$linkdir = __LOCATION__ . '/assets/user-images/'.$userId.'/';
 	$fileTypePhoto = @$_FILES['post_photo']['type'];
 	$fileTypeVideo = @$_FILES['post_video']['type'];
-	//$bytes = 1048576; //bytes per meg
 	$maxPhotoSize = __PHOTOBYTES__ * 10;
 	$maxVideoSize = __PHOTOBYTES__ * 20;
 	$bits = openssl_random_pseudo_bytes(4,$cstrong);
@@ -63,24 +62,14 @@
 			   $fileSource = $_FILES['post_photo']['tmp_name'];
 			   $extension = $Helper->getExtension($fileName);
 			   $newPhotoName = 'budvibes-'.$userId.'-'.$hex.$extension;
-			   $largePhotoName = 'large-'.$newPhotoName;
-			   $smallPhotoName = 'small-'.$newPhotoName;
 			   $targetPath = $userdir.$newPhotoName;
 			   
 			   if(!$forumPost){
 				   $tempPic = $Controller->getTempPic($userId);
 				   if($tempPic){
 					   $tempPath = $userdir.$tempPic;
-					   $tempPathSmall = $userdir.'small-'.$tempPic;
-					   $tempPathLarge = $userdir.'large-'.$tempPic;
 					   if(file_exists($tempPath)){
 						   unlink($tempPath);
-					   }
-					   if(file_exists($tempPathLarge)){
-						   unlink($tempPathLarge);
-					   }
-					   if(file_exists($tempPathSmall)){
-						   unlink($tempPathSmall);
 					   }
 				   }
 				   $Controller->removeTempPhoto($userId);
@@ -92,26 +81,16 @@
 			   
 			   //PROCESS NEW PHOTO
 			   if(move_uploaded_file($fileSource,$targetPath)){
-				   //RESIZE PHOTO
-				   $largePhotoPath = $userdir.$largePhotoName;
-				   $smallPhotoPath = $userdir.$smallPhotoName;
-				   $largePhoto = new \bv\resize($targetPath);
-				   $largePhoto->resizeImage(516,516);
-				   $largePhoto->saveImage($largePhotoPath,80);
-				   $smallPhoto = new \bv\resize($targetPath);
-				   $smallPhoto->resizeImage(100,100);
-				   $smallPhoto->saveImage($smallPhotoPath,80);
+				   //RESIZE PHOTO HERE IF NEEDED
 				   //ADD TO TEMP DIRECTORY
-				   if(file_exists($largePhotoPath) && 
-					  file_exists($smallPhotoPath) &&
-					  file_exists($targetPath)){
+				   if(file_exists($targetPath)){
 						  $addPhoto = $Controller->addTempPic($userId,
 						                                      $newPhotoName,
 															  $fileTypePhoto);
 						  if($addPhoto){
 							  $success = array();
 							  $success['media_type'] = 'photo';
-							  $success['file_source'] = $linkdir.$largePhotoName;
+							  $success['file_source'] = $linkdir.$newPhotoName;
 							  $success['username'] = $userName;
 							  $photoJson = json_encode($success);
 							  echo $xhr ? $photoJson : '<textarea>'.$photoJson.'</textarea>';
@@ -119,12 +98,6 @@
 						  } else {
 							if(file_exists($targetPath)){
 								unlink($targetPath);
-							}
-							if(file_exists($largePhotoPath)){
-								unlink($largePhotoPath);
-							}
-							if(file_exists($smallPhotoPath)){
-								unlink($smallPhotoPath);
 							}
 							$error['status'] = 'Internal error';
 							$error['code'] = 500;

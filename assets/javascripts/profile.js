@@ -572,7 +572,7 @@ $(function(){
     var iframePhoto = 'noframe';
     //CURRENT FEED WALL ID AND USERNAME
     var buttonClass = $button.attr("class");
-    var dash = buttonClass.indexOf("-");
+    var dash = buttonClass.indexOf("|");
     var strEnd = buttonClass.length;
     var curWallId = buttonClass.slice(dash+1,strEnd);
     var curWallUser = buttonClass.slice(0,dash);

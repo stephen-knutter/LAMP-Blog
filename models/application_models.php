@@ -3,7 +3,7 @@
 	class ApplicationModels{
 		
 		public	$pdo;
-		private $Helper;
+		public $Helper;
 		
 		public function __construct(){
 			$this->Helper = new ApplicationHelper;
@@ -323,6 +323,7 @@
 		
 		public function getStoreId($id){
 			$storeId = "SELECT store_id FROM users WHERE id=:id";
+			$statement = $this->pdo->prepare($storeId);
 			$statement->bindValue(':id',$id,PDO::PARAM_INT);
 			$statement->execute();
 			$id = $statement->fetchColumn(0);
@@ -999,6 +1000,103 @@
 			$statement->bindValue(':userId',$userId,PDO::PARAM_INT);
 			$statement->execute();
 			return $statement->rowCount() ? $statement->fetchColumn(0) : 0;
+		}
+		
+		public function checkUniqueUsername($username){
+			$errors = array();
+			if( (strlen($username) >= 4) && (strlen($username) <=29) ){
+				#$reserved_words = array("sign-up", "sign-in", "privacy", "terms", "claim", "finish", "tags", "users", "weed", "stores", 
+				#"forums", "profile", "posts", "photos", "videos", "buds", "followers", "following", "edit", "menu", "forgot");
+				$reserved_words = array();
+				if(in_array($username, $reserved_words)){
+					$errors['username'] = 'Invalid username';
+					$errors['success'] = false;
+				} else {
+					$regex = "/^[a-zA-Z0-9 \-\'\&]+$/";
+					if(!preg_match($regex, $username)){
+						$errors['username'] = 'Invalid username';
+						$errors['success'] = false;
+					} else {
+						$slug = $this->Helper->createUrl($username);
+						$usernameCheck = "SELECT slug FROM users WHERE slug=:slug";
+						$statement = $this->pdo->prepare($usernameCheck);
+						$statement->bindValue(':slug',$slug);
+						$statement->execute();
+						$num = $statement->rowCount();
+						if($num){
+							$errors['username'] = 'Username already in use';
+							$errors['success'] = false;
+						} else {
+							$errors['success'] = true;
+						}
+					}
+				}
+			} else {
+				$errors['username'] = 'Username must be 4 to 29 characters';
+				$errors['success'] = false;
+			}
+			return $errors;
+		}
+		
+		public function checkUniqueEmail($email){
+			$errors = array();
+			if(filter_var($email, FILTER_VALIDATE_EMAIL)){
+				$emailCheck = "SELECT email FROM users WHERE email=:email";
+				$statement = $this->pdo->prepare($emailCheck);
+				$statement->bindValue(':email',$email);
+				$statement->execute();
+				$num = $statement->rowCount();
+				if($num){
+					$errors['email'] = 'Email has been registered';
+					$errors['success'] = false;
+				} else {
+					$errors['success'] = true;
+				}
+			} else {
+				$errors['email'] = 'Invalid email';
+				$errors['success'] = false;
+			}
+			return $errors;
+		}
+		
+		public function doBasicProdInfo($prodId){
+			$product = "SELECT id, name, pic 
+			FROM products WHERE id=:prodId";
+			$statement = $this->pdo->prepare($product);
+			$statement->bindValue(':prodId',$prodId,PDO::PARAM_INT);
+			$statement->execute();
+			return $statement->rowCount() ? $statement->fetch(PDO::FETCH_ASSOC) : false;
+		}
+		
+		//RATINGS
+		public function getStoreRating($storeId){
+			$rating = "SELECT value, votes 
+			FROM ratings WHERE id=:storeId";
+			$statement = $this->pdo->prepare($rating);
+			$statement->bindValue(':storeId',$storeId,PDO::PARAM_INT);
+			return $statement->rowCount() ? $statement->fetch(PDO::FETCH_ASSOC) : false;
+		}
+		
+		public function changeStoreRating($storeId,$curValue,$curVotes){
+			$updateRating = "UPDATE ratings 
+			SET value=:curValue, votes=:curVotes  
+			WHERE id=:storeId";
+			$statement = $this->pdo->prepare($updateRating);
+			$statement->bindValue(':storeId',$storeId,PDO::PARAM_INT);
+			$statement->bindValue(':curValue',$curValue,PDO::PARAM_INT);
+			$statement->bindValue(':curVotes',$curVotes,PDO::PARAM_INT);
+			$statement->execute();
+			return $statement->rowCount() ? true : false;
+		}
+		
+		public function insertStoreRating($storeId,$rating){
+			$newRating = "INSERT INTO ratings 
+			VALUES('NULL', :storeId, :rating, 1)";
+			$statement = $this->pdo->prepare($newRating);
+			$statement->bindValue(':storeId',$storeId,PDO::PARAM_INT);
+			$statement->bindValue(':rating',$rating,PDO::PARAM_INT);
+			$statement->execute();
+			return $statement->rowCount() ? true : false;
 		}
 	} //END APPLICATION MODELS CLASS
 ?>

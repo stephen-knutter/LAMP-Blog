@@ -243,9 +243,8 @@ function doNewSingleItem(itemId,storeId,prodId,prodLabel,itemName, usedFor,
 	'</div>'
 }
 
-function doSpecial(name,desc,photo,exp){
-	return
-	'<div class="curSpecial">'+
+function doSpecial(name,desc,photo,date){
+	return '<div class="curSpecial">'+
 		'<div class="curSpecialHead">'+
 			'<span class="specialStoreName">'+name+'</span><span class="specialDescrip">'+desc+'</span>'+
 		'</div>'+
@@ -253,7 +252,7 @@ function doSpecial(name,desc,photo,exp){
 			'<img class="specialPic" src="'+photo+'">'+
 		'</div>'+
 		'<div class="specialExp">'+
-			'<span class="curexpDate">EXPIRES: '+exp+'</span>'+
+			'<span class="curexpDate">EXPIRES: '+date+'</span>'+
 		'</div>'+
 	'</div>'
 }

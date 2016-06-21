@@ -24,7 +24,7 @@
 	<p id="storeAddress"><?php echo $store['address']; ?></p>
 	<p id="storePhone"><?php echo $store['phone']; ?></p>
 	<p id="storeWebsite"><?php echo $store['website']; ?></p>
-	<p id="storeRating"><?php echo $store['votes'] > 0 ? round($store['votes']/$store['value'],2) : 0 ?></p>
+	<p id="storeRating"><?php echo $store['votes'] > 0 ? round($store['value']/$store['votes'],2) : 0 ?></p>
 	<p id="storeCashType"><?php echo $store['cash_type']; ?></p>
 	<?php
 		if($form){

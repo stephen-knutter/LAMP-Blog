@@ -20,6 +20,7 @@
 		@$confirmation = trim($_POST['confirmation']);
 		
 		if(!empty($username) && !empty($email) && !empty($password) && !empty($confirmation)){
+			//$slug = $Helper->createUrl($username);
 			$errors = $UsersCtrl->validateUser($username,$email,$password,$confirmation);
 		} else {
 			$errors['empty'] = '1 or more fields empty';

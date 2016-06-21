@@ -56,6 +56,34 @@
 			return $token;
 		}
 		
+		public function checkWebsite($website){
+			if(filter_var($website, FILTER_VALIDATE_URL)){
+				$regex = "((https?|ftp)\:\/\/)?"; // SCHEME
+				$regex .= "([a-z0-9+!*(),;?&=\$_.-]+(\:[a-z0-9+!*(),;?&=\$_.-]+)?@)?"; // User and Pass
+				$regex .= "([a-z0-9-.]*)\.([a-z]{2,4})"; // Host or IP
+				$regex .= "(\:[0-9]{2,5})?"; // Port
+				$regex .= "(\/([a-z0-9+\$_-]\.?)+)*\/?"; // Path
+				$regex .= "(\?[a-z+&\$_.-][a-z0-9;:@&%=+\/\$_.-]*)?"; // GET Query
+				$regex .= "(#[a-z_.-][a-z0-9+\$_.-]*)?"; // Anchor
+				
+				if(preg_match("/^$regex$/",$website,$m)){
+					return true;
+				} else {
+					return false;
+				}
+			} else {
+				return false;
+			}
+		}
+		
+		public function checkPhoneNumber($phone){
+			if(preg_match("/^(\+\d{1,2}\s)?\(?\d{3}\)?[\s.-]\d{3}[\s.-]\d{4}$/", $phone, $m)){
+				return true;
+			} else {
+				return false;
+			}
+		}
+		
 		public function fileGetContentscUrl($url){
 			$ch = curl_init();
 			curl_setopt($ch, CURLOPT_HEADER, 0);
@@ -198,15 +226,15 @@
 		
 		public function cropPhoto($path,$photo){
 			$feedPhoto = new \bv\resize($path.$photo);
-			$feedPhoto->resizeImage(516,516);
+			$feedPhoto->resizeImage(516,516,'landscape',0,0,0,0,false);
 			$feedPhoto->saveImage($path.'feed-'.$photo,80);
 				
 			$mobilePhoto = new \bv\resize($path.$photo);
-			$mobilePhoto->resizeImage(320,320);
+			$mobilePhoto->resizeImage(320,320,'landscape',0,0,0,0,false);
 			$mobilePhoto->saveImage($path.'mobile-'.$photo,80);
 				
 			$panePhoto = new \bv\resize($path.$photo);
-			$panePhoto->resizeImage(280,280);
+			$panePhoto->resizeImage(280,280,'landscape',0,0,0,0,false);
 			$panePhoto->saveImage($path.'pane-'.$photo,80);
 				
 			$smallPhoto = new \bv\resize($path.$photo);
@@ -282,12 +310,12 @@
 		public function cropStoreSpecialPhoto($userdir,$photo){
 			$curSpecialImg = $userdir.$photo;
 			
-			$largeSpecialLink = $userdir.'budvibes-special-'.$photo;
+			$largeSpecialLink = $userdir.'special-'.$photo;
 			$largeSpecialImg = new \bv\resize($curSpecialImg);
 			$largeSpecialImg->resizeImage(380,380);
 			$largeSpecialImg->saveImage($largeSpecialLink,80);
 			
-			$smallSpecialLink = $userdir.'small-budvibes-special-'.$photo;
+			$smallSpecialLink = $userdir.'small-special-'.$photo;
 			$smallSpecialImg = new \bv\resize($curSpecialImg);
 			$smallSpecialImg->resizeImage(260,260);
 			$smallSpecialImg->saveImage($smallSpecialLink,80);

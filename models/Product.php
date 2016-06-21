@@ -2,8 +2,8 @@
 	
 	class Product extends ApplicationModels{
 		public $pdo;
+		public $Helper;
 		private $Controller;
-		private $Helper;
 		
 		public function __construct(){
 			$this->pdo = $this->pdo_conn();

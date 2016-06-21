@@ -52,11 +52,11 @@
 				$extension = $Helper->getExtension($newImg);
 				$newImgPath = $userdir.$newImg;
 				$newImgPathSmall = $userdir.'small-'.$newImg;
-				$newOrigImgPath = $userdir.'original-budvibes-special-'.$newImg;
+				$newImgPathOrig = $userdir.'original-special-'.$newImg;
 				if(file_exists($newImgPath)){
 					$newSpecialPhotos = $Helper->cropStoreSpecialPhoto($userdir,$newImg);
 					if($newSpecialPhotos){
-						$specialImg = 'budvibes-special-'.$newImg;
+						$specialImg = 'special-'.$newImg;
 					} else {
 						$specialImg = 'budvibes-special.png';
 					}
@@ -65,7 +65,7 @@
 				}
 				$StoresCtrl->deleteTempSpecialPhoto($sessionId);
 				if(file_exists($newImgPath)){
-					rename($newImgPath,$newOrigImgPath);
+					rename($newImgPath,$newImgPathOrig);
 				}
 				if(file_exists($newImgPathSmall)){
 					unlink($newImgPathSmall);

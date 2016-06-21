@@ -2,8 +2,8 @@
 	class Store extends ApplicationModels{
 		
 		public $pdo;
+		public $Helper;
 		private $Controller;
-		private $Helper;
 		
 		public function __construct(){
 			$this->pdo = $this->pdo_conn();
@@ -487,5 +487,166 @@
 			$statement->bindValue(':dateString',$dateString);
 			$statement->execute();
 			return $statement->rowCount() ? true : false;
+		}
+		
+		public function insertNewTimes($storeId,
+								       $mondayOpen,$mondayClose,
+								       $tuesdayOpen,$tuesdayClose,
+								       $wednesdayOpen,$wednesdayClose,
+								       $thursdayOpen,$thursdayClose,
+								       $fridayOpen,$fridayClose,
+								       $saturdayOpen,$saturdayClose,
+								       $sundayOpen,$sundayClose){
+			$newTimes = "UPDATE times SET mon_o=:mondayOpen, mon_c=:mondayClose, 
+			tue_o=:tuesdayOpen, tue_c=:tuesdayClose, 
+			wed_o=:wednesdayOpen, wed_c=:wednesdayClose, 
+			thu_o=:thursdayOpen, thu_c=:thursdayClose, 
+			fri_o=:fridayOpen, fri_c=:fridayClose, 
+			sat_o=:saturdayOpen, sat_c=:saturdayClose, 
+			sun_o=:sundayOpen, sun_c=:sundayClose 
+			WHERE store_id=:storeId";
+			$statement = $this->pdo->prepare($newTimes);
+			$statement->bindValue(':storeId',$storeId,PDO::PARAM_INT);
+			$statement->bindValue(':mondayOpen',$mondayOpen);
+			$statement->bindValue(':tuesdayOpen',$tuesdayOpen);
+			$statement->bindValue(':wednesdayOpen',$wednesdayOpen);
+			$statement->bindValue(':thursdayOpen',$thursdayOpen);
+			$statement->bindValue(':fridayOpen',$fridayOpen);
+			$statement->bindValue(':saturdayOpen',$saturdayOpen);
+			$statement->bindValue(':sundayOpen',$sundayOpen);
+			$statement->bindValue(':mondayClose',$mondayClose);
+			$statement->bindValue(':tuesdayClose',$tuesdayClose);
+			$statement->bindValue(':wednesdayClose',$wednesdayClose);
+			$statement->bindValue(':thursdayClose',$thursdayClose);
+			$statement->bindValue(':fridayClose',$fridayClose);
+			$statement->bindValue(':saturdayClose',$saturdayClose);
+			$statement->bindValue(':sundayClose',$sundayClose);
+			$statement->execute();
+			return $statement->rowCount() ? true : false;
+		}
+		
+		#VERIFY USERNAME
+		public function validateUsername($username){
+			$errors = $this->checkUniqueUsername($username);
+			return $errors;
+		}
+		
+		public function changeUsername($username,$slug,$userId,$storeId){
+			$updateUser = "UPDATE users 
+			SET username=:username, slug=:slug  
+			WHERE id=:userId";
+			$stmUser = $this->pdo->prepare($updateUser);
+			
+			$updateStore = "UPDATE stores 
+			SET name=:username  
+			WHERE id=:storeId";
+			$stmStore = $this->pdo->prepare($updateStore);
+			
+			$this->pdo->beginTransaction();
+			
+			$stmUser->bindValue(':username',$username);
+			$stmUser->bindValue(':slug',$slug);
+			$stmUser->bindValue(':userId',$userId,PDO::PARAM_INT);
+			$stmUser->execute();
+			
+			$stmStore->bindValue(':username',$username);
+			$stmStore->bindValue(':storeId',$storeId,PDO::PARAM_INT);
+			$stmStore->execute();
+			
+			return $this->pdo->commit() ? true : false;
+		}
+		
+		#VALIDATE EMAIL
+		public function validateEmail($email){
+			$errors = $this->checkUniqueEmail($email);
+			return $errors;
+		}
+		
+		public function changeEmail($userId,$storeId,$email){
+			$updateUser = "UPDATE users 
+			SET email=:email  
+			WHERE id=:userId";
+			$stmUser = $this->pdo->prepare($updateUser);
+			
+			$updateStore = "UPDATE stores 
+			SET email=:email  
+			WHERE id=:storeId";
+			$stmStore = $this->pdo->prepare($updateStore);
+			
+			$this->pdo->beginTransaction();
+			
+			$stmUser->bindValue(':userId',$userId,PDO::PARAM_INT);
+			$stmUser->bindValue(':email',$email);
+			$stmUser->execute();
+			
+			$stmStore->bindValue(':storeId',$storeId,PDO::PARAM_INT);
+			$stmStore->bindValue(':email',$email);
+			$stmStore->execute();
+			
+			return $this->pdo->commit() ? true : false;
+		}
+		
+		public function changeWebsite($storeId,$website){
+			$updateWebsite = "UPDATE stores 
+			SET website=:website  
+			WHERE id=:storeId";
+			$statement = $this->pdo->prepare($updateWebsite);
+			$statement->bindValue(':storeId',$storeId,PDO::PARAM_INT);
+			$statement->bindValue(':website',$website);
+			$statement->execute();
+			return $statement->rowCount() ? true : false;
+		}
+		
+		public function changePhone($storeId,$phone){
+			$updatePhone = "UPDATE stores 
+			SET phone=:phone  
+			WHERE id=:storeId";
+			$statement = $this->pdo->prepare($updatePhone);
+			$statement->bindValue(':storeId',$storeId,PDO::PARAM_INT);
+			$statement->bindValue(':phone',$phone);
+			$statement->execute();
+			return $statement->rowCount() ? true : false;
+		}
+		
+		public function changeStoreType($storeId,$type,$pic){
+			$updateType = "UPDATE stores 
+			SET type=:type, picture=:pic  
+			WHERE id=:storeId";
+			$statement = $this->pdo->prepare($updateType);
+			$statement->bindValue(':storeId',$storeId,PDO::PARAM_INT);
+			$statement->bindValue(':type',$type);
+			$statement->bindValue(':pic',$pic);
+			$statement->execute();
+			return $statement->rowCount() ? true : false;
+		}
+		
+		public function changeCashType($storeId,$cash){
+			$updateCash = "UPDATE stores 
+			SET cash_type=:cash 
+			WHERE id=:storeId";
+			$statement = $this->pdo->prepare($updateCash);
+			$statement->bindValue(':storeId',$storeId,PDO::PARAM_INT);
+			$statement->bindValue(':cash',$cash);
+			$statement->execute();
+			return $statement->rowCount() ? true : false;
+		}
+		
+		public function findMenuItems($storeId,$type){
+			$menuItems = "SELECT s.id, s.name, s.store_id, 
+			s.prod_id, s.gram, s.eighth, s.fourth, s.half, s.ounce, 
+			s.single_price, s.prod_label, s.used_for 
+			FROM store_menu s 
+			WHERE store_id=:storeId  
+			AND s.prod_label=:type";
+			$statement = $this->pdo->prepare($menuItems);
+			$statement->bindValue(':storeId',$storeId,PDO::PARAM_INT);
+			$statement->bindValue(':type',$type);
+			$statement->execute();
+			return $statement->rowCount() ? $statement->fetchAll(PDO::FETCH_ASSOC) : false;
+		}
+		
+		public function findBasicProdInfo($prodId){
+			$prodInfo = $this->doBasicProdInfo($prodId);
+			return $prodInfo;
 		}
 	}

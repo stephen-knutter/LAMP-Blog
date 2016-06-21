@@ -34,21 +34,21 @@
 			<div id="editWrap">
 				<!-- CHANGE USERNAME -->
 				<div class="editBox clearfix">
-					<form method="post" action="../../../change-username-store.php"  id="editUsernameStoreForm">
+					<form method="post" action="<?php echo __LOCATION__ . '/ajax/ajax_store_change_username.php'?>"  id="editUsernameStoreForm">
 						<div class="editTextWrap"><input type="text" id="new_username" name="new_username" value="<?php  echo $store['username']; ?>" placeholder="Username" /></div>
 						<div class="editButtonWrap"><input type="submit" id="newNameButton" value="Save" autocomplete="off"/></div>
 					</form>
 				</div>
 				<!-- CHANGE EMAIL -->
 				<div class="editBox clearfix">
-					<form method="post" action="../../../change-email-store.php"  id="editEmailStoreForm">
+					<form method="post" action="<?php echo __LOCATION__ . '/ajax/ajax_store_change_email.php'; ?>"  id="editEmailStoreForm">
 						<div class="editTextWrap"><input type="text" id="new_email" name="new_email" value="<?php  echo $store['email']; ?>" placeholder="Email"></div>
 						<div class="editButtonWrap"><input type="submit" id="newEmailButton" value="Save" autocomplete="off"/></div>
 					</form>
 				</div>
 				<!--CHANGE PASSWORD -->
 				<div class="editBox clearfix">
-					<form method="post" action="../../../change-password.php" id="changePassForm">
+					<form method="post" action="<?php echo __LOCATION__ . '/ajax/ajax_change_password.php'?>" id="changePassForm">
 						<div class="oldPassWrap"><input type="password" id="old_pass" name="old_pass" placeholder="Old Password.."/></div>
 						<div class="newPassWrap"><input type="password" id="new_pass" name="new_pass" placeholder="New Password.."/></div>
 						<div class="confirmWrap"><input type="password" id="confirm_pass" name="confirm_pass" placeholder="Confirm.."/></div>
@@ -57,7 +57,7 @@
 				</div>
 				<!-- CHANGE WEBSITE -->
 				<div class="editBox clearfix">
-					<form method="post" action="../../../change-website.php" id="editWebsiteStoreForm">
+					<form method="post" action="<?php echo __LOCATION__ . '/ajax/ajax_store_change_website.php'; ?>" id="editWebsiteStoreForm">
 						<?php
 							$site = $store['website'];
 							$site = preg_replace('/http:\/\//', '', $site);
@@ -66,9 +66,8 @@
 						<div class="editButtonWrap"><input type="submit" id="changeWebsiteButton" value="Save" /></div>
 					</form>
 				</div>
-				<!-- CHANGE PHONE NUMBER -->
 				<div class="editBox clearfix">
-					<form method="post" action="../../../change-phonenumber.php" id="editPhoneStoreForm">
+					<form method="post" action="<?php echo __LOCATION__ . '/ajax/ajax_store_change_phone.php'; ?>" id="editPhoneStoreForm">
 						<div class="editTextWrap"><input type="text" id="new_phone" name="new_phone" value="<?php  echo $store['phone']; ?>" placeholder="xxx-xxx-xxxx" autocomplete="off"></div>
 						<div class="editButtonWrap"><input type="submit" id="newPhoneButton" value="Save" /></div>
 					</form>
@@ -80,7 +79,7 @@
 					   $store['store_state'] == 'washington'){
 				?>
 					<div class="editBox clearfix">
-						<form method="post" action="../../../change-store-type.php" id="changeStoreTypeForm">
+						<form method="post" action="<?php echo __LOCATION__ . '/ajax/ajax_store_change_store_type.php'?>" id="changeStoreTypeForm">
 							<?php
 								if($store['type'] == 'rec'){
 									$storeType = 'Recreational';
@@ -104,7 +103,7 @@
 				?>
 				<!--CHANGE STORE CASH-->
 				<div class="editBox clearfix">
-					<form method="post" action="../../../change-store-cash.php" id="changeCashTypeForm">
+					<form method="post" action="<?php echo __LOCATION__ . '/ajax/ajax_store_change_cash_type.php'?>" id="changeCashTypeForm">
 						<?php
 							if($store['cash_type'] == 'd'){
 								$cashType = 'Debit';
