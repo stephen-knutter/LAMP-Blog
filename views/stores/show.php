@@ -12,6 +12,7 @@
 		$UsersCtrl->checkUrl();
 	}
 	
+	$sessionId = (int)$_SESSION['logged_in_id'];
 	$store = $_GET['id'];
 	$storeState = $_GET['state'];
 	$storeRegion = $_GET['reg'];
@@ -80,7 +81,7 @@
 			<div id="userFeed">
 				<div id="userFeedWrap" class="clearfix">
 					<?php
-						$Views->generatePostForm($store['user_id'],$store['slug'],'store');
+						$Views->generatePostForm($store['user_id'],$store['slug'],'store',$sessionId);
 					?>
 				</div>
 			</div>

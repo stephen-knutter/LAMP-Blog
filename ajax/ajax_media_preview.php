@@ -81,7 +81,8 @@
 			   
 			   //PROCESS NEW PHOTO
 			   if(move_uploaded_file($fileSource,$targetPath)){
-				   //RESIZE PHOTO HERE IF NEEDED
+				   //RESIZE PHOTO/REMOVE GIF FRAMES
+				   $previewPic = $Helper->cropPreview($targetPath);
 				   //ADD TO TEMP DIRECTORY
 				   if(file_exists($targetPath)){
 						  $addPhoto = $Controller->addTempPic($userId,

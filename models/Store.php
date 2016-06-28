@@ -13,7 +13,7 @@
 		
 		public function getStore($store){
 			$sql = "SELECT u.id AS user_id, u.username, u.slug, 
-			u.profile_pic, u.email, u.type, u.store_id, 
+			u.profile_pic, u.email, u.type AS user_type, u.store_id, 
 			u.store_reg, u.store_state, u.verified, 
 			s.id, s.address, s.lat, s.lng, s.type, 
 			s.picture, s.phone, s.website, s.cash_type, 

@@ -224,6 +224,23 @@
 	      }
 		}
 		
+		public function cropPreview($path){
+			$previewPic = new \bv\resize($path);
+			$previewPic->resizeImage(516,516,'landscape',0,0,0,0,false);
+			$previewPic->saveImage($path,80);
+		}
+		
+		public function cropReplyPhoto($path,$photo){
+			$replyPhoto = new \bv\resize($path.$photo);
+			$replyPhoto->resizeImage(300,300,'landscape',0,0,0,0,false);
+			$replyPhoto->saveImage($path.'reply-'.$photo,80);
+			if(file_exists($path.'reply-'.$photo)){
+				return true;
+			} else {
+				return false;
+			}
+		}
+		
 		public function cropPhoto($path,$photo){
 			$feedPhoto = new \bv\resize($path.$photo);
 			$feedPhoto->resizeImage(516,516,'landscape',0,0,0,0,false);

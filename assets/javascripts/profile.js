@@ -546,6 +546,8 @@ $(function(){
 	  curId: null,
 	  curPane: null,
 	  curTags: null,
+	  curRatingBtn: $("#addRating"),
+	  curRatingStars: $("div.stars"),
 	  showPanes: null,
 	  photoBtn: $("input.photoFileButton"),
 	  videoBtn: $("input.videoFileButton"),
@@ -628,7 +630,7 @@ $(function(){
 						.val();
     var url = __LOCATION__ + '/ajax/ajax_add_post.php';
     if(!curRating){
-      curRating = 'No Rating';
+      curRating = 'NULL';
     }
     if(userPhoto){
       var media = 'photo';
@@ -672,10 +674,10 @@ $(function(){
 			 iframe: iframePhoto},
       url: url,
       success: function(result){
-        console.log(result);
-		result = $.parseJSON(result) || null;
-		iStatus = result.code || null;
+		console.log(result);
 		if(result){
+		  result = $.parseJSON(result);
+		  iStatus = result.code;
 		  switch(iStatus){
 			case 204:
 			case 401:
@@ -684,7 +686,7 @@ $(function(){
 					.submittedTags
 					.after("<p class='error'>"+result.status+"</p>");
 			break;
-			default:
+			case 200:
 			  var comment = result.message;
 			  iaddphoto.dropPane.prepend(comment);
               var vidId = iaddphoto
@@ -716,6 +718,10 @@ $(function(){
              iaddphoto.curForm = null;
              iaddphoto.curId = null;
              iaddphoto.curPane = null;
+			 if(curRating){
+				iaddphoto.curRatingStars.remove();
+				iaddphoto.curRatingBtn.remove();
+			 }
 			break;
 		  }
 		} else {
@@ -752,11 +758,13 @@ $(function(){
     var curForm = buttonWrap.parent("form").parent("div.replyForm");
     /*COMMENT ID*/
     var buttonId = $button.attr("id");
-    strStart = buttonId.indexOf("-")+1;
+    strStart = buttonId.indexOf("|")+1;
     strEnd = buttonId.length;
     var commId = buttonId.slice(strStart,strEnd);
     /*POST TYPE*/
     var postType = buttonWrap.siblings("input.post_type").val();
+	/*XHR TYPE*/
+	var xhr = buttonWrap.siblings("input.xhr_type").val();
     /*TAG PANE*/
     var userCurPane = buttonWrap.siblings(".replyPane");
     /*PHOTO*/
@@ -765,7 +773,7 @@ $(function(){
     /*USER COMMENT*/
     var userPostBox = buttonWrap.siblings("textarea.userReplyBox");
     var userPost = userPostBox.val();
-    var url = __LOCATION__ + '.com/add-reply.php';
+    var url = __LOCATION__ + '/ajax/ajax_add_reply.php';
     
     $.ajax({
       beforeSend: function(){
@@ -775,38 +783,52 @@ $(function(){
       },
       type: 'POST',
       url: url,
-      data: {text: userPost, photo: userPhoto, comm_id: commId, post_type: postType},
+      data: {text: userPost, 
+	         photo: userPhoto, 
+			 comm_id: commId, 
+			 post_type: postType,
+			 xhr_type: xhr},
       success: function(result){
-        if(result == 0){
-          userCurPane.before("<p class='error'>Error adding comment</p>");
-        } else if(result == 2){
-          userCurPane.before("<p class='error'>Must insert comment or add photo</p>");
-        } else {
-          curForm.after(result);
-          userCurPane.find("img").remove();
-          userPostBox.val("");
-          if(iaddphoto.curButton){
-            iaddphoto.curButton.attr("disabled", false);
-          }
-          var countContain = curForm.siblings("div.repliesHead").find("div.replyCount").find("b")
-          var countWrap = countContain.find("span.replyNum");
-          var count = countWrap.html();
-          count = Math.floor(count);
-          count = count+1;
-          countWrap.html(count);
-          var countText = countContain.find("span.replyPluralize");
-          if(count == 1){
-            reply = 'Reply ';
-          } else {
-            reply = 'Replies ';
-          }
-          countText.html(reply);
-        }
+		console.log(result);
+		if(result){
+			$result = $.parseJSON(result);
+			iStatus = $result.code;
+			switch(iStatus){
+				case 401:
+				case 500:
+				case 501:
+					userCurPane.before("<p class='error'>"+$result.status+"</p>");
+				break;
+				case 200:
+					curForm.after($result.message);
+					userCurPane.find("img").remove();
+					userPostBox.val("");
+					if(iaddphoto.curButton){
+						iaddphoto.curButton.attr("disabled", false);
+					}
+					var countContain = curForm.siblings("div.repliesHead").find("div.replyCount").find("b")
+					var countWrap = countContain.find("span.replyNum");
+					var count = countWrap.html();
+					count = Math.floor(count);
+					count = count+1;
+					countWrap.html(count);
+					var countText = countContain.find("span.replyPluralize");
+					if(count == 1){
+						reply = 'Reply ';
+					} else {
+						reply = 'Replies ';
+					}
+					countText.html(reply);
+				break;
+			}
+		} else {
+			userCurPane.before("<p class='error'>Error adding comment</p>");
+		}
       },
       complete: function(){
         $button.attr("disabled", false);
         $button.html(buttonText);
-        buttonWrap.find("img").remove();
+        curForm.find("i.bigx").remove();
       }
     })
 
@@ -1080,9 +1102,6 @@ $(function(){
 				     iaddphoto
 					    .userTagPane
 						.css("display","block");
-				     iaddphoto
-					    .userTagPane
-						.css("display","block");
                    }
                    iaddphoto
 				      .curButton
@@ -1158,6 +1177,7 @@ $(function(){
         cache: false,
         processData: false,
         success: function(result){
+		  console.log(result);
 		  if(result){
 			  isrc = $.parseJSON(result);
 			  iStatus = isrc.code
@@ -1179,9 +1199,6 @@ $(function(){
 						iaddphoto
 						   .curPane
 						   .append("<img class='postImgPreview' src='"+isrc.file_source+"'>");
-						iaddphoto
-						   .userTagPane
-						   .css("display","block"); 
 						iaddphoto
 						   .curPane
 						   .append("");

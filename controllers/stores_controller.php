@@ -17,7 +17,7 @@
 		
 		public function getStore($store){
 			$store = $this->StoreModel->getStore($store);
-			if(!empty($store)){
+			if(!empty($store) && $store['user_type'] == 'store'){
 				return $store;
 			} else {
 				header('Location: ' . __LOCATION__);

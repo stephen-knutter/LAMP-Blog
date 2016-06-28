@@ -62,16 +62,16 @@
 		$tagString = 'NULL';
 	}
 	//USER RATING
-	$rating = trim($_POST['rating']);
+	$rating = (trim($_POST['rating']));
 	if(is_numeric($rating) && $rating != 'NULL' && !empty($rating)){
-		$rating = (int)($rating / 2);
+		$rating = (float)($rating / 2);
 		$storeId = $Controller->getStoreIdFromUserId($curWallId);
 		if($storeId){
 			$curRating = $Controller->getStoreRating($storeId);
 			if($curRating){
-				$curValue = $curRating['value'];
-				$curVotes = $curRating['votes'];
-				$addRating = $Controller->updateStoreRating($storeId,$rating,$curValue,$curVotes);
+				$oldValue = $curRating['value'];
+				$oldVotes = $curRating['votes'];
+				$addRating = $Controller->updateStoreRating($storeId,$rating,$oldValue,$oldVotes);
 			} else {
 				$addRating = $Controller->addStoreRating($storeId,$rating);
 			}
@@ -89,7 +89,6 @@
 		    !empty($userPhoto)) 
 			&& (empty($userVideo) && 
 			    empty($userLink))){
-			
 			/*
 			 * @PHOTO AND TEXT COMMENT (comm_type[s] = pf,rf,sf)
 			**/
@@ -122,16 +121,16 @@
 				//ADD COMMENT TO DB
 				if($newPics){
 					switch($postType){
-						case 'products':
+						case 'product':
 							$newCommentId = $Controller->addProdPhotoFull($curWallId,$rating,
 														                  $type,$userId,
-														                  'NULL',$newPhoto,
+														                  $userText,$newPhoto,
 														                  'NULL',$tagString);
 						break;
 						default:
 							$newCommentId = $Controller->addUserPhotoFull($curWallId,$rating,
 														                  $type,$userId,
-														                  'NULL',$newPhoto,
+														                  $userText,$newPhoto,
 														                  'NULL',$tagString);
 						break;
 					}
@@ -140,6 +139,9 @@
 						$newComment = $Controller->generateNewComment($newCommentId,$xhr,$postType);
 						if($newComment){
 							echo $Views->generateFeed($newComment,'front',true);
+							if($tags){
+								$addTags = $Controller->addTags($newCommentId,$tags);
+							}
 							exit();
 						}
 					}
@@ -163,7 +165,7 @@
 				$type = 'st';
 			}
 			switch($postType){
-				case 'products':
+				case 'product':
 					$newCommentId = $Controller->addProdPhotoFull($curWallId,$rating,
 														          $type,$userId,
 														          $userText,'NULL',
@@ -180,6 +182,9 @@
 				$newComment = $Controller->generateNewComment($newCommentId,$xhr,$postType);
 				if($newComment){
 					echo $Views->generateFeed($newComment,'front',true);
+					if($tags){
+						$addTags = $Controller->addTags($newCommentId,$tags);
+					}
 					exit();
 				}
 			}
@@ -218,16 +223,16 @@
 				//ADD COMMENT TO DB
 				if($newPics){
 					switch($postType){
-						case 'products':
+						case 'product':
 							$newCommentId = $Controller->addProdPhotoFull($curWallId,$rating,
 														                  $type,$userId,
-														                  $userText,$newPhoto,
+														                  'NULL',$newPhoto,
 														                  'NULL',$tagString);
 						break;
 						default:
 							$newCommentId = $Controller->addUserPhotoFull($curWallId,$rating,
 														                  $type,$userId,
-														                  $userText,$newPhoto,
+														                  'NULL',$newPhoto,
 														                  'NULL',$tagString);
 						break;
 					}
@@ -236,6 +241,9 @@
 						$newComment = $Controller->generateNewComment($newCommentId,$xhr,$postType);
 						if($newComment){
 							echo $Views->generateFeed($newComment,'front',true);
+							if($tags){
+								$addTags = $Controller->addTags($newCommentId,$tags);
+							}
 							exit();
 						}
 					}
@@ -269,7 +277,7 @@
 			$oldVideoPath = $userdir.$newVideo;
 			if(rename($oldVideoPath,$feedVideoPath)){
 				switch($postType){
-					case 'products':
+					case 'product':
 						$newCommentId = $Controller->addProdVideoOnly($curWallId,$rating,
 														              $type,$userId,
 														              $userText,'NULL',
@@ -292,6 +300,9 @@
 				$newComment = $Controller->generateNewComment($newCommentId,$xhr,$postType);
 				if($newComment){
 					echo $Views->generateFeed($newComment,'front',true);
+					if($tags){
+						$addTags = $Controller->addTags($newCommentId,$tags);
+					}
 					exit();
 				}
 			} else {
@@ -329,7 +340,7 @@
 			$oldVideoPath = $userdir.$newVideo;
 			if(rename($oldVideoPath,$feedVideoPath)){
 				switch($postType){
-					case 'products':
+					case 'product':
 						$newCommentId = $Controller->addProdVideoOnly($curWallId,$rating,
 														              $type,$userId,
 														              'NULL','NULL',
@@ -350,6 +361,9 @@
 					$newComment = $Controller->generateNewComment($newCommentId,$xhr,$postType);
 				    if($newComment){
 						echo $Views->generateFeed($newComment,'front',true);
+						if($tags){
+							$addTags = $Controller->addTags($newCommentId,$tags);
+						}
 						exit();
 					}
 				} else {
@@ -404,7 +418,7 @@
 							$userText = $linkInfo;
 						}
 						switch($postType){
-							case 'products':
+							case 'product':
 							  $newCommentId = $Controller->addProdPhotoFull($curWallId,$rating,
 														                    $type,$userId,
 														                    $userText,$newPhoto,
@@ -423,6 +437,9 @@
 						$newComment = $Controller->generateNewComment($newCommentId,$xhr,$postType);
 						if($newComment){
 							echo $Views->generateFeed($newComment,'front',true);
+							if($tags){
+								$addTags = $Controller->addTags($newCommentId,$tags);
+							}
 							exit();
 						}
 					}
@@ -465,7 +482,7 @@
 						$userText = $linkInfo . "<div class='commPostText'><p>".$userText."</p></div>";
 					}
 					switch($postType){
-						case 'products':
+						case 'product':
 							$newCommentId = $Controller->addProdPhotoFull($curWallId,$rating,
 														                    $type,$userId,
 														                    $userText,$newPhoto,
@@ -484,6 +501,9 @@
 					$newComment = $Controller->generateNewComment($newCommentId,$xhr,$postType);
 					if($newComment){
 						echo $Views->generateFeed($newComment,'front',true);
+						if($tags){
+							$addTags = $Controller->addTags($newCommentId,$tags);
+						}
 						exit();
 					}
 				}
@@ -495,12 +515,3 @@
 		echo json_encode($error);
 		exit();
 	}
-	
-	
-	
-	
-	
-	
-	
-	
-	

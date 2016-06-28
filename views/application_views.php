@@ -735,7 +735,7 @@ class ApplicationViews{
 			<?php
 		}
 		
-		public function generatePostForm($id,$username,$type){
+		public function generatePostForm($id,$username,$type,$sessionId=''){
 			if($type == 'product'){
 				$input_type = 'product';
 			} else {
@@ -795,7 +795,9 @@ class ApplicationViews{
 				?>
 	
 				<?php
-					if($type == 'store'){
+					if($type == 'store' && !empty($sessionId)){
+						$ratingCheck = $this->Controller->checkAlreadyRated($sessionId,$id);
+						if(!$ratingCheck){
 				?>
 						<div id="addRating">
 							<span>Add Rating+</span>
@@ -833,6 +835,7 @@ class ApplicationViews{
 							</label>
 						</div>
 				<?php
+					 }
 					}
 				?>
 				<?php
@@ -920,7 +923,64 @@ class ApplicationViews{
 			exit();
 		}
 	}
-		
+	
+	public function generateReplies($items,$ajax=false){
+		$status = array();
+		$footer = '';
+		if(!empty($items)){
+			foreach($items as $reply){
+				$replyProfilePic = $reply['profile_pic'];
+				$replyUserId = $reply['user_id'];
+				$replyUsername = $reply['username'];
+				$replyUserType = $reply['type'];
+				$replyState = $reply['store_state'];
+				$replyRegion = $reply['store_reg'];
+				$replyComment = $reply['reply'];
+				$replyPicture = $reply['pic'];
+				$date = strtotime($reply['created_at']);
+				$date = date("M j, Y, g:i a", $date);
+				if($replyProfilePic != 'no-profile.png'){
+					$replyPic = __LOCATION__ . '/assets/user-images/'.$replyUserId.'/thumbsmall-'.$replyProfilePic;
+				} else {
+					$replyPic = __LOCATION__ . '/assets/images/thumbsmall-'.$replyProfilePic;
+				}
+				$footer .= 	"<div class='replyWrap'>";
+				$footer .= 		"<div class='replyHead clearfix'>";
+				$footer .=			"<div class='repliesHeadImg'>";
+				$footer .=				"<img src='".$replyPic."' alt='".$replyUsername."'>";
+				$footer .=			"</div>";
+				$linkName = $this->Controller->remove_whitespace($replyUsername);
+				if($replyUserType == 'user'){
+					$replyLink = __LOCATION__ .'/'. $linkName;
+				} else {
+					$replyLink = __LOCATION__ .'/dispensary/'. $replyState.'/'.$replyRegion.'/'.$linkName;
+				}
+			
+				$footer .= 			"<div class='repliesHeadName'>";
+				$footer .= 				"<p><a class='grab' href='".$replyLink."'>".$replyUsername."</a><br/><span class='explain'>Replied &bull; ".$date."</span></p>";
+				if($replyComment != 'NULL' || !($replyComment)){
+					$footer .= 	"<p class='replyText'>".$replyComment."</p>";
+				} else {
+					$footer .= 	"<p class='replyText'></p>";
+				}
+			
+				if($replyPicture != 'NULL' || !$replyPicture || (empty($replyPicture))){
+					$footer .= 			"<div class='replyImageCont'><img class='replyImage' src='". __LOCATION__ ."/assets/user-images/".$replyUserId."/reply-".$replyPicture."' alt='".$replyUsername."'></div>";
+				}
+				$footer .= 			"</div>";
+				$footer .= 		"</div>";	
+				$footer .= 	"</div>";
+			}
+		}
+		if($ajax){
+			$status['code'] = 200;
+			$status['message'] = $footer;
+			echo json_encode($status);
+			exit();
+		}
+		return $footer;
+	}
+
 	public function generateFeed($items,$feedType,$ajax=false){
 		$status = array();
 		$status['message'] = '';
@@ -1084,7 +1144,7 @@ class ApplicationViews{
 			$userThumb = __LOCATION__ . "/assets/images/no-profile.png";
 		}
 		$footer .= 	"<div class='replyForm clearfix'>";
-		$footer .= 	"<form action='../../add-post-photo.php' enctype='multipart/form-data' method='post' class='addPostForm' target='frame-".$commentId."'>";
+		$footer .= 	"<form action='". __LOCATION__ ."/ajax/ajax_media_preview.php' enctype='multipart/form-data' method='post' class='addPostForm' target='frame-".$commentId."'>";
 		$footer .= 	"<input type='hidden' name='post_type' class='post_type' value='".$postVal."'>";
 		$footer .= 	'<div class="replyThumb"><img src="'.$userThumb.'"></div>';
 		$footer .= 	"<textarea class='userReplyBox' placeholder='Reply..'></textarea>";
@@ -1092,60 +1152,15 @@ class ApplicationViews{
 		$footer .=			"<span class='fa fa-camera'></span>";
 		$footer .=			"<input class='userReplyFile photoFileButton' type='file' name='post_photo' />";
 		$footer .=		"</div>";
-		$footer .=		"<div class='replyButtonWrap'><button class='replyButton' id='replyto-".$commentId."'>Reply</button></div>";
+		$footer .=		"<div class='replyButtonWrap'><button class='replyButton' id='replyto|".$commentId."'>Reply</button></div>";
 		$footer .= 		"<div class='tagPane replyPane'></div>";
 		$footer .=		"<iframe class='curFrame' name='frame-".$commentId."' src=''></iframe>";
 		$footer .=	"</form>";
 		$footer .= 	"</div>";
 		if($replyNum > 0){
-			$i=0;
-			foreach($replyItems as $reply){
-				$i++;
-				$replyProfilePic = $reply['profile_pic'];
-				$replyUserId = $reply['user_id'];
-				$replyUsername = $reply['username'];
-				$replyUserType = $reply['type'];
-				$replyState = $reply['store_state'];
-				$replyRegion = $reply['store_reg'];
-				$replyComment = $reply['reply'];
-				$replyPicture = $reply['pic'];
-				$date = strtotime($reply['created_at']);
-				$date = date("M j, Y, g:i a", $date);
-				if($replyProfilePic != 'no-profile.png'){
-					$replyPic = __LOCATION__ . '/assets/user-images/'.$replyUserId.'/thumbsmall-'.$replyProfilePic;
-				} else {
-					$replyPic = __LOCATION__ . '/assets/images/thumbsmall-'.$replyProfilePic;
-				}
-				$footer .= 	"<div class='replyWrap'>";
-				$footer .= 		"<div class='replyHead clearfix'>";
-				$footer .=			"<div class='repliesHeadImg'>";
-				$footer .=				"<img src='".$replyPic."' alt='".$replyUsername."'>";
-				$footer .=			"</div>";
-				$linkName = $this->Controller->remove_whitespace($replyUsername);
-				if($replyUserType == 'user'){
-					$replyLink = __LOCATION__ .'/'. $linkName;
-				} else {
-					$replyLink = __LOCATION__ .'/'. $replyState.'/'.$replyRegion.'/'.$linkName;
-				}
-			
-				$footer .= 			"<div class='repliesHeadName'>";
-				$footer .= 				"<p><a class='grab' href='".$replyLink."'>".$replyUsername."</a><br/><span class='explain'>Replied &bull; ".$date."</span></p>";
-				if($replyComment != 'NULL' || !($replyComment)){
-					$footer .= 	"<p class='replyText'>".$replyComment."</p>";
-				} else {
-					$footer .= 	"<p class='replyText'></p>";
-				}
-			
-				if($replyPicture != 'NULL' || !$replyPicture || (empty($replyPicture))){
-					$footer .= 			"<div class='replyImageCont'><img class='replyImage' src='". __LOCATION__ ."/assets/user-images/".$replyUserId."/feed-".$replyPicture."' alt='".$replyUsername."'></div>";
-				}
-				$footer .= 			"</div>";
-				$footer .= 		"</div>";	
-				$footer .= 	"</div>";
-			}
+			$footer .= $this->generateReplies($replyItems);
 		}
 		$footer .= "</div>";
-		//echo "</div>";
 	} else {
 		//IF BELOW MAP FEED ONLY GRAB SHARE AND REPLY TOTALS
 			if($commType == 'sf' || $commType == 'st' || $commType == 'sp' || 
@@ -1164,7 +1179,7 @@ class ApplicationViews{
 					       <span class="countReplies"><b>'.$replyCount.'</b>&nbsp;'.$reply.'&nbsp;&bull;&nbsp;</span><span class="countShares"><b>0</b> shares<span/>
 				        </div>';
 		$footer .= '</div>';
-		}
+	  }
 		return $footer;
 	}
 	
@@ -1172,6 +1187,7 @@ class ApplicationViews{
 									 $picture,$video,$rating,$tags){
 		$body = '';
 		$body .= "<div class='commBody'>";
+		//$body .= "<span>".$video."</span>";
 			if($commType == 'rll' || $commType == 'pll' || $commType == 'sll' 
 			|| $commType == 'rlf' || $commType == 'plf' || $commType == 'slf' || 	
 			$commType == 'shrll' ||		$commType == 'shpll' || $commType == 'shsll' 
@@ -1414,8 +1430,9 @@ class ApplicationViews{
 						/*!!!!! ADDN'L QUERY FOR SECOND USER !!!!!!*/
 						$secondUser = $this->Controller->getSecondUsernameHead($userCommId);
 						$secondUsername = $secondUser['username'];
+						$secondType = $secondUser['type'];
 						$linkName = $this->Controller->remove_whitespace($secondUsername);
-						if($type == 'user'){
+						if($secondType == 'user'){
 							$wallLink = __LOCATION__ .'/'. $linkName;
 							$iconClass = 'user-icon';
 						} else {
@@ -1531,7 +1548,7 @@ class ApplicationViews{
 	$type = $curUser['type'];
 	$nameLink = $this->Helper->createUrl($username);
 	if($type == 'store'){
-		$userLink = __LOCATION__ . '/' . $storeState . '/' . $storeRegion . '/' . $nameLink;
+		$userLink = __LOCATION__ . '/dispensary/' . $storeState . '/' . $storeRegion . '/' . $nameLink;
 		$actionType = 'typeStore-'.$userId;
 	} else {
 		$userLink = __LOCATION__ . '/' . $nameLink;
@@ -1553,7 +1570,8 @@ class ApplicationViews{
 					echo '<div class="relationPics">';
 							foreach($curUserPics as $pic){
 								$curUserPic = $pic['pic'];
-								$smallPicLink = __LOCATION__ . '/assets/user-images/'.$userId.'/'.$curUserPic;
+								$commId = $pic['comm_id'];
+								$smallPicLink = __LOCATION__ . '/assets/user-images/'.$commId.'/small-'.$curUserPic;
 								echo '<img src="'.$smallPicLink.'">';
 							}
 					echo '</div>';

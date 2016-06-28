@@ -180,6 +180,11 @@
 			return $pics;
 		}
 		
+		public function cropReplyPhoto($path,$photo){
+			$pic = $this->Helper->cropReplyPhoto($path,$photo);
+			return $pic;
+		}
+		
 		public function addProdPhotoFull($curWallId,$rating,
 										 $type,$userId,
 										 $userText,$newPhoto,
@@ -189,6 +194,13 @@
 															  $userText,$newPhoto,
 															  $newVideo,$tagString);
 			return $newCommentId;
+		}
+		
+		public function addProdReplyFull($commId,$sessionId,
+										 $userText,$newPhoto){
+			$newReplyId = $this->Model->insertProdReplyFull($commId,$sessionId,
+															$userText,$newPhoto);
+			return $newReplyId;
 		}
 		
 		public function addUserPhotoFull($curWallId,$rating,
@@ -202,13 +214,20 @@
 			return $newCommentId;
 		}
 		
+		public function addUserReplyFull($commId,$sessionId,
+										 $userText,$newPhoto){
+			$newReplyId = $this->Model->insertUserReplyFull($commId,$sessionId,
+										                    $userText,$newPhoto);
+			return $newReplyId;
+		}
+		
 		public function addUserVideoOnly($curWallId,$rating,
-								         $type,$userId,
-										 $userText,$newVideo,
-						                 $tagString){
+										 $type,$userId,
+										 $userText,$newPhoto,
+										 $newVideo,$tagString){
 			$newCommentId = $this->Model->insertUserVideoOnly($curWallId,$rating,
 															  $type,$userId,
-										                      $userText,$newVideo,
+										                      $userText,$newPhoto,
 						                                      $newVideo,$tagString);
 			return $newCommentId;
 		}
@@ -261,6 +280,15 @@
 			}
 		}
 		
+		public function generateNewReply($newReplyId,$xhr,$postType){
+			if($postType == 'product'){
+				$newReply = $this->Model->findNewProdReply($newReplyId);
+			} else {
+				$newReply = $this->Model->findNewUserReply($newReplyId);
+			}
+			return $newReply;
+		}
+		
 		public function addTempVideo($Userid,$video,$type){
 			$tempVideo = $this->Model->insertTempVideo($Userid,$video,$type);
 			return $tempVideo;
@@ -301,17 +329,47 @@
 			return $storeRating;
 		}
 		
-		public function updateStoreRating($storeId,$rating,$curValue,$curVotes){
-			$curVotes = (int)($curVotes + 1);
-			$curValue = (int)($curValue + $rating);
-			$updateRating = $this->Model->changeStoreRating($storeId,$curValue,$curVotes);
-			return $updateRating;
+		public function updateStoreRating($storeId,$rating,$oldValue,$oldVotes){
+			$curValue = (float)($oldValue + $rating);
+			$curVotes = (float)($oldVotes + 1);
+			if($curValue && $curVotes){
+				$updateRating = $this->Model->changeStoreRating($storeId,$curValue,$curVotes);
+				return $updateRating;
+			} else {
+				return false;
+			}
 		}
 		
 		public function addStoreRating($storeId,$rating){
 			$insertRating = $this->Model->insertStoreRating($storeId,$rating);
 			return $insertRating;
 		}
+		
+		public function addTags($commentId,$tags){
+			if(is_array($tags)){
+				foreach($tags as $key=>$tag){
+					$tag = trim(strip_tags($tag));
+					$tagCheckId = $this->Model->checkForTag($tag);
+					if(!$tagCheckId){
+						$newTagId = $this->Model->insertNewTag($tag);
+						if($newTagId){
+							$newTagRelation = $this->Model->newTagRelation($commentId,$newTagId);
+						}
+					} else {
+						$tagId = $tagCheckId['id'];
+						$newTagRelation = $this->Model->newTagRelation($commentId,$tagId);
+					}
+				}
+				return true;
+			}
+			return false;
+		}
+		
+		public function checkAlreadyRated($sessionId,$userId){
+			$rated = $this->Model->checkForRating($sessionId,$userId);
+			return $rated;
+		}
+		
 	}//END APPLICATION CONTROLLER CLASS
 ?>
 

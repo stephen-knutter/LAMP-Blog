@@ -134,7 +134,7 @@ function bigX(){
 }
 
 function addVideo(source,timeStamp){
-	return '<video id="video-preview'+timeStamp+'" style="margin: 0 auto; position: relative; display: block;" class="video-preview'+timeStamp+'" video-js vjs-default-skin" controls preload="auto" width="516" height="516">'+
+	return '<video id="video-preview'+timeStamp+'" style="margin: 0 auto; position: relative; display: block;" class="video-preview'+timeStamp+' video-js vjs-default-skin" controls preload="auto" width="516" height="516">'+
                  '<source src="'+source+'">'+
                  '<p class="vjs-no-js">To view this video please enable JavaScript, and consider upgrading to a web browser that <a href="https://videojs.com/html5-video-support/" target="_blank">supports HTML5 video</a></p>'+
             '</video>';

@@ -83,7 +83,8 @@
 		}
 		
 		public function findSecondUsername($id){
-			$secondUser = "SELECT username, type, store_reg, store_state FROM users WHERE id=:id";
+			$secondUser = "SELECT username, type, store_reg, store_state 
+			FROM users WHERE id=:id";
 			$statement = $this->pdo->prepare($secondUser);
 			$statement->bindValue(':id',$id,PDO::PARAM_INT);
 			$statement->execute();
@@ -152,12 +153,13 @@
 		
 		public function findUserReplies($id){
 			$replies = array();
-			$userReplies = "SELECT r.id, r.comment_id, r.user_id AS user_reply_id, r.reply, r.pic, r.created_at, 
-				u.id AS user_id, u.username, u.profile_pic, u.type, u.store_reg, u.store_state 
-				FROM user_replies r 
-				LEFT JOIN users u ON r.user_id = u.id 
-				WHERE r.comment_id=:id 
-				ORDER BY r.created_at DESC";
+			$userReplies = "SELECT r.id, r.comment_id, r.user_id AS user_reply_id, 
+			r.reply, r.pic, r.created_at, 
+			u.id AS user_id, u.username, u.profile_pic, u.type, u.store_reg, u.store_state 
+			FROM user_replies r 
+			LEFT JOIN users u ON r.user_id = u.id 
+			WHERE r.comment_id=:id 
+			ORDER BY r.created_at DESC";
 			$statement = $this->pdo->prepare($userReplies);
 			$statement->bindValue(':id',$id,PDO::PARAM_INT);
 			$statement->execute();
@@ -283,12 +285,12 @@
 		
 		public function findTempPic($id){
 			$tempPhoto = "SELECT pic FROM temp_postphotos 
-			WHERE user_id=:id";
+			WHERE user_id=:id
+			ORDER BY created_at DESC LIMIT 1";
 			$statement = $this->pdo->prepare($tempPhoto);
 			$statement->bindValue(':id',$id,PDO::PARAM_INT);
 			$statement->execute();
-			$tempPic = $statement->fetchColumn(0);
-			return $tempPic ? $tempPic : false;
+			return $statement->rowCount() ? $statement->fetchColumn(0) : false;
 		}
 		
 		public function insertTempPic($id,$photo,$type){
@@ -322,12 +324,13 @@
 		}
 		
 		public function getStoreId($id){
-			$storeId = "SELECT store_id FROM users WHERE id=:id";
+			$storeId = "SELECT store_id  
+			FROM users WHERE id=:id 
+			LIMIT 1";
 			$statement = $this->pdo->prepare($storeId);
 			$statement->bindValue(':id',$id,PDO::PARAM_INT);
 			$statement->execute();
-			$id = $statement->fetchColumn(0);
-			return $id ? $id : false;
+			return $statement->rowCount() ? $statement->fetchColumn(0) : false;
 		}
 		
 		public function insertProdPhotoFull($curWallId,$rating,
@@ -350,6 +353,20 @@
 			return $insertId ? $insertId : false;
 		}
 		
+		public function insertProdReplyFull($commId,$sessionId,
+											$userText,$newPhoto){
+			$newProdReply = "INSERT INTO prod_replies 
+			VALUES('NULL', :commId, :sessionId, :userText, 
+			:newPhoto, NOW())";
+			$statement = $this->pdo->prepare($newProdReply);
+			$statement->bindValue(':commId',$commId,PDO::PARAM_INT);
+			$statement->bindValue(':sessionId',$sessionId,PDO::PARAM_INT);
+			$statement->bindValue(':userText',$userText);
+			$statement->bindValue(':newPhoto',$newPhoto);
+			$statement->execute();
+			return $statement->rowCount() ? $this->pdo->lastInsertId() : false;
+		}
+		
 		public function insertUserPhotoFull($curWallId,$rating,
 											$type,$userId,
 											$userText,$newPhoto,
@@ -369,6 +386,20 @@
 			$statement->execute();
 			$insertId = $this->pdo->lastInsertId();
 			return $insertId ? $insertId : false;
+		}
+		
+		public function insertUserReplyFull($commId,$sessionId,
+										    $userText,$newPhoto){
+			$newUserReply = "INSERT INTO user_replies 
+			VALUES('NULL', :commId, :sessionId, :userText, 
+			:newPhoto, NOW())";
+			$statement = $this->pdo->prepare($newUserReply);
+			$statement->bindValue(':commId',$commId,PDO::PARAM_INT);
+			$statement->bindValue(':sessionId',$sessionId,PDO::PARAM_INT);
+			$statement->bindValue(':userText',$userText);
+			$statement->bindValue(':newPhoto',$newPhoto);
+			$statement->execute();
+			return $statement->rowCount() ? $this->pdo->lastInsertId() : false;
 		}
 		
 		public function insertUserVideoOnly($curWallId,$rating,
@@ -458,6 +489,20 @@
 			return $comment ? $comment : false;
 		}
 		
+		public function findNewProdReply($id){
+			$newReply = "SELECT r.id, r.user_id AS user_reply_id, 
+			r.reply, r.pic, r.created_at, 
+			u.id AS user_id, u.username, u.profile_pic, 
+			u.type, u.store_state, u.store_reg 
+			FROM prod_replies r
+			LEFT JOIN users u ON r.user_id = u.id 
+			WHERE r.id=:id LIMIT 1";
+			$statement = $this->pdo->prepare($newReply);
+			$statement->bindValue(':id',$id,PDO::PARAM_INT);
+			$statement->execute();
+			return $statement->rowCount() ? $statement->fetchAll(PDO::FETCH_ASSOC) : false;
+		}
+		
 		public function findNewUserComment($id){
 			$newUserComment = "SELECT c.id, c.user_id AS user_comm_id, 
 			c.rating, c.comm_id, c.comm_type, c.orig_id,  
@@ -472,6 +517,20 @@
 			$statement->execute();
 			$comment = $statement->fetchAll(PDO::FETCH_ASSOC);
 			return $comment ? $comment : false;
+		}
+		
+		public function findNewUserReply($id){
+			$newReply = "SELECT r.id, r.user_id AS user_reply_id, 
+			r.reply, r.pic, r.created_at, 
+			u.id AS user_id, u.username, u.profile_pic, 
+			u.type, u.store_state, u.store_reg 
+			FROM user_replies r 
+			LEFT JOIN users u ON r.user_id = u.id 
+			WHERE r.id=:id";
+			$statement = $this->pdo->prepare($newReply);
+			$statement->bindValue(':id',$id,PDO::PARAM_INT);
+			$statement->execute();
+			return $statement->rowCount() ? $statement->fetchAll(PDO::FETCH_ASSOC) : false;
 		}
 		
 		public function findTempProfilePic($userId){
@@ -789,8 +848,7 @@
 			$statement = $this->pdo->prepare($userFeed);
 			$statement->bindValue(':id', $id, PDO::PARAM_INT);
 			$statement->execute();
-			$results = $statement->fetchAll(PDO::FETCH_ASSOC);
-			return $results ? $results : false;
+			return $statement->rowCount() ? $statement->fetchAll(PDO::FETCH_ASSOC) : false;
 		}
 		
 		public function ajaxUserFeed($id,$offset){
@@ -1071,9 +1129,10 @@
 		//RATINGS
 		public function getStoreRating($storeId){
 			$rating = "SELECT value, votes 
-			FROM ratings WHERE id=:storeId";
+			FROM ratings WHERE store_id=:storeId";
 			$statement = $this->pdo->prepare($rating);
 			$statement->bindValue(':storeId',$storeId,PDO::PARAM_INT);
+			$statement->execute();
 			return $statement->rowCount() ? $statement->fetch(PDO::FETCH_ASSOC) : false;
 		}
 		
@@ -1097,6 +1156,55 @@
 			$statement->bindValue(':rating',$rating,PDO::PARAM_INT);
 			$statement->execute();
 			return $statement->rowCount() ? true : false;
+		}
+		
+		//TAGS
+		public function checkForTag($tag){
+			$tagCheck ="SELECT id  
+			FROM tags WHERE tag_name=:tag 
+			LIMIT 1";
+			$statement = $this->pdo->prepare($tagCheck);
+			$statement->bindValue(':tag',$tag);
+			$statement->execute();
+			return $statement->rowCount() ? $statement->fetch(PDO::FETCH_ASSOC) : false;
+		}
+		
+		public function insertNewTag($tag){
+			$insertTag = "INSERT INTO tags 
+			VALUES('NULL', :tag)";
+			$statement = $this->pdo->prepare($insertTag);
+			$statement->bindValue(':tag',$tag);
+			$statement->execute();
+			return $statement->rowCount() ? $this->pdo->lastInsertId() : false;
+		}
+		
+		public function newTagRelation($commentId,$tagId){
+			$tagRelation = "INSERT INTO tag_relations 
+			VALUES('NULL', :commentId, :tagId)";
+			$statement = $this->pdo->prepare($tagRelation);
+			$statement->bindValue(':commentId',$commentId,PDO::PARAM_INT);
+			$statement->bindValue(':tagId',$tagId,PDO::PARAM_INT);
+			$statement->execute();
+			return $statement->rowCount() ? true : false;
+		}
+		
+		public function checkForRating($sessionId,$userId){
+			//ALSO ADD FUNCTION TO ajax_add_post.php script
+			$ratingCheck = "SELECT COUNT(*) 
+			FROM user_comments 
+			WHERE comm_id=:sessionId AND 
+			user_id=:userId AND 
+			(comm_type = 'rt' OR 
+			comm_type = 'rp' OR 
+			comm_type ='rf' OR 
+			comm_type = 'rvf' OR 
+			comm_type = 'rvv' OR 
+			comm_type = 'rll')";
+			$statement = $this->pdo->prepare($ratingCheck);
+			$statement->bindValue(':sessionId',$sessionId,PDO::PARAM_INT);
+			$statement->bindValue(':userId',$userId,PDO::PARAM_INT);
+			$statement->execute();
+			return $statement->rowCount() ?  $statement->fetchColumn(0) : false;
 		}
 	} //END APPLICATION MODELS CLASS
 ?>

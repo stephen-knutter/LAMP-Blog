@@ -131,7 +131,7 @@
 		**/
 		public function getUser($user){
 			$user = $this->UserModel->getUser($user);
-			if(!empty($user)){
+			if(!empty($user) && $user['type'] != 'store'){
 				return $user;
 			} else {
 				header('Location: ' . __LOCATION__);

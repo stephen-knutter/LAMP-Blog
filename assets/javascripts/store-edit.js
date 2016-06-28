@@ -252,23 +252,6 @@ $(function(){
 				} else {
 					$form.before("<p class='error'>Internal error</p>");
 				}
-				/*
-				if(result == 0){
-					$form.before("<p class='error'>log in to edit</p>");
-				} else if(result == 2){
-					$form.before("<p class='error'>username already taken</p>");
-				} else if(result == 3){
-					$form.before("<p class='error'>internal Error</p>");
-				} else if(result == 4){
-					$form.before("<p class='error'>invalid username</p>");
-				} else if(result == 5){
-					$form.before("<p class='error'>username cannot be blank</p>");
-				} else {
-					//newNameContain.val(result);
-					//window.location = result;
-					$form.before("<p class='success'>username changed successfully</p>");
-				}
-				*/
 			},
 			complete: function(){
 				button.attr("disabled", false);
@@ -478,43 +461,17 @@ $(function(){
 			case 'Sativa':
 			case 'Indica':
 			case 'Hybrid':
-				editForm.html(
-					'<input type="hidden" name="prod_type" id="prod_type" value="'+newItem+'" />'+
-					'<input type="hidden" name="prod_id" id="prod_id" value=0>'+
-					'<input type="text" name="item_name" id="item_name" value="" placeholder="Item Name" autocomplete="off" /><br/>'+
-					'<span class="priceBox" id="price_gram">G $<span class="selectDollar">00</span></span>'+
-					'<span class="priceBox" id="price_eigth">1/8 $<span class="selectDollar">00</span></span>'+
-					'<span class="priceBox" id="price_fourth">1/4 $<span class="selectDollar">00</span></span>'+
-					'<span class="priceBox" id="price_half">1/2 $<span class="selectDollar">00</span></span>'+
-					'<span class="priceBox" id="price_ounce">Oz $<span class="selectDollar">00</span></span>'+
-					'<span class="priceBox menuType">med</span><br/>'+
-					'<input type="submit" id="addMenuItem" value="Add New" />'
-				)
+				editForm.html(doFlwrMenu(newItem));
 			break;
 			case 'Wax':
-			editForm.html(
-				'<input type="hidden" name="prod_type" id="prod_type" value="'+newItem+'" />'+
-				'<input type="hidden" name="prod_id" id="prod_id" value=0>'+
-				'<input type="text" name="item_name" id="item_name" value="" placeholder="Item Name" autocomplete="off" /><br/>'+
-				'<span class="priceBox" id="price_half">.5g $<span class="selectDollar">00</span></span>'+
-				'<span class="priceBox" id="price_gram">G $<span class="selectDollar">00</span></span>'+
-				'<span class="priceBox menuType">med</span><br/>'+
-				'<input type="submit" id="addMenuItem" value="Add New" />'
-			)
+				editForm.html(doWaxMenu(newItem));
 			break;
 			case 'Edible':
 			case 'Drink':
 			case 'Tincture':
 			case 'Ointment':
 			case 'Other':
-				editForm.html(
-					'<input type="hidden" name="prod_type" id="prod_type" value="'+newItem+'" />'+
-					'<input type="hidden" name="prod_id" id="prod_id" value=0>'+
-					'<input type="text" name="item_name" id="item_name" value="" placeholder="Item Name"/><br/>'+
-					'<span class="priceBox" id="price_each">Each $<span class="selectDollar">00</span></span>'+
-					'<span class="priceBox menuType">med</span><br/>'+
-					'<input type="submit" id="addMenuItem" value="Add New" />'
-				)
+				editForm.html(doSingleMenu(newItem));
 			break;
 		}
 		
@@ -1444,41 +1401,6 @@ $(function(){
 				} else {
 					appendWrap.prepend("<p class='error'>Internal error</p>");
 				}
-				
-				/*
-				if(result == 0){
-					appendWrap.prepend("<p class='error'>internal error</p>");
-				} else if(result == 2){
-					appendWrap.prepend("<p class='error'>must be less than 140 characters</p>")
-				} else {
-					//CLEAR OUT FORM
-					specialOfferBox.val("");
-					tagPane.find("img").remove();
-					expDate.find("span#expMonth").html("MM");
-					expDate.find("span#expDay").html("DD");
-					expDate.find("span#expYear").html("YYYY");
-					
-					new_special = $.parseJSON(result);
-					if(new_special.photo == 'budvibes-special.png'){
-						photoURL = __LOCATION__ + '/assets/images/budvibes-special.png';
-					} else {
-						photoURL = 'https://www.budvibes.com/user-images/'+new_special.user_id+'/'+new_special.photo;
-					}
-					curSpecialWrap.html(
-						'<div class="curSpecial">'+
-							'<div class="curSpecialHead">'+
-								'<span class="specialStoreName">'+new_special.store_name+'</span><span class="specialDescrip">'+new_special.desc+'</span>'+
-							'</div>'+
-							'<div class="curSpecialPic">'+
-								'<img class="specialPic" src="'+photoURL+'">'+
-							'</div>'+
-							'<div class="specialExp">'+
-								'<span class="curexpDate">EXPIRES: '+new_special.exp+'</span>'+
-							'</div>'+
-						'</div>'
-					)
-				}
-				*/
 			},
 			complete: function(){
 				$button.attr("disabled",false).html(buttonVal);
