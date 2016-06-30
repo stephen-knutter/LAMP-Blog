@@ -188,7 +188,7 @@
 		public function addProdPhotoFull($curWallId,$rating,
 										 $type,$userId,
 										 $userText,$newPhoto,
-										 $tagString){
+										 $newVideo,$tagString){
 			$newCommentId = $this->Model->insertProdPhotoFull($curWallId,$rating,
 															  $type,$userId,
 															  $userText,$newPhoto,

@@ -245,12 +245,6 @@
 						return false;
 					}
 				break;
-				case 'product':
-					$this->UserModel->doProductFeed();
-				break;
-				case 'ajax-strainfeed':
-					$this->UserModel->doAjaxStrainFeed();
-				break;
 				case 'tags':
 					$this->UserModel->doTagsFeed();
 				break;

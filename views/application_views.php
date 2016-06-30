@@ -60,6 +60,18 @@ class ApplicationViews{
 							.$rating 
 							.' out of 5 stars';
 				break;
+				case 'product':
+					$name = $item['name'];
+					$slug = $item['slug'];
+					$prodType = $item['type'];
+					$split = $item['split'];
+					
+					$title = $name . ' | '. __KEYWORD_CAP_M .' '. __KEYWORD_CAP_S;
+					$uri = '/'. __KEYWORD_S . '/' . $slug;
+					$url = __LOCATION__ . $uri;
+					$alt = __MOBILELOCATION__ . $uri;
+					$meta = $name . ' ' . __KEYWORD_W . ' ' . __KEYWORD_S . ' : ' . $split . ' ' .  $prodType;
+				break;
 				case 'custom':
 					$title = $item['title'];
 					$url = __LOCATION__ . $item['location'];
@@ -90,9 +102,12 @@ class ApplicationViews{
 			$html .= 	'<link rel="stylesheet" type="text/css" href="'. __LOCATION__ .'/assets/css/lightbox.css">';
 			$html .= 	'<link rel="stylesheet" type="text/css" href="'. __LOCATION__ .'/assets/css/jquery.Jcrop.min.css">';
 			$html .=	'<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">';
+			if($type == 'product'){
+				$html .= '<link rel="stylesheet" type="text/css" href="'. __LOCATION__ .'/assets/css/prod-page.css" />';
+			}
 			$html .= 	'<link rel="icon" href="'. __LOCATION__ .'/assets/images/tab-pic.png">';
-			$html .= 	'<script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?v=3.14&sensor=false"></script>';
 			$html .= 	'<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>';
+			$html .= 	'<script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?v=3.24&sensor=false"></script>';
 			$html .= 	'<script type="text/javascript" src="'. __LOCATION__ .'/assets/javascripts/config.js"></script>';
 			$html .= 	'<script type="text/javascript" src="'. __LOCATION__ .'/assets/javascripts/global-fns.js"></script>';
 			$html .=	'<script type="text/javascript" src="'. __LOCATION__ .'/assets/javascripts/profile.js"></script>';
@@ -209,6 +224,15 @@ class ApplicationViews{
 		<?php
 		}
 		
+		public function generateProdFollowingButtons($id,$product){
+		?>	
+			<!-- FOLLOW PRODUCT PAGE-->
+			<div class="follow-message" id="typeProd">	
+				<span id="relationLink" class="unfollow-<?php echo $id; ?> unfollowText">Unfollow</span>
+			</div>
+		<?php
+		}
+		
 		public function generateEditButtons($id,$user){
 		?>
 			<!-- EDIT BUTTON USER PAGE -->
@@ -245,6 +269,15 @@ class ApplicationViews{
 				<span id="relationLink" class="follow-<?php echo $id; ?> followText">Follow</span>
 			</div>
 			<?php
+		}
+		
+		public function generateProdFollowerButtons($id){
+		?>
+			<!-- FOLLOW BUTTON FOR PRODUCT PAGE -->
+			<div class="follow-message" id="typeProduct">
+				<span id="relationLink" class="follow-<?php echo $id; ?> followText">Follow</span>
+			</div>
+		<?php
 		}
 		
 		public function generateUserCountBar($url,$feedclass,$postclass,$photoclass,
@@ -316,6 +349,38 @@ class ApplicationViews{
 						<span class="infoNumber">'.$followingCount.'</span>
 						<span class="infoDesc">following</span>
 					</div></a>';
+			echo '</div>';
+		}
+		
+		public function generateProdCountBar($url,$feedclass,$feedCount,
+											 $photoclass,$photoCount,
+											 $videoclass,$videoCount,
+											 $followerclass,$followerCount){
+			echo '<div class="infoBarWrap clearfix">';
+			echo 	'<a href="'.$url.'"> 
+						<div class="feedInfo '.$feedclass.' clearfix">
+							<span class="infoNumber">'. $feedCount .'</span>
+							<span class="infoDesc">feed</span>
+						</div>
+					</a>';
+			echo 	'<a href="'.$url.'/photos">
+						<div class="photoInfo '.$photoclass.' clearfix">
+							<span class="infoNumber">'.$photoCount.'</span>
+							<span class="infoDesc">photos</span>
+						</div>
+					</a>';
+			echo    '<a href="'.$url.'/videos">
+						<div class="budInfo '.$videoclass.' clearfix">
+							<span class="infoNumber">'.$videoCount.'</span>
+							<span class="infoDesc">videos</span>
+						</div>
+					</a>';
+			echo 	'<a href="'.$url.'/followers">
+						<div class="followersInfo '.$followerclass.' clearfix">
+							<span class="infoNumber">'.$followerCount.'</span>
+							<span class="infoDesc">followers</span>
+						</div>
+					</a>';
 			echo '</div>';
 		}
 		
@@ -1352,7 +1417,7 @@ class ApplicationViews{
 					if($type == 'user'){
 						$link = __LOCATION__ .'/'. $linkName;
 					} else {
-						$link = __LOCATION__ .'/dispensary/'. $storeState.'/'.$storeRegion.'/'.$linkName;
+						$link = __LOCATION__ .'/'. __KEYWORD_D .'/'. $storeState.'/'.$storeRegion.'/'.$linkName;
 					}
 								
 					//SINGLE POST
@@ -1424,7 +1489,7 @@ class ApplicationViews{
 						/*!!!!! ADDN'L QUERY FOR STRAIN !!!!!!*/
 						$secondUsername = $this->Controller->getStrainNameHead($userCommId);
 						$linkName = $this->Controller->remove_whitespace($secondUsername);
-						$wallLink = __LOCATION__ .'/strains/'. $linkName;
+						$wallLink = __LOCATION__ .'/'. __KEYWORD_PLURAL_S .'/'. $linkName;
 						$iconClass = 'prod-icon';
 					} else {
 						/*!!!!! ADDN'L QUERY FOR SECOND USER !!!!!!*/
@@ -1438,7 +1503,7 @@ class ApplicationViews{
 						} else {
 							$secondStoreRegion = $secondUser['store_reg'];
 							$secondStoreState = $secondUser['store_state'];
-							$wallLink = __LOCATION__ .'/dispensary/'. $secondStoreState.'/'.$secondStoreRegion.'/'.$linkName;
+							$wallLink = __LOCATION__ .'/'. __KEYWORD_D .'/'. $secondStoreState.'/'.$secondStoreRegion.'/'.$linkName;
 							$iconClass = 'store-icon';
 						}
 					}
@@ -1455,7 +1520,7 @@ class ApplicationViews{
 					if($type == 'user'){
 						$link = __LOCATION__ .'/'. $linkName;
 					} else {
-						$link = __LOCATION__ .'/dispenary/'. $storeState.'/'.$storeRegion.'/'.$linkName;
+						$link = __LOCATION__ .'/'. __KEYWORD_D .'/'. $storeState.'/'.$storeRegion.'/'.$linkName;
 					}
 					if($commType == 'rf' || $commType == 'rt' || $commType == 'rp' || $commType == 'rvf' || 
 						$commType == 'rvv' || $commType == 'rll' || $commType == 'rlf' || $commType == 'rllv' || 
@@ -1537,8 +1602,53 @@ class ApplicationViews{
 	  }
   }
   
+  public function generateProdToolTip($curProd,$curProdPics,$relationStatus){
+	  $prodId = $curProd['id'];
+	  $prodName = $curProd['name'];
+	  $prodSlug = $curProd['slug'];
+	  $prodPic = $curProd['pic'];
+	  $prodPicLink = __LOCATION__ . '/assets/images/' . __KEYWORD_PLURAL_S . '/75-'.$prodPic;
+	  $prodHref = __LOCATION__ . '/' . __KEYWORD_PLURAL_S . '/' . $prodSlug;
+	  $actionType = 'typeProd-'.$prodId;
+	  echo '<div class="userToolTip">';
+	  echo 	'<div class="relationImg clearfix">';
+	  echo 		'<img src="'.$prodPicLink.'" alt="'.$prodName.'">';
+	  echo 	'</div>';
+	  echo 	'<div class="relationBody">';
+	  echo 		'<p><a href="'.$prodHref.'">'.$prodName.'</a></p>';
+	  echo 		'<div class="midSection">';
+			if($curProdPics){
+				echo '<div class="relationPics">';
+						foreach($curProdPics as $pic){
+							$curUserPic = $pic['pic'];
+							$commId = $pic['comm_id'];
+							$smallPicLink = __LOCATION__ . '/assets/user-images/'.$commId.'/small-'.$curUserPic;
+							echo '<img src="'.$smallPicLink.'">';
+						}
+				echo '</div>';
+			}
+	  echo		'</div>';
+	  echo 	'</div>';
+	  echo '<div class="userRelationBar clearfix">';
+			if($relationStatus){
+				echo '<div class="relationButtonWrap" id="'.$actionType.'">';
+				echo 	'<span class="unfollow-'.$prodId.' relationButton">';
+				echo 		'&minus; Unfollow';
+				echo	'</span>';
+				echo '</div>';
+			} else {
+				echo '<div class="relationButtonWrap" id="'.$actionType.'">';
+				echo 	'<span class="follow-'.$prodId.' relationButton">';
+				echo 		'&#43; Follow';
+				echo	'</span>';
+				echo '</div>';
+			}
+	  echo '</div>';
+	  echo '</div>';
+  }
+  
   public function generateToolTip($curUser,$curUserPics,$relationStatus){
-	$i=1;
+	//$i=1;
 	$sessionId = $_SESSION['logged_in_id'];
 	$username = $curUser['username'];
 	$userId = $curUser['id'];
@@ -1548,7 +1658,7 @@ class ApplicationViews{
 	$type = $curUser['type'];
 	$nameLink = $this->Helper->createUrl($username);
 	if($type == 'store'){
-		$userLink = __LOCATION__ . '/dispensary/' . $storeState . '/' . $storeRegion . '/' . $nameLink;
+		$userLink = __LOCATION__ . '/'. __KEYWORD_D .'/' . $storeState . '/' . $storeRegion . '/' . $nameLink;
 		$actionType = 'typeStore-'.$userId;
 	} else {
 		$userLink = __LOCATION__ . '/' . $nameLink;

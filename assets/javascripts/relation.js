@@ -61,6 +61,7 @@ $(function(){
 	irelations.curButtonAction = irelations
 	                              .curButtonClass
 								  .slice(0,actionStart);
+	//!!! LEFT OFF HERE; NEED SCRIPT TO ADD/REMOVE PROD RELATIONSHIPS
     if(irelations.curButtonAction == 'follow'){
 	  url = __LOCATION__ + '/ajax/ajax_user_follow.php';
       if(!small){

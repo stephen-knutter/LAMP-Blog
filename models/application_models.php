@@ -340,6 +340,7 @@
 			$newProdComment = "INSERT INTO prod_comments 
 			VALUES('NULL', :curWallId, :rating, :userId, :type, :userId, 
 			:userText, :newPhoto, 'NULL', :tagString, NOW())";
+			$statement = $this->pdo->prepare($newProdComment);
 			$statement->bindValue(':curWallId',$curWallId,PDO::PARAM_INT);
 			$statement->bindValue(':rating',$rating,PDO::PARAM_INT);
 			$statement->bindValue(':type',$type);
@@ -349,8 +350,7 @@
 			$statement->bindValue(':newVideo',$newVideo);
 			$statement->bindValue(':tagString',$tagString);
 			$statement->execute();
-			$insertId = $this->pdo->lastInsertId();
-			return $insertId ? $insertId : false;
+			return $statement->rowCount() ? $this->pdo->lastInsertId() : false;
 		}
 		
 		public function insertProdReplyFull($commId,$sessionId,

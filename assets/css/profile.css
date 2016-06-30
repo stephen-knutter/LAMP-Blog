@@ -376,6 +376,7 @@ td.topicCount{
 	margin-top: 100px;
 	margin-bottom: 20px;
 	position: relative;
+	overflow-x: hidden;
 }
 
 #legalWrap{
