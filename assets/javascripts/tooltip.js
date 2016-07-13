@@ -39,7 +39,7 @@ $(function(){
 			})
 		},150)
 	});
-
+	/*
 	$("body").on("mouseleave", ".grab, .grab-prod", function(){
 			if(timeoutID){
 				clearTimeout(timeoutID);
@@ -61,5 +61,5 @@ $(function(){
 			clearTimeout(timeoutID);
 		}
 	})
-
+	*/
 })

@@ -6,7 +6,7 @@ $(function(){
 	  curButtonClass: null,
 	  curButtonAction: null,
 	  relationTypeWrap: null,
-    relationFollowWho: null,
+    followWho: null,
 	  relationType: null,
 	  relationLink: $("span#relationLink"),
 	  relationType: null,
@@ -20,36 +20,26 @@ $(function(){
 	  irelations.relationType = irelations
 	                               .relationTypeWrap
 								                 .attr("id");
-    if(irelations.relationType.indexOf('-') > 0){
+    if(irelations.relationType.indexOf('-') !==  -1){
       /*SMALL BUTTON TYPE*/
+      irelations.followWho = irelations
+                               .relationType
+                               .split('-');
+
       irelations.relationType = irelations
-                                  .relationType
-                                  .split('-')[0];
-      var dshStart = irelations
-	                     .relationType
-					             .indexOf("-")+1;
-	  var dshEnd = irelations
-					         .relationType
-					         .length;
-      irelations.relationUserId = irelations
-	                                  .relationType
-								                    .slice(dshStart,dshEnd);
+                                  .followWho[0];
+      irelations.relationsUserId = irelations
+                                     .followWho[1];
       var small = true;
     } else {
 	  /*BIG BUTTON TYPE*/
-	  irelations.relationFollowWho = irelations
-	                                   .relationLink
-								                     .attr("class")
-								                     .split(' ')[0];
-	  var dshStart = irelations
-						        .relationType
-						        .indexOf("-")+1;
-	  var dshEnd = irelations
-					         .relationType
-					         .length;
-	  irelations.relationUserId = irelations
-								                  .relationType
-								                  .slice(dshStart,dshEnd);
+	  irelations.followWho = irelations
+	                           .relationLink
+								             .attr("class")
+								             .split(' ')[0];
+	  irelations.relationUserId  = irelations
+						                       .followWho
+						                       .split("-")[1];
       var small = false;
     }
 
@@ -116,6 +106,8 @@ $(function(){
 		return false;
 	}
 
+  console.log(irelations.relationUserId + '---' + irelations.relationType);
+  /*
   $.ajax({
       beforeSend: function(){
         if(!small){
@@ -164,5 +156,6 @@ $(function(){
 		        }
          }
      })
+     */
   })
 });
