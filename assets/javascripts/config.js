@@ -1,4 +1,4 @@
-var __LOCATION__ = 'http://localhost/bv_mvc/LAMP-Blog';
+var __LOCATION__ = 'http://localhost:8888/budvibes_mvc/LAMP-Blog';
 
 function doSignUpBox(){
 	return '<div class="chatBoxWrap" id="thread-no">'+
@@ -38,7 +38,7 @@ function doSignUpBox(){
                     '<img class="chatEmoImg" src="'+__LOCATION__+'/assets/images/chat-smile.png" />'+
                   '</div>'+
                 '</div>'+
-              '</div>'		
+              '</div>'
 }
 
 function doChatBox(parent,chatWithId,chatWithUsername,chatMessages){
@@ -142,7 +142,7 @@ function addVideo(source,timeStamp){
 
 function doVideo(video,photo,timeStamp){
 	return "<div class='userPicWrap'>"+
-	           "<video style='margin: 0 auto; position: relative; display: block;' id='video-preview"+timeStamp+"' class='video-js vjs-default-skin' controls preload='auto' width='281' height='281' poster='"+photo+"'>"+  
+	           "<video style='margin: 0 auto; position: relative; display: block;' id='video-preview"+timeStamp+"' class='video-js vjs-default-skin' controls preload='auto' width='281' height='281' poster='"+photo+"'>"+
 				 "<source src='"+ video+"'>"+
 				 "<p class='vjs-no-js'>To view this video please enable JavaScript, and consider upgrading to a web browser that <a href='https://videojs.com/html5-video-support/' target='_blank'>supports HTML5 video</a></p>"+
                "</video>"+

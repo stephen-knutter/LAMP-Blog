@@ -1,7 +1,7 @@
 /*TOOLTIP*/
 $(function(){
 	timeoutID = null;
-	
+
 	$("body").on("mouseenter", ".grab, .grab-prod", function(){
 		$(".userToolTip").remove();
 		$link = $(this);
@@ -17,13 +17,14 @@ $(function(){
 			if(linkClass.indexOf("-") > 0){
 				url = __LOCATION__ +'/ajax/ajax_prod_tooltip.php';
 			} else {
-				url = __LOCATION__+'/ajax/ajax_user_tooltip.php';
+				url = __LOCATION__ +'/ajax/ajax_user_tooltip.php';
 			}
 			$.ajax({
 				url: url,
 				type: 'POST',
 				data: {user: username},
 				success: function(result){
+					console.log(result);
 					if(result){
 					  $("body").append(result);
 					  var offset = $link.offset();
@@ -38,7 +39,7 @@ $(function(){
 			})
 		},150)
 	});
-	
+
 	$("body").on("mouseleave", ".grab, .grab-prod", function(){
 			if(timeoutID){
 				clearTimeout(timeoutID);
@@ -47,18 +48,18 @@ $(function(){
 				$(".userToolTip").remove();
 			},250)
 	});
-	
+
 	$("body").on("mouseenter", ".userToolTip", function(){
 		if(timeoutID){
 			clearTimeout(timeoutID);
 		}
 	})
-	
+
 	$("body").on("mouseleave", ".userToolTip", function(){
 		$(".userToolTip").remove();
 		if(timeoutID){
 			clearTimeout(timeoutID);
 		}
 	})
-	
+
 })

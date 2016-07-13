@@ -39,16 +39,16 @@ $(function(){
 	 changeFileButton: $("#changeFileButton"),
 	 changePhotoForm: $("#changePhotoForm"),
   }
-  var winHeight = window.innerHeight 
-		          || document.documentElement.clientHeight 
+  var winHeight = window.innerHeight
+		          || document.documentElement.clientHeight
 				  || document.body.clientHeight;
-  var winWidth = window.innerWidth 
-                 || document.documentElement.clientWidth 
+  var winWidth = window.innerWidth
+                 || document.documentElement.clientWidth
 				 || document.body.clientWidth;
   ichangephoto
 	  .changePhotoForm
       .prepend("<input type='hidden' name='winheight' value='"+winHeight+"'>")
-  
+
   $("#userProfilePic, #changePhotoForm, #userPicImg").hover(function(){
     ichangephoto
 	    .newPicIcon
@@ -87,18 +87,18 @@ $(function(){
 			     zHeight = $result.height;
 			     zUserId = $result.user_id;
 			     zPhoto = $result.photo;
-			     var winHeight = window.innerHeight 
-			                    || document.documentElement.clientHeight 
+			     var winHeight = window.innerHeight
+			                    || document.documentElement.clientHeight
 						        || document.body.clientHeight;
 			     winHeight = winHeight - 250;
 			     if(zHeight > winHeight){
 				     zHeight = winHeight;
 			     }
-			     var winWidth = window.innerWidth 
-			                   || document.documentElement.clientWidth 
+			     var winWidth = window.innerWidth
+			                   || document.documentElement.clientWidth
 						       || document.body.clientWidth;
 			     document.scrollTop = 0;
-			     $('html, body').css({'overflow':'hidden', 
+			     $('html, body').css({'overflow':'hidden',
 			                     'height':'100%'});
 			     $("<div id='overlay'></div>")
 				    .css({
@@ -106,7 +106,7 @@ $(function(){
                         'opacity': 0,
                         'z-index': 10
                        })
-                    .animate({'opacity':'0.5'}, 
+                    .animate({'opacity':'0.5'},
 					          'slow')
                     .appendTo('body');
 		         $("<div id='lightbox'></div>")
@@ -150,7 +150,7 @@ $(function(){
       //$("#ajaxUploadImg").css("display", "none");
     }
   })
-  
+
   /*FORCE SUBMIT ONCE PHOTO IS UPLOADED*/
   ichangephoto
 	    .changeFileButton
@@ -159,7 +159,7 @@ $(function(){
 				ichangephoto.changePhotoForm.submit();
 			}
 		})
-  		
+
  // $("#changeFileButton").change(function(){
  //   if($("#changeFileButton") != ""){
  //     $("#changePhotoForm").submit();
@@ -184,7 +184,7 @@ $(function(){
       setSelect: [0,0,190,190]
     });
   });
-  
+
   function showCoords(c){
     $('#x').val(c.x);
     $("#y").val(c.y);
@@ -193,11 +193,11 @@ $(function(){
     $("#w").val(c.w);
     $("#h").val(c.h);
   }
-  
+
   function showPreview(coords){
     var rx = 100 / coords.w;
     var ry = 100 / coords.h;
-    
+
     $("#preview").css({
       width: Math.round(rx * $width) + "px",
       height: Math.round(ry * $height) + "px",
@@ -231,12 +231,12 @@ $(function(){
 		type: 'POST',
 		cache: false,
 		url: url,
-		data: {x: x, 
-		       y: y, 
-			   x2: x2, 
-			   y2: y2, 
-			   w: w, 
-			   h: h, 
+		data: {x: x,
+		       y: y,
+			   x2: x2,
+			   y2: y2,
+			   w: w,
+			   h: h,
 			   pic: pic},
 		success: function(result){
 			      //console.log(result);
@@ -260,7 +260,7 @@ $(function(){
 						 .userProfilePic
 						 .append("<p class='uploadError'>Internal error</p>");
 				  }
-		          
+
 		}
 	})
   })
@@ -359,7 +359,7 @@ $(function(){
       }
     });
   });
-  
+
   /*CHANGE EMAIL SUBMIT*/
   $("body").on("submit", "#editEmailForm", function(event){
     if(!event){
@@ -396,7 +396,7 @@ $(function(){
 				case 500:
 					$form.before("<p class='error'>"+ $result.status +"</p>");
 				break;
-				default: 
+				default:
 					iedituser
 					   .newEmailInputField
 					   .val($result.email);
@@ -417,7 +417,7 @@ $(function(){
       }
     })
   });
-  
+
   /*CHANGE PASSWORD SUBMIT*/
   $("body").on("submit", "#changePassForm", function(event){
     if(!event){
@@ -438,7 +438,7 @@ $(function(){
 	                                       .confirmPassInputField
 										   .val();
     var url = $form.attr("action");
-    
+
     $.ajax({
       beforeSend: function(){
         $(".error, .uploadError, .success").remove();
@@ -450,8 +450,8 @@ $(function(){
 		   .val("");
       },
       type: 'POST',
-      data: {old_pass: iedituser.oldPassInputFieldVal, 
-	         new_pass: iedituser.newPassInputFieldVal, 
+      data: {old_pass: iedituser.oldPassInputFieldVal,
+	         new_pass: iedituser.newPassInputFieldVal,
 			 confirm: iedituser.confirmPassInputFieldVal},
       url: url,
       success: function(result){
@@ -463,7 +463,7 @@ $(function(){
 				case 500:
 					$form.before("<p class='error'>"+$result.status+"</p>");
 				break;
-				default: 
+				default:
 					iedituser
 					   .oldPassInputField
 					   .val("");
@@ -511,7 +511,7 @@ $(function(){
     var pop_up = $(this).attr("id");
     google.maps.event.trigger(storedMarker[pop_up], "click");
   });
-  
+
   /*NAVIGATOR GEOLOCATION
   if(geoPosition.init()){
       geoPosition.getCurrentPosition(success_callback,error_callback,{enableHighAccuracy:true});
@@ -531,7 +531,7 @@ $(function(){
     nearbyMap();
     //freezePane();
   }
-  
+
    //freezePane();
    */
 });
@@ -650,7 +650,7 @@ $(function(){
       userVideo = 'NULL';
       userLink = 'NULL';
     }
-    
+
     $.ajax({
       beforeSend: function(){
         $(".error").remove();
@@ -659,18 +659,18 @@ $(function(){
 			.html("");
       },
       type: 'POST',
-      data: {cur_wall_id: curWallId, 
-			 cur_wall_user: curWallUser, 
-			 text: userPost, 
-			 photo: userPhoto, 
-			 video: userVideo, 
-			 tags: tags, 
-			 rating: curRating, 
-			 xhr_type: xhrType, 
-			 post_type: postType, 
-			 media: media, 
-			 link: userLink, 
-			 link_info: linkHtml, 
+      data: {cur_wall_id: curWallId,
+			 cur_wall_user: curWallUser,
+			 text: userPost,
+			 photo: userPhoto,
+			 video: userVideo,
+			 tags: tags,
+			 rating: curRating,
+			 xhr_type: xhrType,
+			 post_type: postType,
+			 media: media,
+			 link: userLink,
+			 link_info: linkHtml,
 			 iframe: iframePhoto},
       url: url,
       success: function(result){
@@ -742,9 +742,9 @@ $(function(){
 			.html("");
       }
     });
-    
+
   });
-	
+
   /*REPLY BUTTON CLICK*/
   $("body").on("click", "button.replyButton", function(event){
     if(!event){
@@ -774,7 +774,7 @@ $(function(){
     var userPostBox = buttonWrap.siblings("textarea.userReplyBox");
     var userPost = userPostBox.val();
     var url = __LOCATION__ + '/ajax/ajax_add_reply.php';
-    
+
     $.ajax({
       beforeSend: function(){
         $("p.error").remove();
@@ -783,9 +783,9 @@ $(function(){
       },
       type: 'POST',
       url: url,
-      data: {text: userPost, 
-	         photo: userPhoto, 
-			 comm_id: commId, 
+      data: {text: userPost,
+	         photo: userPhoto,
+			 comm_id: commId,
 			 post_type: postType,
 			 xhr_type: xhr},
       success: function(result){
@@ -833,9 +833,9 @@ $(function(){
     })
 
   })
-  
+
   /*ADD A LINK*/
-  $("body").on("click", ".linkFileButton", function(event){ 
+  $("body").on("click", ".linkFileButton", function(event){
     iaddphoto.curButton = $(this);
     iaddphoto.curForm = iaddphoto
 						   .curButton
@@ -855,7 +855,7 @@ $(function(){
 	inputCache = null;
     e = $(this);
     $(".error").remove();
-	
+
     var timeoutId = setTimeout(function(){
       if(e.val() != "" && e.val() != inputCache){
 		iaddphoto
@@ -893,84 +893,84 @@ $(function(){
 						e.css("color","red");
 					}
 					var html = ""
-					if((!result.ogimage || result.ogimage == "") && 
-					   (!result.ogtitle || result.ogtitle == "") && 
-					   (!result.ogdescription || result.ogdescription == "") && 
+					if((!result.ogimage || result.ogimage == "") &&
+					   (!result.ogtitle || result.ogtitle == "") &&
+					   (!result.ogdescription || result.ogdescription == "") &&
 					   (!result.ogurl || result.ogurl == "")
-					&& (!result.site_title || result.site_title == "") && 
-					   (!result.meta_description || result.meta_description == "") && 
+					&& (!result.site_title || result.site_title == "") &&
+					   (!result.meta_description || result.meta_description == "") &&
 					   (!result.iframe || result.iframe == "")){
 					//NO RESULTS
 						$("input#addlink").css("color","red");
-					} else if((!result.ogimage) && 
-					          (!result.ogtitle) && 
-							  (!result.ogdescription) && 
+					} else if((!result.ogimage) &&
+					          (!result.ogtitle) &&
+							  (!result.ogdescription) &&
 							  (!result.ogurl) &&
-						      (!result.site_title) &&  
-						      (!result.meta_description) && 
+						      (!result.site_title) &&
+						      (!result.meta_description) &&
 							  (result.iframe)){
 					//IFRAME ONLY
 						html += "<div class='userLink'>";
 						html += "<img class='iframephoto' id='iframenophoto' style='display:none;' src='"+__LOCATION__+"/assets/images/videoholder.png' />";
 						html += result.iframe;
 						html += "<div>";
-					} else if(((result.ogimage) || 
-							   (result.ogtitle) || 
-							   (result.ogdescription) || 
+					} else if(((result.ogimage) ||
+							   (result.ogtitle) ||
+							   (result.ogdescription) ||
 							   (result.ogurl) ||
-						       (result.site_title) || 
-							   (result.meta_description)) 
+						       (result.site_title) ||
+							   (result.meta_description))
 							   && (result.iframe)){
 					//IFRAME & OG INFORMATION
 						html += "<div class='userLink'>";
 						html += "<img class='iframephoto' id='iframephoto' style='display: none;' src='"+result.ogimage+"'>";
 						html += result.iframe;
 						html += "<div>";
-					} else if(((!result.ogimage) && 
-					           (!result.ogtitle) && 
-							   (!result.ogdescription) && 
-							   (!result.ogurl) && 
-							   (!result.iframe)) 
-						       && ((result.site_title) || 
+					} else if(((!result.ogimage) &&
+					           (!result.ogtitle) &&
+							   (!result.ogdescription) &&
+							   (!result.ogurl) &&
+							   (!result.iframe))
+						       && ((result.site_title) ||
 							       (result.meta_description)) ){
-					//ONLY META AND TITLE INFORMATION  
+					//ONLY META AND TITLE INFORMATION
 						html += "<div class='userLink'>";
 						if(result.site_title && result.site_title != ""){
 							html += "<h2 class='postHeadPreview'>"+result.site_title+"</h2>";
 						}
-						if(result.meta_description && 
+						if(result.meta_description &&
 						   result.meta_description != ""){
 							html += "<span class='postDescPreview'>"+result.meta_description+"</span>";
 						}
 						html += '</div>';
-					} else if(((result.ogimage) || 
-					           (result.ogtitle) || 
-							   (result.ogdescription) || 
-							   (result.ogurl)) 
+					} else if(((result.ogimage) ||
+					           (result.ogtitle) ||
+							   (result.ogdescription) ||
+							   (result.ogurl))
 							   && (!result.iframe)){
 					//OG ONLY NO IFRAME
 						html += "<div class='userLink linkWrap'>";
-						if(result.ogimage && 
+						if(result.ogimage &&
 						   result.ogimage != ""){
 							html += "<img class='linkImgPreview' src='"+result.ogimage+"'>";
 						}
-						if(result.ogtitle && 
+						if(result.ogtitle &&
 						   result.ogtitle != ""){
 							html += "<h2>"+result.ogtitle+"</h2>";
 						}
-						if(result.ogdescription && 
+						if(result.ogdescription &&
 						   result.ogdescription != ""){
 							html += "<span class='postDescPreview'>"+result.ogdescription+"</span>";
-						} else if(result.meta_description && 
+						} else if(result.meta_description &&
 						          result.meta_description != ""){
 							html += "<span class='postDescPreview'>"+result.meta_description+"</span>";
 						}
-						if((result.sitename && 
-						    result.sitename != "") 
-							&& (result.ogurl && 
+						if((result.sitename &&
+						    result.sitename != "")
+							&& (result.ogurl &&
 							    result.ogurl != "")){
 							html += "<b><a class='postLinkPreview' rel='nofollow' href='"+result.ogurl+"' target='_blank'>"+result.sitename+"</a></b>";
-						} 
+						}
 						html += "</div>";
 					} else {
 					//DETECTION FAILED
@@ -1006,16 +1006,16 @@ $(function(){
 			$("body").focus();
           }
         })
-        
+
       }
     },300)
   })
-	
+
   /*ADD PHOTO/VIDEO TO COMMENT*/
   $("body").on("change", ".photoFileButton, .videoFileButton", function(){
     $("#addlink").remove(); //zAddPhoto.addLink = $("#addlink");
     iaddphoto.curButton = $(this);//zAddPhoto.curButton = $(this);
-    
+
     //KEEP TAG PANE HIDDEN ON REPLY PHOTO
     var paneCheck = $(this)
 					   .attr("class")
@@ -1025,7 +1025,7 @@ $(function(){
     } else {
       iaddphoto.showPanes = true;
     }
-    
+
     iaddphoto.curForm = iaddphoto
 						   .curButton
 						   .parent("div")
@@ -1092,7 +1092,7 @@ $(function(){
 						.buttonToggleInputs
 						.attr("disabled","disabled");
 				break;
-				default: 
+				default:
 				  if(isrc.media_type == "photo"){
 				    iaddphoto
 					   .curPane
@@ -1194,7 +1194,7 @@ $(function(){
 					   .buttonToggleInputs
 					   .attr("disabled","disabled");
 				break;
-				default: 
+				default:
 				  if(isrc.media_type == "photo"){
 						iaddphoto
 						   .curPane
@@ -1263,7 +1263,7 @@ $(function(){
       })
     }
   });
-  
+
   /*BIGX REMOVE PHOTO*/
   $("body").on("click", "i.bigx", function(){
     iaddphoto
@@ -1309,7 +1309,7 @@ $(function(){
       if(curText == ""){
         return false;
       }
-      
+
       curText = curText
 	             .replace(/&/g, "&amp;")
 				 .replace(/>/g, "&gt;")
@@ -1408,7 +1408,7 @@ $(function(){
     var sending = false;
     var smokeCheck = $("span.smokingnow")
     var smokingId = smoking.slice(strStart,strEnd);
-    
+
     if(!sending && !smokeCheck.length){
       $.ajax({
         beforeSend: function(){
@@ -1429,7 +1429,7 @@ $(function(){
         }
       })
     }
-    
+
   })
 });
 
@@ -1440,7 +1440,7 @@ $(function(){
 	$("body").on("click", ".editLink", function(){
 		var curLink = $(this);
 		var curDelete = curLink.siblings(".delete");
-		
+
 		if(editClick){
 			$(curDelete).css("display", "none");
 		} else {
@@ -1448,7 +1448,7 @@ $(function(){
 		}
 		editClick = editClick ? false : true;
 	});
-	
+
 	//DELETE BUTTON
 	$("body").on("click", ".delete", function(){
 		var curLink = $(this);
@@ -1457,10 +1457,10 @@ $(function(){
 		var curInfo = curIdWrap.split("|");
 		curId = curInfo[1];
 		curPostType = curInfo[2];
-		
+
 		var url = __LOCATION__ + '/delete-post.php';
 		var data = {post_id: curId, post_type: curPostType};
-		
+
 		if(editClick){
 			$.ajax({
 				beforeSend: function(){
@@ -1488,7 +1488,7 @@ $(function(){
 				}
 			})
 		}
-		
+
 	})
 });
 

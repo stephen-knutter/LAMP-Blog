@@ -1,15 +1,15 @@
 <?php
-	
+
 class ApplicationViews{
-		
+
 		private $Controller;
 		private $Helper;
-		
+
 		public function __construct(){
 			$this->Controller = new ApplicationCtrl;
 			$this->Helper = new ApplicationHelper;
 		}
-		
+
 		/*****
 			#VIEWS TEMPLATE FUNCTIONS#
 			 @addHead();
@@ -21,7 +21,7 @@ class ApplicationViews{
 			 @generateFollowingButtons();
 			 @
 		*****/
-		
+
 		#DISPLAY HEADER
 		public function addHead($type,$item){
 			switch($type){
@@ -38,8 +38,8 @@ class ApplicationViews{
 						$tail = __MEDTAIL__;
 					}
 					$title = $item['username'] . ' | ' . $tail;
-					$uri = '/dispensary/' 
-					      . $item['store_state'] . '/' 
+					$uri = '/dispensary/'
+					      . $item['store_state'] . '/'
 						  . $item['store_reg'] . '/'
 						  . $item['slug'];
 					$url = __LOCATION__ . $uri;
@@ -51,13 +51,13 @@ class ApplicationViews{
 						$rating = 0;
 						$votes = 0;
 					}
-					$meta = $item['username'] 
-					        . ' located at ' 
+					$meta = $item['username']
+					        . ' located at '
 							.$item['address']
-							.' call at ' 
-							.$item['phone'] 
+							.' call at '
+							.$item['phone']
 							.' is rated '
-							.$rating 
+							.$rating
 							.' out of 5 stars';
 				break;
 				case 'product':
@@ -65,7 +65,7 @@ class ApplicationViews{
 					$slug = $item['slug'];
 					$prodType = $item['type'];
 					$split = $item['split'];
-					
+
 					$title = $name . ' | '. __KEYWORD_CAP_M .' '. __KEYWORD_CAP_S;
 					$uri = '/'. __KEYWORD_S . '/' . $slug;
 					$url = __LOCATION__ . $uri;
@@ -85,7 +85,7 @@ class ApplicationViews{
 					$meta = __WELCOME__;
 				break;
 			}
-			
+
 			$html = '<!DOCTYPE html>';
 			$html .= '<html>';
 			$html .= '<head>';
@@ -131,7 +131,7 @@ class ApplicationViews{
 			$html .= 	'<script type="text/javascript" src="'. __LOCATION__ .'/assets/javascripts/relation.js"></script>';
 			$html .= 	'<script type="text/javascript" src="'. __LOCATION__ .'/assets/javascripts/endless-scroll.js"></script>';
 			$html .= 	'<script type="text/javascript" src="'. __LOCATION__ .'/assets/javascripts/tooltip.js"></script>';
-			
+
 			$html .= 	'<!--[if IE]><script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->';
 			$html .= 	'<script src="https://vjs.zencdn.net/4.12/video.js"></script>';
 			$html .= 	'<link rel="stylesheet" type="text/css" href="'. __LOCATION__ .'/assets/css/tube.css" />';
@@ -139,15 +139,15 @@ class ApplicationViews{
 			$html .= '<body>';
 			echo $html;
 		}
-		
+
 		#DISPLAY FOOTER
 		public function doFooter(){
 			$html = '</body>';
 			$html .= '</html>';
-			
+
 			echo $html;
 		}
-		
+
 		#HEAD BANNER
 		public function doHeader($type='',$link=''){
 			$html = '<div id="header" class="clearfix">';
@@ -164,7 +164,7 @@ class ApplicationViews{
 							} else {
 								$url = __LOCATION__ .'/'.$username;
 							}
-							
+
 							$html .= '<div id="headMenu">';
 							/* HEAD MENU WITH IMAGES(LOGGED IN)
 							$html .=	'<li><a href="'.$url.'"><img src="'. __LOCATION__ .'/assets/images/home-icon.png" alt="home"></a></li>';
@@ -183,7 +183,7 @@ class ApplicationViews{
 							} else {
 								$html .= '<li><a id="menuIcon"><i class="fa fa-bars"></i></a></li>';
 							}
-							
+
 							$html .= '</div>';
 						} else {
 							$html .= '<div id="headMenu">';
@@ -204,35 +204,35 @@ class ApplicationViews{
 							} else {
 								$html .= '<li><a id="menuIcon"><i class="fa fa-bars"></i></a></li>';
 							}
-							
+
 							$html .= '</div>';
 						}
 			$html .= '</div>';
-			
+
 			echo $html;
 		}
-		
+
 		public function generateFollowingButtons($id,$user){
 		?>
 			<!-- FOLLOW USER PAGE-->
 				<div class="message-user" id="message-<?php echo $id; ?>" data-chat="<?php echo $id; ?>">
 					<img src="<?php echo __LOCATION__  . '/assets/images/message-icon.png' ?>" alt="message" title="message <?php echo $user; ?>"/>
 				</div>
-				<div class="follow-message" id="typeUser">	
+				<div class="follow-message" id="typeUser">
 					<span id="relationLink" class="unfollow-<?php echo $id; ?> unfollowText">Unfollow</span>
 				</div>
 		<?php
 		}
-		
+
 		public function generateProdFollowingButtons($id,$product){
-		?>	
+		?>
 			<!-- FOLLOW PRODUCT PAGE-->
-			<div class="follow-message" id="typeProd">	
+			<div class="follow-message" id="typeProd">
 				<span id="relationLink" class="unfollow-<?php echo $id; ?> unfollowText">Unfollow</span>
 			</div>
 		<?php
 		}
-		
+
 		public function generateEditButtons($id,$user){
 		?>
 			<!-- EDIT BUTTON USER PAGE -->
@@ -256,9 +256,9 @@ class ApplicationViews{
 					?>
 					<img class="userEditIcon" src="<?php echo __LOCATION__ . '/assets/images/rss-icon.png' ?>" />
 				</div>
-		<?php	
+		<?php
 		}
-		
+
 		public function generateFollowerButtons($id,$user){
 			?>
 			<!-- FOLLOW BUTTON FOR NON LOGGED IN USERS ON USER PAGE-->
@@ -270,7 +270,7 @@ class ApplicationViews{
 			</div>
 			<?php
 		}
-		
+
 		public function generateProdFollowerButtons($id){
 		?>
 			<!-- FOLLOW BUTTON FOR PRODUCT PAGE -->
@@ -279,7 +279,7 @@ class ApplicationViews{
 			</div>
 		<?php
 		}
-		
+
 		public function generateUserCountBar($url,$feedclass,$postclass,$photoclass,
 											 $budclass,$followerclass,$followingclass,$videoclass,
 											 $feedCount,$postCount,$photoCount,$videoCount,
@@ -313,9 +313,9 @@ class ApplicationViews{
 						<span class="infoNumber">'.$followingCount.'</span>
 						<span class="infoDesc">following</span>
 					</div></a>';
-			echo '</div>';								  
+			echo '</div>';
 		}
-		
+
 		public function generateStoreCountBar($url,$feedclass,$postclass,$photoclass,
 											 $menuclass,$followerclass,$followingclass,$videoclass,
 											 $feedCount,$postCount,$photoCount,$videoCount,
@@ -351,13 +351,13 @@ class ApplicationViews{
 					</div></a>';
 			echo '</div>';
 		}
-		
+
 		public function generateProdCountBar($url,$feedclass,$feedCount,
 											 $photoclass,$photoCount,
 											 $videoclass,$videoCount,
 											 $followerclass,$followerCount){
 			echo '<div class="infoBarWrap clearfix">';
-			echo 	'<a href="'.$url.'"> 
+			echo 	'<a href="'.$url.'">
 						<div class="feedInfo '.$feedclass.' clearfix">
 							<span class="infoNumber">'. $feedCount .'</span>
 							<span class="infoDesc">feed</span>
@@ -383,38 +383,40 @@ class ApplicationViews{
 					</a>';
 			echo '</div>';
 		}
-		
+
 		public function doTopStrains($topStrains){
-			echo '<div class="recentStrainsWrap clearfix">';
-			echo 	'<div id="strainHeadText">';
-			echo		'<h3>Top Strains</h3>';
-			echo 	'</div>';
-			echo 	'<div class="topStrainsPics clearfix">';
-					foreach($topStrains as $row){
-						if(strlen($row['name']) > 20){
-							$name = substr($row['name'],0,20);
-							$name = $name.'...';
-						} else {
-							$name = $row['name'];
+			if($topStrains){
+				echo '<div class="recentStrainsWrap clearfix">';
+				echo 	'<div id="strainHeadText">';
+				echo		'<h3>Top Strains</h3>';
+				echo 	'</div>';
+				echo 	'<div class="topStrainsPics clearfix">';
+						foreach($topStrains as $row){
+							if(strlen($row['name']) > 20){
+								$name = substr($row['name'],0,20);
+								$name = $name.'...';
+							} else {
+								$name = $row['name'];
+							}
+							$linkName = $this->Controller->remove_whitespace($row['name']);
+							echo '<a href="'. __LOCATION__ .'/strains/'.$linkName.'">';
+							echo '<div class="topStrainWrap">';
+							echo '<div class="topStrainImg"><img style="height: 110px; width: 110px;" src="'. __LOCATION__ .'/assets/images/strains/110-'.$row['pic'].'" alt="'.$row['name'].' weed strain"></div>';
+							echo '<div class="topStrainName">'.$name.'</div>';
+							echo '</div>';
+							echo '</a>';
 						}
-						$linkName = $this->Controller->remove_whitespace($row['name']);
-						echo '<a href="'. __LOCATION__ .'/strains/'.$linkName.'">';
+						echo '<a href="'. __LOCATION__ .'/strains/">';
 						echo '<div class="topStrainWrap">';
-						echo '<div class="topStrainImg"><img style="height: 110px; width: 110px;" src="'. __LOCATION__ .'/assets/images/strains/110-'.$row['pic'].'" alt="'.$row['name'].' weed strain"></div>';
-						echo '<div class="topStrainName">'.$name.'</div>';
+						echo '<div class="topStrainImg"><img style="height: 110px; width: 110px;" src="'. __LOCATION__ .'/assets/images/explore.png" alt="More Weed"></div>';
+						echo '<div class="topStrainName">More...</div>';
 						echo '</div>';
 						echo '</a>';
-					}
-					echo '<a href="'. __LOCATION__ .'/strains/">';
-					echo '<div class="topStrainWrap">';
-					echo '<div class="topStrainImg"><img style="height: 110px; width: 110px;" src="'. __LOCATION__ .'/assets/images/explore.png" alt="More Weed"></div>';
-					echo '<div class="topStrainName">More...</div>';
-					echo '</div>';
-					echo '</a>';
-			echo	'</div>';
-			echo 	'</div>';
+				echo	'</div>';
+				echo 	'</div>';
+			}
 		}
-		
+
 		public function doTopPosters($topPosters){
 			echo '<div class="recentStrainsWrap topPosters clearfix">';
 			echo	'<div id="posterHeadText">';
@@ -447,12 +449,12 @@ class ApplicationViews{
 						echo '</a>';
 					}
 					echo '</div>';
-	
+
 			//do_footer($type,$store);
-	
-			echo  '</div>';	
+
+			echo  '</div>';
 		}
-		
+
 		#ADD HEAD MENU ITEMS TO DOM
 		public function doUserMenu($type=''){
 			?>
@@ -470,7 +472,7 @@ class ApplicationViews{
 					<div id="signUp"><a href="<?php echo __LOCATION__ . '/signup'; ?>" id="signUpLink">Sign Up?</a></div>
 					</div>
 				</div>
-		
+
 				<div id="logMenu" class="signUp logMenu">
 					<h3><img src="<?php echo __LOCATION__ . '/assets/images/sign-up-head.png'; ?>" alt="budvibes sign up"></h3>
 					<div id="logWrap">
@@ -564,16 +566,16 @@ class ApplicationViews{
 					echo '<div class="inboxCount">'.$msgCount.'</div>';
 				}
 			}
-		
+
 			if(isset($_SESSION['logged_in_id'])){
 		?>
 			<div id="msgWrap">
-				<div id="listingHead"><img src="<?php echo __LOCATION__ . './assets/images/message-head-icon.png'; ?>" alt="<?php echo $_SESSION['logged_in_user'].'\'s messages'?>"></div>
+				<div id="listingHead"><img src="<?php echo __LOCATION__ . '/assets/images/message-head-icon.png'; ?>" alt="<?php echo $_SESSION['logged_in_user'].'\'s messages'?>"></div>
 				<div id="messages">
 					<?php
 						$userMessages = $this->Controller->getUserMessages($_SESSION['logged_in_id']);
 						$totalUsers = $userMessages['count'];
-						$messageThread = $userMessages['thread']; 
+						$messageThread = $userMessages['thread'];
 						if($totalUsers > 0){
 							$data = array();
 							$i=0;
@@ -581,9 +583,9 @@ class ApplicationViews{
 								$messageUserOne = $message['user_one'];
 								$messageUserTwo = $message['user_two'];
 								if($messageUserOne == $_SESSION['logged_in_id']){
-									$msg = $this->Controller->getFirstUserMessage($messageUserTwo); 
+									$msg = $this->Controller->getFirstUserMessage($messageUserTwo);
 								} else {
-									$msg = $this->Controller->getSecondUserMessage($messageUserOne); 
+									$msg = $this->Controller->getSecondUserMessage($messageUserOne);
 								}
 								$data[$i]['chat_id'] = $msg['id'];
 								$data[$i]['parent'] = $msg['parent'];
@@ -772,7 +774,7 @@ class ApplicationViews{
 			</div>
 		</div>
 	<?php
-	  } 
+	  }
 	?>
 		<!-- FORUM -->
 		<div id="forumHeadWrap">
@@ -799,14 +801,14 @@ class ApplicationViews{
 		</div>
 			<?php
 		}
-		
+
 		public function generatePostForm($id,$username,$type,$sessionId=''){
 			if($type == 'product'){
 				$input_type = 'product';
 			} else {
 				$input_type = 'user';
 			}
-	
+
 			if($type == 'edit'){
 				$placeholder = 'Special Offer..';
 				$post_text = 'Add';
@@ -834,7 +836,7 @@ class ApplicationViews{
 					<span class="fa fa-camera"></span>
 					<input type="file" name="post_photo" class="photoFileButton" />
 				</div>
-	
+
 				<?php
 					if($type != 'edit'){
 				?>
@@ -846,7 +848,7 @@ class ApplicationViews{
 				<?php
 					}
 				?>
-	
+
 				<?php
 					if($type != 'edit'){
 				?>
@@ -858,7 +860,7 @@ class ApplicationViews{
 				<?php
 					}
 				?>
-	
+
 				<?php
 					if($type == 'store' && !empty($sessionId)){
 						$ratingCheck = $this->Controller->checkAlreadyRated($sessionId,$id);
@@ -949,7 +951,7 @@ class ApplicationViews{
 			exit();
 		}
 	}
-	
+
 	public function generatePhotos($items,$ajax=false){
 		$i=0;
 		$photoSize=283;
@@ -988,7 +990,7 @@ class ApplicationViews{
 			exit();
 		}
 	}
-	
+
 	public function generateReplies($items,$ajax=false){
 		$status = array();
 		$footer = '';
@@ -1020,7 +1022,7 @@ class ApplicationViews{
 				} else {
 					$replyLink = __LOCATION__ .'/dispensary/'. $replyState.'/'.$replyRegion.'/'.$linkName;
 				}
-			
+
 				$footer .= 			"<div class='repliesHeadName'>";
 				$footer .= 				"<p><a class='grab' href='".$replyLink."'>".$replyUsername."</a><br/><span class='explain'>Replied &bull; ".$date."</span></p>";
 				if($replyComment != 'NULL' || !($replyComment)){
@@ -1028,12 +1030,12 @@ class ApplicationViews{
 				} else {
 					$footer .= 	"<p class='replyText'></p>";
 				}
-			
+
 				if($replyPicture != 'NULL' || !$replyPicture || (empty($replyPicture))){
 					$footer .= 			"<div class='replyImageCont'><img class='replyImage' src='". __LOCATION__ ."/assets/user-images/".$replyUserId."/reply-".$replyPicture."' alt='".$replyUsername."'></div>";
 				}
 				$footer .= 			"</div>";
-				$footer .= 		"</div>";	
+				$footer .= 		"</div>";
 				$footer .= 	"</div>";
 			}
 		}
@@ -1068,7 +1070,7 @@ class ApplicationViews{
 			$picture = $row['pic'];
 			$video = $row['vid'];
 			$tags = $row['tags'];
-			
+
 			if($ajax){
 				$status['message'] .= "<div class='commWrap'>";
 					                 //ITEM HEAD
@@ -1079,7 +1081,7 @@ class ApplicationViews{
 					                //ITEM BODY
 				$status['message'] .= $this->generateFeedBody($commentId,$commType,$comment,$origId,
 										   $username,$picture,$video,$rating,$tags);
-											
+
 					                //ITEM REPLIES/FOOTER
 				$status['message'] .= $this->generateFeedReplies($feedType,$commType,$commentId,$rating);
 				$status['message'] .= "</div>";
@@ -1094,52 +1096,52 @@ class ApplicationViews{
 					//ITEM BODY
 					echo $this->generateFeedBody($commentId,$commType,$comment,$origId,
 										    $username,$picture,$video,$rating,$tags);
-											
+
 					//ITEM REPLIES/FOOTER
 					echo $this->generateFeedReplies($feedType,$commType,$commentId,$rating);
 				echo "</div>";
 			}
 		}
-		
+
 		if($ajax){
 		    $status['code'] = 200;
 		    $status['type'] = $feedType;
 			return json_encode($status);
 		}
 	}
-	
+
 	public function generateFeedReplies($feedType,$commType,$commentId,$rating){
 		$footer = '';
 		if($feedType != 'map' && $feedType != 'ajax-front'){
 		//ADD REPLY FORM AND REPLIES
-		if($commType == 'sf' || $commType == 'st' || $commType == 'sp' || 
+		if($commType == 'sf' || $commType == 'st' || $commType == 'sp' ||
 			$commType == 'svf' || $commType == 'svv' ||
-			$commType == 'sll' || $commType == 'slf' || $commType == 'smk' || 
+			$commType == 'sll' || $commType == 'slf' || $commType == 'smk' ||
 			$commType == 'shsll' || $commType == 'shslf' || $commType == 'shsmk' ||
 			$commType == 'shsf' || $commType == 'shst' || $commType == 'shsp' ||
-			$commType == 'shsvv' || $commType == 'shsvf' || $commType == 'sllv' || 
+			$commType == 'shsvv' || $commType == 'shsvf' || $commType == 'sllv' ||
 			$commType == 'slfv' || $commType == 'shsllv' || $commType == 'shslfv'){
 				$replies = $this->Controller->getProdReplies($commentId);
 		} else {
 				$replies = $this->Controller->getUserReplies($commentId);
 		}
-		
+
 		$replyItems = $replies['items'];
 		$replyNum = $replies['num'];
-		
+
 		if($replyNum == 1){
 			$replyText = 'Reply';
 		} else {
 			$replyText = 'Replies';
 		}
-		
+
 		$footer .= "<div class='repliesWrapper'>";
 		$footer .=	"<div class='repliesHead clearfix'>";
 		$footer .=		"<div class='replyCount'>";
 		$footer .=			"<b><span class='fa fa-reply'></span><span class='replyNum'>".$replyNum."</span> <span class='replyPluralize'>".$replyText." </span><span class='addLink'>+Reply</span></b>";
 		$footer .=		"</div>";
-		if($commType == 'rf' || $commType == 'rt' || $commType == 'rp' || $commType == 'rvf' || 			  
-			$commType == 'rvv' || $commType == 'rll' || $commType == 'rlf' || 
+		if($commType == 'rf' || $commType == 'rt' || $commType == 'rp' || $commType == 'rvf' ||
+			$commType == 'rvv' || $commType == 'rll' || $commType == 'rlf' ||
 			$commType == 'rllv' || $commType == 'rlvf'){
 			$footer .= 	"<div class='shareCount'>";
 			if($rating > 0.1 && $rating <= .9){
@@ -1168,36 +1170,36 @@ class ApplicationViews{
 			$footer .= 		$stars;
 			$footer .= 	"</div>";
 		} else {
-			if($commType == 'shsf' || 
-			   $commType == 'shst' || 
-			   $commType == 'shsp' || 
-			   $commType == 'shsll' || 
-			   $commType == 'shslf' || 
-			   $commType == 'shsmk' || 
-			   $commType == 'shsvf' || 
+			if($commType == 'shsf' ||
+			   $commType == 'shst' ||
+			   $commType == 'shsp' ||
+			   $commType == 'shsll' ||
+			   $commType == 'shslf' ||
+			   $commType == 'shsmk' ||
+			   $commType == 'shsvf' ||
 			   $commType == 'shsvv'){
 				$shareCount = $this->Controller->generateProductShareCount($commentId);
 			} else {
 				$shareCount = $this->Controller->generateUserShareCount($commentId);
 			}
-			
+
 			if($shareCount == 1){
 				$share = 'Share';
 			} else {
 				$share = 'Shares';
 			}
-			
+
 			$footer .=		"<div class='shareCount'>";
 			$footer .=			"<b><span class='fa fa-retweet'></span>".$shareCount."&nbsp;".$share."&nbsp;<span class='shareLink' id='share-".$commentId."'>+Share</span></b>";
 			$footer .=		"</div>";
 		}
 		$footer .=	"</div>";
-		if($commType == 'sf' || $commType == 'st' || $commType == 'sp' || 
+		if($commType == 'sf' || $commType == 'st' || $commType == 'sp' ||
 			$commType == 'svf' || $commType == 'svv' ||
-			$commType == 'sll' || $commType == 'slf' || $commType == 'smk' || 
+			$commType == 'sll' || $commType == 'slf' || $commType == 'smk' ||
 			$commType == 'shsll' || $commType == 'shslf' || $commType == 'shsmk' ||
-			$commType == 'shsf' || $commType == 'shst' || $commType == 'shsp' || 
-			$commType == 'shsvv' || $commType == 'shsvf' || $commType == 'sllv' || 
+			$commType == 'shsf' || $commType == 'shst' || $commType == 'shsp' ||
+			$commType == 'shsvv' || $commType == 'shsvf' || $commType == 'sllv' ||
 			$commType == 'slfv' || $commType == 'shsllv' || $commType == 'shslfv'){
 			$postVal = 'product';
 		} else {
@@ -1228,8 +1230,8 @@ class ApplicationViews{
 		$footer .= "</div>";
 	} else {
 		//IF BELOW MAP FEED ONLY GRAB SHARE AND REPLY TOTALS
-			if($commType == 'sf' || $commType == 'st' || $commType == 'sp' || 
-			$commType == 'sll' || $commType == 'slf' || $commType == 'svv' || 
+			if($commType == 'sf' || $commType == 'st' || $commType == 'sp' ||
+			$commType == 'sll' || $commType == 'slf' || $commType == 'svv' ||
 			$commType == 'svf' || $commType == 'sllv' || $commType == 'slfv'){
 				$replyCount = $this->Controller->getProductReplyCount($commentId);
 			} else {
@@ -1247,17 +1249,17 @@ class ApplicationViews{
 	  }
 		return $footer;
 	}
-	
+
 	public function generateFeedBody($commentId,$commType,$comment,$origId,$username,
 									 $picture,$video,$rating,$tags){
 		$body = '';
 		$body .= "<div class='commBody'>";
 		//$body .= "<span>".$video."</span>";
-			if($commType == 'rll' || $commType == 'pll' || $commType == 'sll' 
-			|| $commType == 'rlf' || $commType == 'plf' || $commType == 'slf' || 	
-			$commType == 'shrll' ||		$commType == 'shpll' || $commType == 'shsll' 
+			if($commType == 'rll' || $commType == 'pll' || $commType == 'sll'
+			|| $commType == 'rlf' || $commType == 'plf' || $commType == 'slf' ||
+			$commType == 'shrll' ||		$commType == 'shpll' || $commType == 'shsll'
 			|| $commType == 'shrlf' || $commType == 'shplf' || $commType == 'shslf'){
-				if($commType == 'sll' || $commType == 'slf' || 
+				if($commType == 'sll' || $commType == 'slf' ||
 				$commType == 'shsll' || $commType == 'shslf'){
 					$permalink = __LOCATION__ .'/strainpost/' .$commentId;
 				} else {
@@ -1273,9 +1275,9 @@ class ApplicationViews{
 				}
 				$body .= 	'</div>';
 				$body .= '</div>';
-			} else if($commType == 'rllv' || $commType == 'pllv' || $commType == 'sllv' || 
-				$commType == 'rlfv' || $commType == 'plfv' || $commType == 'slfv' || 
-				$commType == 'shrllv' || $commType == 'shpllv' || $commType == 'shsllv' || 
+			} else if($commType == 'rllv' || $commType == 'pllv' || $commType == 'sllv' ||
+				$commType == 'rlfv' || $commType == 'plfv' || $commType == 'slfv' ||
+				$commType == 'shrllv' || $commType == 'shpllv' || $commType == 'shsllv' ||
 				$commType == 'shrlfv' || $commType == 'shplfv' || $commType == 'shslfv'){
 					$body .= '<div class="commPostPic" id="test'.$commentId.'">';
 					$body .= 	'<div class="linkWrap">';
@@ -1290,14 +1292,14 @@ class ApplicationViews{
 				//echo '<span class="nowSmokingFeed">is now smoking <a class="grab-prod" href="https://www.budvibes.com/strains/'.$link_name.'">'.$row_result['user_name'].'</a></span>';
 			} else {
 				if($video && $video != 'NULL'){
-					if($commType == 'rvf' || $commType == 'pvf' || $commType == 'svf' || 
-					$commType == 'rvv' || $commType == 'pvv' || $commType == 'svv' 
-					|| $commType == 'shpvf' || $commType == 'shsvf' || $commType == 'shpvv' || 
+					if($commType == 'rvf' || $commType == 'pvf' || $commType == 'svf' ||
+					$commType == 'rvv' || $commType == 'pvv' || $commType == 'svv'
+					|| $commType == 'shpvf' || $commType == 'shsvf' || $commType == 'shpvv' ||
 					$commType == 'shsvv'){
 						$micro =  uniqid();
 						$body .= "<div class='commPostVideo'>";
 						$body .=	"<video id='video_".$commentId."' class='video-js vjs-default-skin' controls ";
-						$body .=	 " preload='auto' width='100%' height='auto' style='position: relative; display: block; margin: 0 auto; padding: 0;' data-setup='{}' 
+						$body .=	 " preload='auto' width='100%' height='auto' style='position: relative; display: block; margin: 0 auto; padding: 0;' data-setup='{}'
 									poster='". __LOCATION__ ."/assets/user-images/".$origId."/".$picture."'>";
 						$body .=	 "<source src='". __LOCATION__ ."/assets/user-images/".$origId."/feed-".$video."'>";
 						$body .=	 "<p class='vjs-no-js'>To view this video please enable JavaScript, and consider upgrading to a web browser that <a href='https://videojs.com/html5-video-support/' target='_blank'>supports HTML5 video</a></p>";
@@ -1306,8 +1308,8 @@ class ApplicationViews{
 						$body .= "</div>";
 					}
 				} else if($picture && $picture != 'NULL' && $video == 'NULL'){
-					if($commType == 'sf' || $commType == 'st' || $commType == 'sp' || 
-					$commType == 'svf' || $commType == 'svv' || 
+					if($commType == 'sf' || $commType == 'st' || $commType == 'sp' ||
+					$commType == 'svf' || $commType == 'svv' ||
 					$commType == 'sllv' || $commType == 'slfv'){
 						$imgLink = __LOCATION__ .'/strainpost/'. $commentId;
 					} else {
@@ -1327,7 +1329,7 @@ class ApplicationViews{
 						//GET BLOCK WITHIN FORUM
 						$blockName = $this->Controller->getForumBlock($parentId);
 						$blockLink = $this->Controller->remove_whitespace($blockName);
-				
+
 						$body .= '<div class="breadcrumbTrail">
 								<p class="firstCrumb"><a href="'. __LOCATION__ .'/forum/general/'.$blockLink.'">'.$blockName.'</a></p>
 								<p class="secondCrumb"><a href="'. __LOCATION__ .'/forum/general/'.$blockLink.'/'.$threadLink.'">'.$threadName.'</a></p>
@@ -1342,7 +1344,7 @@ class ApplicationViews{
 					//FORUM REPLY W/ QUOTE
 					if($commType == 'fg' || $commType == 'shfg'){
 						$forumReply = $this->Controller->getForumReply($rating);
-						
+
 						if(!empty($forumReply)){
 							$replyUser = $forumReply['username'];
 							$replyComment = $forumReply['comment'];
@@ -1383,13 +1385,13 @@ class ApplicationViews{
 					foreach($userTags as $key=>$tag){
 						$tagLink = $this->Controller->remove_whitespace($tag);
 						$body .= '<span class="usertag"><a href="'. __LOCATION__ .'/tags/'.$tagLink.'">'.$tag.'</a></span>';
-					}		
+					}
 				$body .= '</div>';
 			}
 			$body .=	"</div>";
 			return $body;
 	}
-		
+
 	public function generateFeedHead($commentId,$date,$profilePic,$userId,$username,
 									 $userCommId,$commId,$nullRow,$commType,
 									 $type,$storeState,$storeRegion,$origId,
@@ -1403,30 +1405,30 @@ class ApplicationViews{
 		} else {
 			$picLink = __LOCATION__ . '/assets/images/thumb-'.$profilePic;
 		}
-			
+
 		$head .= "<div class='commHead clearfix'>";
 		$head .= 	"<div class='commHeadImg'>";
 		$head .=		"<img src='".$picLink."' alt='".$username."' />";
 		$head .=	"</div>";
 		$head .= 	"<div class='commHeadName'>";
-				if( ($userCommId == $commId && !($nullRow) ) || $commType == 'fg' 
-				|| $commType == 'shfg' || $commType == 'smk' || $commType == 'shsmk' || 
-				$commType == 'shsf' || $commType == 'shst' || $commType == 'shsp' || 
-				$commType == 'shsll' || $commType == 'shslf' || $commType == 'shsvv' || 
+				if( ($userCommId == $commId && !($nullRow) ) || $commType == 'fg'
+				|| $commType == 'shfg' || $commType == 'smk' || $commType == 'shsmk' ||
+				$commType == 'shsf' || $commType == 'shst' || $commType == 'shsp' ||
+				$commType == 'shsll' || $commType == 'shslf' || $commType == 'shsvv' ||
 				$commType == 'shsvf' || $commType == 'shsllv' || $commType == 'shslfv'){
 					if($type == 'user'){
 						$link = __LOCATION__ .'/'. $linkName;
 					} else {
 						$link = __LOCATION__ .'/'. __KEYWORD_D .'/'. $storeState.'/'.$storeRegion.'/'.$linkName;
 					}
-								
+
 					//SINGLE POST
-					if($commType == 'shpll' || $commType == 'shplf' || $commType == 'shpp' || 
-					$commType == 'shpf' || $commType == 'shpt' || $commType == 'shpvf' || 
-					$commType == 'shpvv' || $commType == 'shsmk' || $commType == 'shfg' || 
-					$commType == 'shsf' || $commType == 'shst' || $commType == 'shsp' || 
-					$commType == 'shsll' || $commType == 'shslf' || $commType == 'shsvv' || 
-					$commType == 'shsvf' || $commType == 'shsllv' || $commType == 'shslfv' || 
+					if($commType == 'shpll' || $commType == 'shplf' || $commType == 'shpp' ||
+					$commType == 'shpf' || $commType == 'shpt' || $commType == 'shpvf' ||
+					$commType == 'shpvv' || $commType == 'shsmk' || $commType == 'shfg' ||
+					$commType == 'shsf' || $commType == 'shst' || $commType == 'shsp' ||
+					$commType == 'shsll' || $commType == 'shslf' || $commType == 'shsvv' ||
+					$commType == 'shsvf' || $commType == 'shsllv' || $commType == 'shslfv' ||
 					$commType == 'shpllv'){
 						switch($commType){
 							case 'shpll':
@@ -1471,20 +1473,20 @@ class ApplicationViews{
 						$head .=	"<a class='grab user-icon' href='".$link."'>".$username."</a>";
 						$head .=	"<span class='explain'>&nbsp;shared&nbsp;</span><span class='sharefrom'><a href='". __LOCATION__ ."/".$sharedLinkname."'>".$sharedFrom."</a>'s ".$infoText."</span> ";
 						$head .=		"<br/><span class='explain'>".$date."</span>&nbsp;";
-						if($commType == 'shsvv' || $commType == 'shsvf' || 
-						$commType == 'shst' || $commType == 'shsf' || $commType == 'shsp' || 
-						$commType == 'shsll' || $commType == 'shslf' || 
+						if($commType == 'shsvv' || $commType == 'shsvf' ||
+						$commType == 'shst' || $commType == 'shsf' || $commType == 'shsp' ||
+						$commType == 'shsll' || $commType == 'shslf' ||
 						$commType == 'shsllv' || $commType == 'shslfv'){
 							//$strain_link = remove_whitespace($row_result['user_name']);
 							//echo		"<a class='grab-prod prod-icon about-text' href='https://www.budvibes.com/strains/".$strain_link."'>".$row_result['user_name']."</a>";
 						}
 						$head .= "</p>";
 					} else {
-						$head .=	"<p class='singcomm'><a class='grab user-icon' href='".$link."'>".$username."</a><br/><span class='explain'>posted &bull; ".$date." </span></p>";			
+						$head .=	"<p class='singcomm'><a class='grab user-icon' href='".$link."'>".$username."</a><br/><span class='explain'>posted &bull; ".$date." </span></p>";
 					}
 				} else {
-					if($commType == 'sf' || $commType == 'st' || $commType == 'sp' || 
-					$commType == 'svf' || $commType == 'svv' || $commType == 'sll' 
+					if($commType == 'sf' || $commType == 'st' || $commType == 'sp' ||
+					$commType == 'svf' || $commType == 'svv' || $commType == 'sll'
 					|| $commType == 'slf' || $commType == 'sllv' || $commType == 'slfv'){
 						/*!!!!! ADDN'L QUERY FOR STRAIN !!!!!!*/
 						$secondUsername = $this->Controller->getStrainNameHead($userCommId);
@@ -1508,22 +1510,22 @@ class ApplicationViews{
 						}
 					}
 
-					if($nullRow || $commType == 'sf' || $commType == 'st' || $commType == 'sp' || 
-					$commType == 'svf' || $commType == 'svv' || $commType == 'sll' 
+					if($nullRow || $commType == 'sf' || $commType == 'st' || $commType == 'sp' ||
+					$commType == 'svf' || $commType == 'svv' || $commType == 'sll'
 					|| $commType == 'slf' || $commType == 'sllv' || $commType == 'slfv'){
 						$grab = 'grab-prod';
 					} else {
 						$grab = 'grab';
 					}
-		
+
 					$linkName = $this->Controller->remove_whitespace($username);
 					if($type == 'user'){
 						$link = __LOCATION__ .'/'. $linkName;
 					} else {
 						$link = __LOCATION__ .'/'. __KEYWORD_D .'/'. $storeState.'/'.$storeRegion.'/'.$linkName;
 					}
-					if($commType == 'rf' || $commType == 'rt' || $commType == 'rp' || $commType == 'rvf' || 
-						$commType == 'rvv' || $commType == 'rll' || $commType == 'rlf' || $commType == 'rllv' || 
+					if($commType == 'rf' || $commType == 'rt' || $commType == 'rp' || $commType == 'rvf' ||
+						$commType == 'rvv' || $commType == 'rll' || $commType == 'rlf' || $commType == 'rllv' ||
 						$commType == 'rlfv'){
 						$head .=	"<p class='singcomm'><a class='grab' href='".$link."'>".$username."</a><span class='explain'>&nbsp;rated &bull; ".$date."</span></p>
 						<p><a class='grab ".$iconClass."' href='".$wallLink."'>".$secondUsername."</a><span> ".$rating." of 5 stars</span></p>";
@@ -1540,7 +1542,7 @@ class ApplicationViews{
 	$head .= "</div>";//END commHead
 	return $head;
   }
-  
+
   public function generateRecentPosts($posts){
 	  foreach($posts as $post){
 		  $type = $post['type'];
@@ -1575,24 +1577,24 @@ class ApplicationViews{
 		echo '</div>';
 		$picLink = __LOCATION__ . '/assets/user-images/'.$origId.'/'.$pic;
 		$picLinkSmall = __LOCATION__ . '/assets/user-images/'.$origId.'/mobile-'.$pic;
-			if($commType == 'rvf' || 
-			   $commType == 'pvf' || 
-			   $commType == 'svf' || 
-			   $commType == 'rvv' || 
-			   $commType == 'pvv' || 
+			if($commType == 'rvf' ||
+			   $commType == 'pvf' ||
+			   $commType == 'svf' ||
+			   $commType == 'rvv' ||
+			   $commType == 'pvv' ||
 			   $commType == 'svv'){
 				echo 	'<img class="recentPic" src="'.$picLink.'">';
-			} else if($commType == 'rlf' || 
-					  $commType == 'plf' || 
-					  $commType == 'slf' || 
-					  $commType == 'rll' || 
-					  $commType == 'pll' || 
-					  $commType == 'sll' || 
-					  $commType == 'shrlf' || 
-					  $commType == 'shplf' || 
-					  $commType == 'shslf' || 
-					  $commType == 'shrll' || 
-					  $commType == 'shpll' || 
+			} else if($commType == 'rlf' ||
+					  $commType == 'plf' ||
+					  $commType == 'slf' ||
+					  $commType == 'rll' ||
+					  $commType == 'pll' ||
+					  $commType == 'sll' ||
+					  $commType == 'shrlf' ||
+					  $commType == 'shplf' ||
+					  $commType == 'shslf' ||
+					  $commType == 'shrll' ||
+					  $commType == 'shpll' ||
 					  $commType == 'shsll'){
 				  echo '<img class="recentPic" src="'.$picLinkSmall.'" alt="'.$username.'\'s recent post">';
 			} else {
@@ -1601,7 +1603,7 @@ class ApplicationViews{
 		echo '</div>';
 	  }
   }
-  
+
   public function generateProdToolTip($curProd,$curProdPics,$relationStatus){
 	  $prodId = $curProd['id'];
 	  $prodName = $curProd['name'];
@@ -1646,7 +1648,7 @@ class ApplicationViews{
 	  echo '</div>';
 	  echo '</div>';
   }
-  
+
   public function generateToolTip($curUser,$curUserPics,$relationStatus){
 	//$i=1;
 	$sessionId = $_SESSION['logged_in_id'];
@@ -1708,9 +1710,9 @@ class ApplicationViews{
 			}
 	echo '</div>';
 	echo '</div>';
-	
+
   }
-  
+
   public function appendStoreTime($day,$open,$close){
 	 echo '<li class="storeTime">
 			<span class="dayTime">'.$day.'</span>
@@ -1719,7 +1721,7 @@ class ApplicationViews{
 			<span class="closeTime">'.$close.'</span>
 		   </li>';
   }
-  
+
   public function appendStoreTimeEdit($day,$oHour,$cHour,$oMin,$cMin,
 									  $oMeridian,$cMeridian,$liClass){
 	  echo '<li class="'.$liClass.'">
@@ -1733,8 +1735,8 @@ class ApplicationViews{
 				</span>
 			</li>';
   }
-  
-  
+
+
   public function generateMenuItemList($items){
 	  $output = '<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>';
 	  $output .= '<response>';
@@ -1748,7 +1750,7 @@ class ApplicationViews{
 							$tags = substr($tags,0,37);
 							$tags .= '...';
 						}
-						
+
 						$output .= '<product ';
 						$output .= 'id="'.$id.'" ';
 						$output .= 'name="'.$name.'" ';
@@ -1756,11 +1758,11 @@ class ApplicationViews{
 						$output .= 'pic="'.$pic.'" ';
 						$output .= 'tags="'.$tags.'" ';
 						$output .= '/>';
-						
+
 					}
 	  $output .= '</response>';
 	  return $output;
   }
-  
+
 } //END ApplicationViews Class
 ?>
