@@ -24,7 +24,6 @@ $(function(){
 				type: 'POST',
 				data: {user: username},
 				success: function(result){
-					console.log(result);
 					if(result){
 					  $("body").append(result);
 					  var offset = $link.offset();
@@ -34,12 +33,12 @@ $(function(){
 						  'top':iTop+33+"px",
 						  'left':iLeft-120+"px"
 					  })
-				    }
+				  }
 				}
 			})
 		},150)
 	});
-	/*
+
 	$("body").on("mouseleave", ".grab, .grab-prod", function(){
 			if(timeoutID){
 				clearTimeout(timeoutID);
@@ -61,5 +60,5 @@ $(function(){
 			clearTimeout(timeoutID);
 		}
 	})
-	*/
+
 })

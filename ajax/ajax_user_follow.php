@@ -24,7 +24,7 @@
 		$followUser = $UsersCtrl->addUserFollowing($followId,$userId);
 	    if($followUser){
 		  	$success['code'] = 200;
-		  	$success['status'] = 'Now following';
+		  	$success['status'] = 'No Longer Following';
 		  	echo json_encode($success);
 		  	exit();
 	    }
