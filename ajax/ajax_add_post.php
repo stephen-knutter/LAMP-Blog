@@ -1,29 +1,29 @@
-<?php 
+<?php
 	require dirname(__DIR__) . '/bv_inc.php';
 	require dirname(__DIR__) . '/vendor/autoload.php';
-	
+
 	$Controller = new ApplicationCtrl;
 	$Views = new ApplicationViews;
 	$Helper = new ApplicationHelper;
-	
+
 	if(!$Helper->isLoggedIn()){
 		$error['status'] = 'Must be logged in';
 		$error['code'] = 401;
 		echo json_encode($error);
 		exit();
 	}
-	
+
 	$username = trim($_SESSION['logged_in_user']); //DELETE !!!!!!!!!
 	$userId = $_SESSION['logged_in_id'];
-	
+
 	set_error_handler("warning_handler", E_WARNING);
-	function warning_handler($errno, $errstr) { 
+	function warning_handler($errno, $errstr) {
 		$error['status'] = $errstr;
 		$error['code'] = 500;
 		echo json_encode($error);
 		exit();
 	}
-	
+
 	//POST ELEMENTS
 	$curWallId = trim($_POST['cur_wall_id']);
 	$curWallUser = trim($_POST['cur_wall_user']); //DELETE!!!!!!!!!!!
@@ -79,20 +79,20 @@
 	} else {
 		$rating = 0;
 	}
-	
-	if(!empty($userText) || 
-	   !empty($userPhoto) || 
-	   !empty($userVideo) || 
+
+	if(!empty($userText) ||
+	   !empty($userPhoto) ||
+	   !empty($userVideo) ||
 	   !empty($userLink)){
-		
-		if((!empty($userText) && 
-		    !empty($userPhoto)) 
-			&& (empty($userVideo) && 
+
+		if((!empty($userText) &&
+		    !empty($userPhoto))
+			&& (empty($userVideo) &&
 			    empty($userLink))){
 			/*
 			 * @PHOTO AND TEXT COMMENT (comm_type[s] = pf,rf,sf)
 			**/
-			
+
 			$newCommentId = false;
 			$tempPic = $Controller->getTempPic($userId);
 			$newPhoto = $Helper->getFileFromFilePath($userPhoto);
@@ -123,18 +123,18 @@
 					switch($postType){
 						case 'product':
 							$newCommentId = $Controller->addProdPhotoFull($curWallId,$rating,
-														                  $type,$userId,
-														                  $userText,$newPhoto,
-														                  'NULL',$tagString);
+														                  							$type,$userId,
+														                  							$userText,$newPhoto,
+														                  							'NULL',$tagString);
 						break;
 						default:
 							$newCommentId = $Controller->addUserPhotoFull($curWallId,$rating,
-														                  $type,$userId,
-														                  $userText,$newPhoto,
-														                  'NULL',$tagString);
+														                  							$type,$userId,
+														                  							$userText,$newPhoto,
+														                  							'NULL',$tagString);
 						break;
 					}
-					
+
 					if($newCommentId){
 						$newComment = $Controller->generateNewComment($newCommentId,$xhr,$postType);
 						if($newComment){
@@ -147,9 +147,9 @@
 					}
 				}
 			}
-		} else if((!empty($userText)) 
-			       && (empty($userPhoto) && 
-			           empty($userVideo) && 
+		} else if((!empty($userText))
+			       && (empty($userPhoto) &&
+			           empty($userVideo) &&
 					   empty($userLink))){
 			/*
 			 * @TEXT ONLY COMMENT (comm_type[s] = pt,rt,st)
@@ -167,15 +167,15 @@
 			switch($postType){
 				case 'product':
 					$newCommentId = $Controller->addProdPhotoFull($curWallId,$rating,
-														          $type,$userId,
-														          $userText,'NULL',
-														          'NULL',$tagString);
+														          									$type,$userId,
+														          									$userText,'NULL',
+														          									'NULL',$tagString);
 				break;
 				default:
 					$newCommentId = $Controller->addUserPhotoFull($curWallId,$rating,
-														          $type,$userId,
-														          $userText,'NULL',
-														          'NULL',$tagString);
+														          									$type,$userId,
+														          									$userText,'NULL',
+														          									'NULL',$tagString);
 				break;
 			}
 			if($newCommentId){
@@ -188,9 +188,9 @@
 					exit();
 				}
 			}
-		} else if((!empty($userPhoto)) 
-			       && (empty($userText) && 
-			           empty($userVideo) && 
+		} else if((!empty($userPhoto))
+			       && (empty($userText) &&
+			           empty($userVideo) &&
 					   empty($userLink))){
 			/*
 			 * @PHOTO ONLY COMMENT (comm_type[s] = pp,rp,sp)
@@ -225,18 +225,18 @@
 					switch($postType){
 						case 'product':
 							$newCommentId = $Controller->addProdPhotoFull($curWallId,$rating,
-														                  $type,$userId,
-														                  'NULL',$newPhoto,
-														                  'NULL',$tagString);
+														                  							$type,$userId,
+														                  							'NULL',$newPhoto,
+														                  							'NULL',$tagString);
 						break;
 						default:
 							$newCommentId = $Controller->addUserPhotoFull($curWallId,$rating,
-														                  $type,$userId,
-														                  'NULL',$newPhoto,
-														                  'NULL',$tagString);
+														                  							$type,$userId,
+														                  							'NULL',$newPhoto,
+														                  							'NULL',$tagString);
 						break;
 					}
-					
+
 					if($newCommentId){
 						$newComment = $Controller->generateNewComment($newCommentId,$xhr,$postType);
 						if($newComment){
@@ -249,9 +249,9 @@
 					}
 				}
 			}
-		} else if((!empty($userVideo) && 
-		           !empty($userText)) 
-				   && (empty($userPhoto) && 
+		} else if((!empty($userVideo) &&
+		           !empty($userText))
+				   && (empty($userPhoto) &&
 				       empty($userLink))){
 			/*
 			 * @VIDEO AND TEXT COMMENT (comm_type[s] = pvf,rvf,svf)
@@ -279,24 +279,21 @@
 				switch($postType){
 					case 'product':
 						$newCommentId = $Controller->addProdVideoOnly($curWallId,$rating,
-														              $type,$userId,
-														              $userText,'NULL',
-														              $newVideo,$tagString);
+														              								$type,$userId,
+														              								$userText,'NULL',
+														              								$newVideo,$tagString);
 					break;
 					default:
 						$newCommentId = $Controller->addUserVideoOnly($curWallId,$rating,
-														              $type,$userId,
-														              $userText,'NULL',
-														              $newVideo,$tagString);
+														              								$type,$userId,
+														              								$userText,'NULL',
+														              								$newVideo,$tagString);
 					break;
 				}
-				
+
 			}
 			if($newCommentId){
-				$addVideoPic = $Controller->generateVideoPic($feedVideo,
-												             $userId,
-												             $newCommentId,
-												             $postType);
+				$addVideoPic = $Controller->generateVideoPic($feedVideo,$userId,$newCommentId,$postType);
 				$newComment = $Controller->generateNewComment($newCommentId,$xhr,$postType);
 				if($newComment){
 					echo $Views->generateFeed($newComment,'front',true);
@@ -312,10 +309,10 @@
 				echo json_encode($error);
 				exit();
 			}
-		} else if((!empty($userVideo)) 
-			       && (empty($userText) && 
-			           empty($userPhoto) && 
-					   empty($userLink))){
+		} else if((!empty($userVideo))
+			       && (empty($userText) &&
+			           empty($userPhoto) &&
+					   		 empty($userLink))){
 			/*
 			 * @VIDEO ONLY COMMENT (comm_type[s] = pvv,rvv,svv)
 			**/
@@ -342,25 +339,22 @@
 				switch($postType){
 					case 'product':
 						$newCommentId = $Controller->addProdVideoOnly($curWallId,$rating,
-														              $type,$userId,
-														              'NULL','NULL',
-														              $newVideo,$tagString);
+														              								$type,$userId,
+														              								'NULL','NULL',
+														              								$newVideo,$tagString);
 					break;
 					default:
 						$newCommentId = $Controller->addUserVideoOnly($curWallId,$rating,
-														              $type,$userId,
-														              'NULL','NULL',
-														              $newVideo,$tagString);
+														              								$type,$userId,
+														              								'NULL','NULL',
+														              								$newVideo,$tagString);
 					break;
 				}
 				if($newCommentId){
-					$addVideoPic = $Controller->generateVideoPic($feedVideo,
-												                 $userId,
-												                 $newCommentId,
-												                 $postType);
-					$newComment = $Controller->generateNewComment($newCommentId,$xhr,$postType);
+						$addVideoPic = $Controller->generateVideoPic($feedVideo,$userId,$newCommentId,$postType);
+						$newComment = $Controller->generateNewComment($newCommentId,$xhr,$postType);
 				    if($newComment){
-						echo $Views->generateFeed($newComment,'front',true);
+							echo $Views->generateFeed($newComment,'front',true);
 						if($tags){
 							$addTags = $Controller->addTags($newCommentId,$tags);
 						}
@@ -380,9 +374,9 @@
 				echo json_encode($error);
 				exit();
 			}
-		} else if((!empty($userLink)) 
-			       && (empty($userVideo) && 
-			           empty($userText) && 
+		} else if((!empty($userLink))
+			       && (empty($userVideo) &&
+			           empty($userText) &&
 					   empty($userPhoto))){
 			/*
 			 * @LINK MEDIA ONLY (comm_type[s] = pll,rll,sll)
@@ -420,18 +414,18 @@
 						switch($postType){
 							case 'product':
 							  $newCommentId = $Controller->addProdPhotoFull($curWallId,$rating,
-														                    $type,$userId,
-														                    $userText,$newPhoto,
-														                    $newVideo,$tagString);
+														                    							$type,$userId,
+														                    							$userText,$newPhoto,
+														                    							$newVideo,$tagString);
 						    break;
 						    default:
 							  $newCommentId = $Controller->addUserPhotoFull($curWallId,$rating,
-														                    $type,$userId,
-														                    $userText,$newPhoto,
-														                    $newVideo,$tagString);
+														                    							$type,$userId,
+														                    							$userText,$newPhoto,
+														                    							$newVideo,$tagString);
 						    break;
 						}
-						
+
 					}
 					if($newCommentId){
 						$newComment = $Controller->generateNewComment($newCommentId,$xhr,$postType);
@@ -445,9 +439,9 @@
 					}
 				}
 			}
-		} else if((!empty($userLink) && 
-		           !empty($userText)) 
-				   && (empty($userVideo) && 
+		} else if((!empty($userLink) &&
+		           !empty($userText))
+				   && (empty($userVideo) &&
 				       empty($userPhoto))){
 			/*
 			 * @LINK AND TEXT COMMENT (comm_type[s] = plf,rlf,slf)
@@ -484,18 +478,18 @@
 					switch($postType){
 						case 'product':
 							$newCommentId = $Controller->addProdPhotoFull($curWallId,$rating,
-														                    $type,$userId,
-														                    $userText,$newPhoto,
-														                    $newVideo,$tagString);
+														                    						$type,$userId,
+														                    						$userText,$newPhoto,
+														                    						$newVideo,$tagString);
 						break;
 						default:
 							$newCommentId = $Controller->addUserPhotoFull($curWallId,$rating,
-														                    $type,$userId,
-														                    $userText,$newPhoto,
-														                    $newVideo,$tagString);
+														                    						$type,$userId,
+														                    						$userText,$newPhoto,
+														                    						$newVideo,$tagString);
 						break;
 						}
-						
+
 					}
 				if($newCommentId){
 					$newComment = $Controller->generateNewComment($newCommentId,$xhr,$postType);

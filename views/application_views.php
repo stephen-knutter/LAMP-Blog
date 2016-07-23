@@ -107,7 +107,7 @@ class ApplicationViews{
 			}
 			$html .= 	'<link rel="icon" href="'. __LOCATION__ .'/assets/images/tab-pic.png">';
 			$html .= 	'<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>';
-			$html .= 	'<script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?v=3.24&sensor=false"></script>';
+			$html .= 	'<script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?v=3.25&sensor=false"></script>';
 			$html .= 	'<script type="text/javascript" src="'. __LOCATION__ .'/assets/javascripts/config.js"></script>';
 			$html .= 	'<script type="text/javascript" src="'. __LOCATION__ .'/assets/javascripts/global-fns.js"></script>';
 			$html .=	'<script type="text/javascript" src="'. __LOCATION__ .'/assets/javascripts/profile.js"></script>';

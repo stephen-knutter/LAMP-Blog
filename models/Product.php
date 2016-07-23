@@ -172,6 +172,26 @@
 			return $statement->rowCount() ? $statement->fetchAll(PDO::FETCH_ASSOC) : false;
 		}
 
+		public function getAjaxStrainFeed($id,$alt){
+			$prodFeed = "SELECT c.id, c.user_id AS user_comm_id,
+			c.rating, c.comm_id, c.comm_type, c.orig_id,
+			c.comment, c.pic, c.vid, c.tags, c.created_at,
+			u.id AS user_id, u.username, u.profile_pic, u.type, u.store_id,
+			u.store_reg, u.store_state,
+			p.id AS prod_id, p.pic AS prod_pic
+			FROM prod_comments c
+			LEFT JOIN users u ON c.comm_id = u.id
+			LEFT JOIN products p ON c.user_fid = p.id
+			WHERE c.user_id = :id
+			ORDER BY created_at DESC
+			LIMIT :alt, 15";
+			$statement = $this->pdo->prepare($prodFeed);
+			$statement->bindValue(':id',$id,PDO::PARAM_INT);
+			$statement->bindValue(':alt',$alt,PDO::PARAM_INT);
+			$statement->execute();
+			return $statement->rowCount() ? $statement->fetchAll(PDO::FETCH_ASSOC) : false;
+		}
+
 		public function getRecentPosts(){
 			$recentPosts = $this->findRecentPosts();
 			return $recentPosts;

@@ -97,8 +97,13 @@
 						$this->Views->generateFeed($results,$feedType);
 					}
 				break;
-				case 'ajax-strainfeed':
-					$this->ProductModel->getAjaxStrainFeed();
+				case 'ajax-product':
+					$results = $this->ProductModel->getAjaxStrainFeed($id,$alt);
+					if($results){
+						$this->Views->generateFeed($results,$feedType,true);
+					} else {
+						return false;
+					}
 				break;
 			}
 		}

@@ -579,28 +579,18 @@ $(function(){
     var curWallId = buttonClass.slice(dash+1,strEnd);
     var curWallUser = buttonClass.slice(0,dash);
     //XHR TYPE
-	var xhrType = iaddphoto
-				      .xhrType
-					  .val();
+	  var xhrType = iaddphoto.xhrType.val();
     //POST TYPE(PROD OR USER)
-	var postType = iaddphoto
-					  .postType
-					  .val();
+	  var postType = iaddphoto.postType.val();
     //TAG PANE
     //USER PHOTO
-    var userPhotoImg = iaddphoto
-						 .tagPane
-						 .find("img.postImgPreview");
+    var userPhotoImg = iaddphoto.tagPane.find("img.postImgPreview");
     var userPhoto = userPhotoImg.attr("src");
     //USER VIDEO
     var userVideoWrap = iaddphoto.tagPane.find("video");
-    var userVideo = userVideoWrap
-						.find("source")
-						.attr("src");
+    var userVideo = userVideoWrap.find("source").attr("src");
     //LINK INFO
-    var userLinkWrap = iaddphoto
-						.tagPane
-						.find("div.userLink");
+    var userLinkWrap = iaddphoto.tagPane.find("div.userLink");
     var linkSource = userLinkWrap.find("img");
     var linkType = linkSource.attr("id");
     if(linkType == 'iframephoto'){
@@ -612,16 +602,12 @@ $(function(){
     linkSource.remove();
     var linkHtml = userLinkWrap.html();
     //USER COMMENT
-    var userPost = iaddphoto
-					.userPostBox
-					.val();
+    var userPost = iaddphoto.userPostBox.val();
     //TAGS
     var tags = Array();
-    var curTags = iaddphoto
-					.submittedTags
-					.find("span.newTag");
+    var curTags = iaddphoto.submittedTags.find("span.newTag");
     curTags.each(function(){
-      tags.push($(this).text());
+    tags.push($(this).text());
     })
     //RATING
     var curRating = buttonWrap
@@ -651,12 +637,28 @@ $(function(){
       userLink = 'NULL';
     }
 
+    console.log(curWallId+' | '+curWallUser+' | '+userPost+' | '+userPhoto+' | '
+                +userVideo+' | '+tags+' | '+curRating+' | '+xhrType+' | '+postType+' | '+media+' | '
+                +userLink+' | '+linkHtml+' | '+iframePhoto);
+      //curWallId = 2
+      //curWallUser = prod-two
+      //userPost = ''
+      //userPhoto = NULL
+      //userVideo = 'http://...'
+      //tags = ''
+      //curRating = NULL
+      //xhrType = true
+      //postType = product
+      //media = video
+      //userLink = NULL
+      //linkHtml = null
+      //iframePhoto = noframe
+
     $.ajax({
       beforeSend: function(){
+
         $(".error").remove();
-        $button
-			.attr("disabled", "disabled")
-			.html("");
+        $button.attr("disabled", "disabled").html("");
       },
       type: 'POST',
       data: {cur_wall_id: curWallId,
@@ -673,6 +675,9 @@ $(function(){
 			 link_info: linkHtml,
 			 iframe: iframePhoto},
       url: url,
+      error: function(){
+        console.log('Error');
+      },
       success: function(result){
 		console.log(result);
 		if(result){
@@ -691,21 +696,16 @@ $(function(){
 			  iaddphoto.dropPane.prepend(comment);
               var vidId = iaddphoto
 					       .dropPane
-						   .first("div.commPostVideo")
-						   .find("video")
-						   .attr("id");
+						     .first("div.commPostVideo")
+						     .find("video")
+						     .attr("id");
               if(vidId == 'newvideo'){
                 videojs('newvideo',{},function(){});
               }
               $("img.postImgPreview").remove();
               $("div.userLink").remove();
-              iaddphoto
-				 .tagPane
-				 .find("div.video-js, video")
-				 .remove();
-              iaddphoto
-			     .userPostBox
-				 .val("");
+              iaddphoto.tagPane.find("div.video-js, video").remove();
+              iaddphoto.userPostBox.val("");
               userPhotoImg.remove();
               if(iaddphoto.curButton){
                iaddphoto.curButton.attr("disabled", false);
@@ -731,15 +731,9 @@ $(function(){
 		}
       },
       complete: function(){
-        $button
-			.attr("disabled",false)
-			.html(buttonVal);
-		iaddphoto
-			.buttonToggleInputs
-			.attr("disabled",false);
-		iaddphoto
-			.submittedTags
-			.html("");
+        $button.attr("disabled",false).html(buttonVal);
+		    iaddphoto.buttonToggleInputs.attr("disabled",false);
+		    iaddphoto.submittedTags.html("");
       }
     });
 
@@ -763,8 +757,8 @@ $(function(){
     var commId = buttonId.slice(strStart,strEnd);
     /*POST TYPE*/
     var postType = buttonWrap.siblings("input.post_type").val();
-	/*XHR TYPE*/
-	var xhr = buttonWrap.siblings("input.xhr_type").val();
+	  /*XHR TYPE*/
+	  var xhr = buttonWrap.siblings("input.xhr_type").val();
     /*TAG PANE*/
     var userCurPane = buttonWrap.siblings(".replyPane");
     /*PHOTO*/

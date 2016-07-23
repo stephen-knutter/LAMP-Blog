@@ -2,14 +2,14 @@
 	require dirname(dirname(__DIR__)) . '/bv_inc.php';
 	require dirname(dirname(__DIR__)) . '/controllers/products_controller.php';
 	require dirname(dirname(__DIR__)) . '/vendor/autoload.php';
-	
+
 	$ProdCtrl = new ProductsCtrl;
 	$Views = new ApplicationViews;
 	$Helper = new ApplicationHelper;
-	
+
 	$product = $_GET['id'];
 	$product = $ProdCtrl->getProduct($product);
-	
+
 	$Views->addHead('product',$product);
 	$Views->doHeader('message');
 	$Views->doUserMenu('message');
@@ -49,7 +49,7 @@
 				$ProdCtrl->doTopPosters();
 			?>
 		</div>
-		
+
 		<div id="rightInfoPane">
 			<div class="userFeedHead"><h3>Tell Your Buds</h3></div>
 			<div id="userFeed">
@@ -59,13 +59,13 @@
 						?>
 					</div>
 			</div>
-			<div class="dropPane" data-pane="strains-<?php echo $product['id']; ?>" id="start-15">
+			<div class="dropPane" data-pane="product-<?php echo $product['id']; ?>" id="start-15">
 				<?php
 					$ProdCtrl->generateFeed('product',$product['id']);
 				?>
 			</div>
 		</div>
-		
+
 		<div id="recentPane">
 			<h3 class="latestHead">Latest</h3>
 			<?php

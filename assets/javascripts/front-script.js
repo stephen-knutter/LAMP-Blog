@@ -2,10 +2,10 @@ $(function(){
 	/*GOOGLE MAP*/
 	storedMarker = Array();
 	var timeInterval = 1000;
-	
+
 	var customIcons = {
 		rec: {
-			icon: __LOCATION__ + '/assets/images/rec_icon_40.png' 
+			icon: __LOCATION__ + '/assets/images/rec_icon_40.png'
 		},
 		rdel: {
 			icon: __LOCATION__ + '/assets/images/rec_icon_del_60.png'
@@ -20,7 +20,7 @@ $(function(){
 			icon: __LOCATION__ + '/assets/images/tour-icon.png'
 		}
 	};
-	
+
 	/*MAP CLICK HANDLER REGION*/
 	var currentRegion = $("ul#cityFilter li.selected");
 	var currentMap = currentRegion.attr("id");
@@ -32,7 +32,7 @@ $(function(){
 		currentPage = $link.text().toLowerCase();
 		currentPage = currentPage.replace(/\s+/g, '-');
 		if(currentMap && check){
-			if(currentPage == 'denver' || currentPage == 'telluride' || currentPage == 'colorado-springs' || currentPage == 'ft-collins' 
+			if(currentPage == 'denver' || currentPage == 'telluride' || currentPage == 'colorado-springs' || currentPage == 'ft-collins'
 			|| currentPage == 'aspen' || currentPage == 'breckenridge' || currentPage == 'boulder' || currentPage == 'pueblo'){
 				//COLORADO
 				window.location = __LOCATION__ + '/colorado/'+currentPage
@@ -42,7 +42,7 @@ $(function(){
 			} else if(currentPage == 'portland' || currentPage == 'bend' || currentPage == 'medford' || currentPage == 'eugene' || currentPage == 'la-grande'){
 				//OREGON
 				window.location = __LOCATION__ + '/oregon/'+currentPage
-			} else if(currentPage == 'los-angeles' || currentPage == 'san-fernando' || currentPage == 'orange-county' || currentPage == 'inland-empire' || 
+			} else if(currentPage == 'los-angeles' || currentPage == 'san-fernando' || currentPage == 'orange-county' || currentPage == 'inland-empire' ||
 					  currentPage == 'norcal' || currentPage == 'bay-area' || currentPage == 'central-cal' || currentPage == 'sacramento' || currentPage == 'san-diego'){
 				//CALIFORNIA
 				window.location = __LOCATION__ + '/california/'+currentPage
@@ -51,7 +51,7 @@ $(function(){
 				window.location = __LOCATION__ + '/british-columbia/'+currentPage
 			} else if(currentPage == 'vancouver-island'){
 					window.location = __LOCATION__ + '/british-columbia/'+currentPage
-			} else if(currentPage == 'detroit' || currentPage == 'ann-arbor' || currentPage == 'flint' || currentPage == 'lansing' || 
+			} else if(currentPage == 'detroit' || currentPage == 'ann-arbor' || currentPage == 'flint' || currentPage == 'lansing' ||
 					  currentPage == 'grand-rapids' || currentPage == 'north-michigan'){
 				//MICHIGAN
 				window.location = __LOCATION__ + '/michigan/'+currentPage
@@ -103,7 +103,7 @@ $(function(){
 			}
 		}
 	});
-	
+
 	/*MAP CLICK HANDLER FILTER*/
 	$("ul#typeFilter li input").on("click", function(event){
 		$link = $(this).parent("span").parent("li");
@@ -117,7 +117,7 @@ $(function(){
 			displayMap(currentRegion, currentFilter);
 		}
 	})
-	
+
 function displayMap(region,filter){
 	switch(region){
 		/*DENVER, CO (SOUTH DENVER, DOWNTOWN DENVER, WEST DENVER, NORTHEAST DENVER, SOUTHEAST DENVER)*/
@@ -151,7 +151,7 @@ function displayMap(region,filter){
 			var newZoom = 12;
 			var mapType = 'hood';
 		break;
-		
+
 		/*BOULDER, CO*/
 		case 'bld':
 			var newCenter = new google.maps.LatLng(40.014985, -105.270545);
@@ -178,7 +178,7 @@ function displayMap(region,filter){
 			var newZoom = 12;
 			var mapType = 'hood';
 		break;
-		
+
 		/*COLORADO SPRINGS, CO*/
 		case 'csp':
 			var newCenter = new google.maps.LatLng(38.846127, -104.800644);
@@ -205,7 +205,7 @@ function displayMap(region,filter){
 			var newZoom = 14;
 			var mapType = 'hood';
 		break;
-		
+
 		/*PUEBLO, CO*/
 		case 'pue':
 			var newCenter = new google.maps.LatLng(38.15965,-104.824677);
@@ -227,7 +227,7 @@ function displayMap(region,filter){
 			var newZoom = 10;
 			var mapType = 'hood';
 		break;
-		
+
 		/*APSEN, CO*/
 		case 'asp':
 		 	var newCenter = new google.maps.LatLng(39.195560, -106.8382);
@@ -264,7 +264,7 @@ function displayMap(region,filter){
 			var newZoom = 11;
 			var mapType = 'hood';
 		break;
-		
+
 		/*BRECK, CO*/
 		case 'brk':
 			var newCenter = new google.maps.LatLng(39.482043, -106.038777);
@@ -299,7 +299,7 @@ function displayMap(region,filter){
 			var newZoom = 11;
 			var mapType = 'hood';
 		break;
-		
+
 		/*FT COLLINS, CO*/
 		case 'ftc':
 			var newCenter = new google.maps.LatLng(40.559167, -105.078056);
@@ -326,7 +326,7 @@ function displayMap(region,filter){
 			var newZoom = 15;
 			var mapType = 'hood';
 		break;
-		
+
 		/*TELLURIDE, CO*/
 		case 'tel':
 			var newCenter = new google.maps.LatLng(37.939167,  -107.816389);
@@ -343,7 +343,7 @@ function displayMap(region,filter){
 			var newZoom = 13;
 			var mapType = 'hood';
 		break;
-		
+
 		/*SEATTLE, WA*/
 		case 'sea':
 			var newCenter = new google.maps.LatLng(47.670582,-122.247963);
@@ -375,7 +375,7 @@ function displayMap(region,filter){
 			var newZoom = 12;
 			var mapType = 'hood';
 		break;
-		
+
 		/*TACOMA, WA*/
 		case 'tac':
 			var newCenter = new google.maps.LatLng(47.342763,-122.242813);
@@ -402,7 +402,7 @@ function displayMap(region,filter){
 			var newZoom = 11;
 			var mapType = 'hood';
 		break;
-		
+
 		/*OLYMPIA, WA*/
 		case 'oly':
 			var newCenter = new google.maps.LatLng(47.037568, -122.900512);
@@ -424,7 +424,7 @@ function displayMap(region,filter){
 			var newZoom = 9;
 			var mapType = 'hood';
 		break;
-		
+
 		/*SPOKANE, WA*/
 		case 'spk':
 			var newCenter = new google.maps.LatLng(47.710332,-117.216911);
@@ -441,7 +441,7 @@ function displayMap(region,filter){
 			var newZoom = 12;
 			var mapType = 'hood';
 		break;
-		
+
 		/*PORTLAND, OR*/
 		case 'por':
 			var newCenter = new google.maps.LatLng(45.544095,-122.55867);
@@ -463,14 +463,14 @@ function displayMap(region,filter){
 			var newZoom = 11;
 			var mapType = 'hood';
 		break;
-		
+
 		/*BEND, OR*/
 		case 'bnd':
 			var newCenter = new google.maps.LatLng(44.079998,-121.284084);
 			var newZoom = 13;
 			var mapType = 'region';
 		break;
-		
+
 		/*EUGENE, OR*/
 		case 'eug':
 			var newCenter = new google.maps.LatLng(44.051836, -123.086733);
@@ -487,7 +487,7 @@ function displayMap(region,filter){
 			var newZoom = 9;
 			var mapType = 'hood';
 		break;
-		
+
 		/*MEDFORD, OR*/
 		case 'mef':
 			var newCenter = new google.maps.LatLng(42.326257, -122.875396);
@@ -500,7 +500,7 @@ function displayMap(region,filter){
 			var newZoom = 10;
 			var mapType = 'region';
 		break;
-		
+
 		/*LOS ANGELES, CA*/
 		case 'los':
 			var newCenter = new google.maps.LatLng(34.079091,-118.096848);
@@ -602,7 +602,7 @@ function displayMap(region,filter){
 			var newZoom = 12;
 			var mapType = 'hood';
 		break;
-		
+
 		/*SAN FERNANDO VALLEY, CA*/
 		case 'sfv':
 			var newCenter = new google.maps.LatLng(34.245431, -118.425407);
@@ -644,7 +644,7 @@ function displayMap(region,filter){
 			var newZoom = 13;
 			var mapType = 'hood';
 		break;
-		
+
 		/*ORANGE COUNTY, CA*/
 		case 'org':
 			var newCenter = new google.maps.LatLng(33.755526,-117.733097);
@@ -701,7 +701,7 @@ function displayMap(region,filter){
 			var newZoom = 12;
 			var mapType = 'hood';
 		break;
-		
+
 		/*INLAND EMPIRE, CA*/
 		case 'emp':
 			var newCenter = new google.maps.LatLng(33.925156, -116.876314);
@@ -813,7 +813,7 @@ function displayMap(region,filter){
 			var newZoom = 14;
 			var mapType = 'hood';
 		break;
-		
+
 		/*NORCAL, CA*/
 		case 'nca':
 			var newCenter = new google.maps.LatLng(39.793633,-120.657349);
@@ -834,7 +834,7 @@ function displayMap(region,filter){
 			var newCenter = new google.maps.LatLng(39.269723,-123.189697);
 			var newZoom = 10;
 			var mapType = 'hood';
-		break;	
+		break;
 		case 'ncalke':
 			var newCenter = new google.maps.LatLng(39.045978,-122.715225);
 			var newZoom = 11;
@@ -865,7 +865,7 @@ function displayMap(region,filter){
 			var newZoom = 11;
 			var mapType = 'hood';
 		break;
-		
+
 		/*BAY AREA, CA*/
 		case 'sfc':
 			var newCenter = new google.maps.LatLng(37.78508,-121.955795);
@@ -917,7 +917,7 @@ function displayMap(region,filter){
 			var newZoom = 11;
 			var mapType = 'hood';
 		break;
-		
+
 		/*CENTRAL CAL, CA*/
 		case 'cca':
 			var newCenter = new google.maps.LatLng(36.431158,-119.726257);
@@ -969,7 +969,7 @@ function displayMap(region,filter){
 			var newZoom = 11;
 			var mapType = 'hood';
 		break;
-		
+
 		/*SACRAMENTO, CA*/
 		case 'sac':
 			var newCenter = new google.maps.LatLng(38.65145,-121.403732);
@@ -1001,7 +1001,7 @@ function displayMap(region,filter){
 			var newZoom = 13;
 			var mapType = 'hood';
 		break;
-		
+
 		/*SAN DIEGO, CA*/
 		case 'san':
 			var newCenter = new google.maps.LatLng(32.741218,-117.129707);
@@ -1068,7 +1068,7 @@ function displayMap(region,filter){
 			var newZoom = 12;
 			var mapType = 'hood';
 		break;
-		
+
 		/*DETROIT, MI*/
 		case 'det':
 			var newCenter = new google.maps.LatLng(42.537129,-82.87056);
@@ -1090,7 +1090,7 @@ function displayMap(region,filter){
 			var newZoom = 10;
 			var mapType = 'hood';
 		break;
-		
+
 		/*ANN ARBOR, MI*/
 		case 'ann':
 			var newCenter = new google.maps.LatLng(42.272466,-83.640976);
@@ -1107,7 +1107,7 @@ function displayMap(region,filter){
 			var newZoom = 13;
 			var mapType = 'hood';
 		break;
-		
+
 		case 'fln':
 			/*FLINT, MI*/
 			var newCenter = new google.maps.LatLng(43.012399, -83.687346);
@@ -1126,7 +1126,7 @@ function displayMap(region,filter){
 			var newZoom = 8;
 			var mapType = 'region';
 		break;
-		
+
 		/*NORTHERN MICHIGAN, MI*/
 		case 'nmi':
 			var newCenter = new google.maps.LatLng(45.693201,-85.834808);
@@ -1148,8 +1148,8 @@ function displayMap(region,filter){
 			var newZoom = 7;
 			var mapType = 'hood';
 		break;
-		
-		
+
+
 		case 'pnx':
 			/*PHOENIX, AZ*/
 			var newCenter = new google.maps.LatLng(33.478686,-112.033768);
@@ -1258,7 +1258,7 @@ function displayMap(region,filter){
 			var newZoom = 9;
 			var mapType = 'region';
 		break;
-		
+
 		/*VANCOUVER, BC*/
 		case 'van':
 			var newCenter = new google.maps.LatLng(49.282681, -123.120888);
@@ -1285,7 +1285,7 @@ function displayMap(region,filter){
 			var newZoom = 13;
 			var mapType = 'hood';
 		break;
-		
+
 		/*VANCOUVER ISLAND, BC*/
 		case 'vci':
 			var newCenter = new google.maps.LatLng(48.757886,-123.909302);
@@ -1302,7 +1302,7 @@ function displayMap(region,filter){
 			var newZoom = 11;
 			var mapType = 'hood';
 		break;
-		
+
 		//BARCELONS, SPAIN
 		case 'bar':
 			var newCenter = new google.maps.LatLng(41.529159,2.150574);
@@ -1317,12 +1317,12 @@ function displayMap(region,filter){
 		break;
 		*/
 	}
-	
+
 	var map = new google.maps.Map(document.getElementById("map"), {
 		/*styles: [{"featureType":"water","elementType":"geometry","stylers":[{"hue":"#71ABC3"},{"saturation":-10},{"lightness":-21},{"visibility":"simplified"}]},{"featureType":"landscape.natural","elementType":"geometry","stylers":[{"hue":"#7DC45C"},{"saturation":37},{"lightness":-41},{"visibility":"simplified"}]},{"featureType":"landscape.man_made","elementType":"geometry","stylers":[{"hue":"#C3E0B0"},{"saturation":23},{"lightness":-12},{"visibility":"simplified"}]},{"featureType":"poi","elementType":"all","stylers":[{"hue":"#A19FA0"},{"saturation":-98},{"lightness":-20},{"visibility":"off"}]},{"featureType":"road","elementType":"geometry","stylers":[{"hue":"#ffa500"},{"saturation":100},{"lightness":0},{"visibility":"simplified"}]}],*/
 		center: newCenter,
 		zoom: newZoom,
-		
+
 		zoomControlOptions: {
 			style: google.maps.ZoomControlStyle.LARGE,
 			position: google.maps.ControlPosition.BOTTOM_LEFT
@@ -1334,7 +1334,7 @@ function displayMap(region,filter){
 		mapTypeControl: false,
 		mapTypeId: 'roadmap'
 	});
-	
+
 		var  infoBubble = new InfoBubble({
 			    map: map,
 				shadowStyle: 0,
@@ -1353,7 +1353,7 @@ function displayMap(region,filter){
 				backgroundClassName: 'marker',
 				arrowStyle: 2
 		});
-		
+
 		var geoBubble = new InfoBubble({
 			    map: map,
 				shadowStyle: 0,
@@ -1372,8 +1372,8 @@ function displayMap(region,filter){
 				backgroundClassName: 'phoney',
 				arrowStyle: 2
 			 });
-		
-		
+
+
 			if (navigator.geolocation) {
 			    navigator.geolocation.getCurrentPosition(function(position) {
 			        var latitude = position.coords.latitude;
@@ -1386,7 +1386,7 @@ function displayMap(region,filter){
 			            title: 'Your geolocation',
 			            icon: __LOCATION__ + '/assets/images/smoke_icon_75.png'
 			        });
-			
+
 					google.maps.event.addListener(geolocation, 'click', function(){
 						geoBubble.close();
 						geoBubble.setContent('YOUR LOCATION');
@@ -1400,7 +1400,7 @@ function displayMap(region,filter){
 		type: "GET",
 		dataType: "xml",
 		url : __LOCATION__ + "/weed-dbinfo.php?storeType="+filter+"&reg="+region+"&map="+mapType,
-		
+
 		success : function(xml){
 			var markers = xml.documentElement.getElementsByTagName("marker");
 			$("#listings").html("");
@@ -1415,7 +1415,7 @@ function displayMap(region,filter){
 				var url_name = markers[i].getAttribute("url_name");
 				var region = markers[i].getAttribute("region");
 				var website = (markers[i].getAttribute("website") == 'N/A') ? '' : markers[i].getAttribute("website");
-				var cash = (markers[i].getAttribute("cash") == 'd') ? "<span>Debit Card</span>" + "<div class='cash_image_debit clearfix'><img src='"+ __LOCATION__ +"/assets/images/debit.png' class='cash_image'/></div>" : 
+				var cash = (markers[i].getAttribute("cash") == 'd') ? "<span>Debit Card</span>" + "<div class='cash_image_debit clearfix'><img src='"+ __LOCATION__ +"/assets/images/debit.png' class='cash_image'/></div>" :
 				"<span>ATM</span>" + "<div class='cash_image_atm clearfix'><img src='"+ __LOCATION__ + "/assets/images/atm.png'/></div>";
 				var lat = parseFloat(markers[i].getAttribute("lat"));
 				var lng = parseFloat(markers[i].getAttribute("lng"));
@@ -1426,7 +1426,7 @@ function displayMap(region,filter){
 				var value = markers[i].getAttribute("value");
 				var num = value / votes;
 				var directory;
-				
+
 				switch(region){
 					case 'dev':
 						directory = __LOCATION__ + '/colorado/denver';
@@ -1588,7 +1588,7 @@ function displayMap(region,filter){
 						directory = __LOCATION__ + '/spain/barcelona';
 					break;
 				}
-				
+
 				var html = "<div class='info'>";
 				var ihtml = "<div class='info clearfix'>";
 				ihtml += "<div class='infoPicWrap'>";
@@ -1613,7 +1613,7 @@ function displayMap(region,filter){
 				if(name != 'Colorado Marijuana Tours'){
 					html += "<p class='phone'><i>" + phone + "</i></p>";
 					ihtml += "<p class='phone'><i>" + phone + "</i></p>";
-				} 
+				}
 				if(name != 'Colorado Marijuana Tours'){
 					if(num > 0.1 && num <= .9){
 						html +=	"<div class='half_star'></div>";
@@ -1650,16 +1650,16 @@ function displayMap(region,filter){
 						ihtml +=	"<div class='no_stars'></div>";
 					}
 				}
-				
+
 				if(name !== 'Colorado Marijuana Tours'){
 					html += "<p class='cash'><b>Non-Cash Type:</b>"+cash +"</p>";
 				} else {
 					html += "<p class='address'>Click above for tour information</p>";
 				}
-				
+
 				html += "<a id='" + id + "' class='on_map'>" + 'Mark on map' + "</a>";
 				ihtml += "<a id='" + id + "' class='on_map'>" + 'Mark on map' + "</a>";
-				
+
 				html += "</div>";
 				ihtml += "</div>";
 				ihtml += "</div>";
@@ -1670,7 +1670,7 @@ function displayMap(region,filter){
 					icon: icon.icon,
 					title: name
 				});
-				
+
 				storedMarker[id] = marker;
 				bindInfoWindow(marker, addresslength, address, map, infoBubble, html);
 				appendListing(ihtml);
@@ -1683,7 +1683,7 @@ function displayMap(region,filter){
 		}
 	})
 }
-	
+
 function bindInfoWindow(marker, addresslength, addressFill, map, infoBubble, html){
 		google.maps.event.addListener(marker, 'click', function(){
 			infoBubble.close();
@@ -1697,14 +1697,14 @@ function bindInfoWindow(marker, addresslength, addressFill, map, infoBubble, htm
 
 function appendListing(html){
 	$('#listings').append(html);
-	
+
 	this.onclick = function(){
 	$("body").on("click", "#listings  .info a.on_map", function(event){
 		event.stopPropagation();
 		var pop_up = $(this).attr("id")
 		google.maps.event.trigger(storedMarker[pop_up], "click");
 	});
-  }	
+  }
 }
 
 $(function(){
@@ -1788,7 +1788,7 @@ function calculateRoute(from, to) {
       }
       else{
        	alert("Unable to retrieve your route");
-	  }	
+	  }
     }
   );
 
@@ -1812,7 +1812,7 @@ function calculateRoute(from, to) {
 
 	}
 }
-	
+
 	$(".weed_map").on('click', function(event){
 			window.location = './';
 	});
@@ -1828,10 +1828,10 @@ $(function(){
 			height : "toggle"
 		}, 200);
 		*/
-		
+
 		$("."+hoodMenu).slideToggle(300);
 	});
-	
+
 });
 
 function adjustMap(){
@@ -1848,13 +1848,13 @@ function adjustMap(){
 	$("#listings").css({
 		height: listHeight
 	});
-	
+
 	//SEARCH BOX HEIGHT
 	$("#searchBox").css({
 		height: searchHeight
 	});
 	/*$(".suggestions").css("height", suggestHeight);*/
-	
+
 	//POISION FILTER TOOTIPS AT BOTTOM OF MAP
 	var pickCity = $("#pickCity");
 	var pickCityPosTop = pickCity.offset().top;
@@ -1866,7 +1866,7 @@ function adjustMap(){
 	cityHead.css({
 		"position":"absolute",
 		"top": pickCityPosTop - 365 + "px",
-		"left": -500 + "px" 
+		"left": -500 + "px"
 	})
 	var filterHead = $("#filterHeadWrap");
 	filterHead.css({
