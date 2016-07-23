@@ -675,9 +675,6 @@ $(function(){
 			 link_info: linkHtml,
 			 iframe: iframePhoto},
       url: url,
-      error: function(){
-        console.log('Error');
-      },
       success: function(result){
 		console.log(result);
 		if(result){

@@ -464,6 +464,7 @@
 			$statement->execute();
 			return $statement->rowCount() ? true : false;
 		}
+		
 		public function insertUserVideoPic($newVideoPic,$newCommentId){
 			$updateUserComment = "UPDATE user_comments
 			SET pic=:newVideoPic WHERE id=:newCommentId";

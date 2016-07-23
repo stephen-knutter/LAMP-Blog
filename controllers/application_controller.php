@@ -247,7 +247,7 @@
 			$newVideoPic = $this->Helper->addVideoPic($newVideo,$userId);
 			if($newVideoPic){
 				switch($postType){
-					case 'products':
+					case 'product':
 					   $addPic = $this->Model->insertProdVideoPic($newVideoPic,$newCommentId);
 					break;
 					default:

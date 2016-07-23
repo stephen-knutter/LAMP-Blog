@@ -212,18 +212,14 @@
 		  //$fileName = $this->getFileFromFilePath($newVideo);
 	      $fileName = $this->getFileNameNoExtension($newVideo);
 	      $newFileName = $fileName . '.jpg';
-				/*
-	      $vidPath = 'C:\\wamp\\www\\bv_mvc\\lamp-blog\\assets\\user-images\\'.$userId.'\\'.$fileName.'.mp4';
-	      $picPath = 'C:\\wamp\\www\\bv_mvc\\lamp-blog\\assets\\user-images\\'.$userId.'\\'.$newFileName;
-	      $output = array();
-				*/
-				$vidPath = '../assets/user-images/'.$userId.'/'.$fileName.'.mp4';
+				$vidPath = '../assets/user-images/'.$userId.'/'.$newVideo;
 				$picPath = '../assets/user-images/'.$userId.'/'.$newFileName;
-				$ffmpeg = '/usr/local/Cellar/ffmpeg/3.0.2';
+				$ffmpeg = '/usr/local/bin/ffmpeg/';
 	      $cmd = "$ffmpeg -i $vidPath -an -ss 00:00:01 -r 1 -vframes 1 -y $picPath";
-	      exec($cmd,$output,$retval);
+				$output = array();
+				exec($cmd,$output,$retval);
 	      if(file_exists($picPath)){
-		    return $newFileName;
+		    	return $newFileName;
 	      } else {
 		     return false;
 	      }
