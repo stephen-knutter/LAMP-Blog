@@ -51,9 +51,9 @@ $(function(){
   var firstLoad = true;
 
   if(iscriptType == 'photos'
-   || iscriptType == 'strainphotos'
+   || iscriptType == 'prodphotos'
 	 || iscriptType == 'videos'
-	 || iscriptType == 'strainvideos'){
+	 || iscriptType == 'prodvideos'){
      var didScroll = true;
   } else {
      var didScroll = false;
@@ -108,15 +108,15 @@ $(function(){
 			  case 'photos':
 				  url = __LOCATION__ + '/ajax/ajax_user_photos.php?'+iTime;
 			  break;
-			  case 'strainphotos':
-				  url = __LOCATION__ + '/ajax/ajax_strain_photos.php?'+iTime;
+			  case 'prodphotos':
+				  url = __LOCATION__ + '/ajax/ajax_prod_photos.php?'+iTime;
 			    type = 'strain';
 			  break;
 			  case 'videos':
 				  url = __LOCATION__ + '/ajax/ajax_user_videos.php?'+iTime;
 			  break;
-			  case 'strainvideos':
-				  url = __LOCATION__ + '/ajax/ajax_strain_videos.php?'+iTime;
+			  case 'prodvideos':
+				  url = __LOCATION__ + '/ajax/ajax_prod_videos.php?'+iTime;
 				  type = 'strain';
 			  break;
 		 }

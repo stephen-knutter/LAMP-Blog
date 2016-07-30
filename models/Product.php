@@ -102,8 +102,8 @@
 		public function generateTotalVideos($id){
 			$videoCount = "SELECT COUNT(*)
 			FROM prod_comments
-			WHERE comm_id=:id
-			AND (comm_type='pvv'
+			WHERE user_id=:id AND
+			(comm_type='pvv'
 			OR comm_type='svv'
 			OR comm_type='rvv'
 			OR comm_type='pvf'
@@ -286,5 +286,63 @@
 			$statement->bindValue(':unfollowId',$unfollowId,PDO::PARAM_INT);
 			$statement->execute();
 			return $statement->rowCount() ? true : false;
+		}
+
+		public function getAjaxProdPhotos($id,$offset){
+			$ajaxProdPhotos = "SELECT p.id, p.user_id AS user_comm_id,
+			p.comm_id, p.comm_type, p.comment, p.pic, p.created_at,
+			u.id AS user_id, u.username, u.profile_pic
+			FROM prod_comments p
+			LEFT JOIN users u ON p.comm_id = u.id
+			WHERE p.user_id = :id
+			AND p.pic <> 'NULL'
+			ORDER BY p.created_at DESC
+			LIMIT :offset, 15";
+			$statement = $this->pdo->prepare($ajaxProdPhotos);
+			$statement->bindValue(':id',$id,PDO::PARAM_INT);
+			$statement->bindValue(':offset',$offset,PDO::PARAM_INT);
+			$statement->execute();
+			return $statement->rowCount() ? $statement->fetchAll(PDO::FETCH_ASSOC) : false;
+		}
+
+		public function getAjaxProdVideos($id,$offset){
+			$ajaxProdVideos = "SELECT p.id, p.user_id AS user_comm_id,
+			p.comm_id, p.comm_type, p.comment, p.pic, p.vid, p.created_at,
+			u.id AS user_id, u.username, u.profile_pic
+			FROM prod_comments p
+			LEFT JOIN users u ON p.comm_id = u.id
+			WHERE p.user_id = :id
+			AND p.vid <> 'NULL'
+			ORDER BY p.created_at DESC
+			LIMIT :offset, 20";
+			$statement = $this->pdo->prepare($ajaxProdVideos);
+			$statement->bindValue(':id',$id,PDO::PARAM_INT);
+			$statement->bindValue(':offset',$offset,PDO::PARAM_INT);
+			$statement->execute();
+			return $statement->rowCount() ? $statement->fetchAll(PDO::FETCH_ASSOC) : false;
+		}
+
+		public function findProdFollowers($prodId){
+			$prodFollowers = "SELECT u.id AS user_id, u.username, u.slug, u.profile_pic,
+			u.type, u.store_state, u.store_reg FROM users u
+			WHERE u.id IN(SELECT user_id FROM prod_relationships WHERE prod_id=:prodId)";
+			$statement = $this->pdo->prepare($prodFollowers);
+			$statement->bindValue(':prodId',$prodId,PDO::PARAM_INT);
+			$statement->execute();
+			return $statement->rowCount() ? $statement->fetchAll(PDO::FETCH_ASSOC) : false;
+		}
+
+		public function findProdFollowerCount($prodId){
+			$followerCount = "SELECT COUNT(*) FROM users u
+			WHERE u.id IN(SELECT user_id FROM prod_relationships WHERE prod_id=:prodId)";
+			$statement = $this->pdo->prepare($followerCount);
+			$statement->bindValue(':prodId',$prodId,PDO::PARAM_INT);
+			$statement->execute();
+			return $statement->rowCount() ? $statement->fetchColumn(0) : 0;
+		}
+
+		public function findRecentUserPics($userId,$limit){
+			$recentPics = $this->getRecentUserPics($userId,$limit);
+			return $recentPics;
 		}
 	}

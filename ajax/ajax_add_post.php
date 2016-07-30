@@ -150,7 +150,7 @@
 		} else if((!empty($userText))
 			       && (empty($userPhoto) &&
 			           empty($userVideo) &&
-					   empty($userLink))){
+					       empty($userLink))){
 			/*
 			 * @TEXT ONLY COMMENT (comm_type[s] = pt,rt,st)
 			**/
@@ -191,7 +191,7 @@
 		} else if((!empty($userPhoto))
 			       && (empty($userText) &&
 			           empty($userVideo) &&
-					   empty($userLink))){
+					       empty($userLink))){
 			/*
 			 * @PHOTO ONLY COMMENT (comm_type[s] = pp,rp,sp)
 			**/
@@ -251,8 +251,8 @@
 			}
 		} else if((!empty($userVideo) &&
 		           !empty($userText))
-				   && (empty($userPhoto) &&
-				       empty($userLink))){
+				   	&& (empty($userPhoto) &&
+				        empty($userLink))){
 			/*
 			 * @VIDEO AND TEXT COMMENT (comm_type[s] = pvf,rvf,svf)
 			**/
@@ -377,7 +377,7 @@
 		} else if((!empty($userLink))
 			       && (empty($userVideo) &&
 			           empty($userText) &&
-					   empty($userPhoto))){
+					   		 empty($userPhoto))){
 			/*
 			 * @LINK MEDIA ONLY (comm_type[s] = pll,rll,sll)
 			**/

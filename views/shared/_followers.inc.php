@@ -11,8 +11,8 @@
 		  $slug = $follower['slug'];
 		  //PROFILE LINK
 		  if($type == 'store'){
-			  $userLink = __LOCATION__ . '/dispensary/' . $storeState . '/' . $storeRegion . '/' . $slug;
-			  $actionType = 'typeStore-'.$userId; 
+			  $userLink = __LOCATION__ . '/'.__KEYWORD_D.'/' . $storeState . '/' . $storeRegion . '/' . $slug;
+			  $actionType = 'typeStore-'.$userId;
 		  } else {
 			  $userLink = __LOCATION__ . '/' . $slug;
 			  $actionType = 'typeUser-'.$userId;
@@ -41,6 +41,8 @@
 						$pics = $UsersCtrl->getRecentUserPics($userId);
 					} else if($controller == 'store'){
 						$pics = $StoresCtrl->getRecentUserPics($userId);
+					} else if($controller == 'product'){
+						$pics = $ProdCtrl->getRecentUserPics($userId);
 					}
 					if($pics){
 						foreach($pics as $pic){
@@ -53,20 +55,22 @@
 					}
 			echo '</div>';
 			echo '</div>';
-			echo '<div class="userRelationBar clearfix">';	
+			echo '<div class="userRelationBar clearfix">';
 				 if($controller == 'user'){
 					 $relation = $UsersCtrl->checkUserRelation($userId);
-				 } else {
-					 $relation = $StoresCtrl->checkUserRelation($userId); 
+				 } else if($controller == 'store') {
+					 $relation = $StoresCtrl->checkUserRelation($userId);
+				 } else if($controller == 'product'){
+					 $relation = $ProdCtrl->checkProdRelation($userId);
 				 }
 				 if($relation){
 			echo	'<div class="relationButtonWrap" id="'.$actionType.'">';
 			echo 		'<span class="unfollow-'.$userId.' relationButton">&minus; Unfollow</span>';
-			echo    '</div>';	 
+			echo    '</div>';
 				 } else if($sessionId == $userId) {
 			echo	'<div class="whiteBox">';
 			echo		'<span class="whiteButton">+</span>';
-			echo	'</div>';	 
+			echo	'</div>';
 				 } else {
 			echo	'<div class="relationButtonWrap" id="'.$type.'">';
 			echo 		'<span class="follow-'.$userId.' relationButton">&#43; Follow</span>';

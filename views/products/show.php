@@ -36,7 +36,6 @@
 					?>
 				</div>
 			</div>
-			<!-- !!! LEFT OFF HERE !!! -->
 			<!-- SIMILAR PRODUCTS -->
 			<?php
 				$similarProds = $ProdCtrl->getSimilarProds($product['tags'],$product['name']);;

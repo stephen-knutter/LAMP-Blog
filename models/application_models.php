@@ -464,7 +464,7 @@
 			$statement->execute();
 			return $statement->rowCount() ? true : false;
 		}
-		
+
 		public function insertUserVideoPic($newVideoPic,$newCommentId){
 			$updateUserComment = "UPDATE user_comments
 			SET pic=:newVideoPic WHERE id=:newCommentId";
@@ -953,16 +953,10 @@
 		}
 
 		public function getUserFollowers($userId){
-			$userFollowers = "SELECT
-			u.id AS user_id,
-			u.username,
-			u.slug,
-			u.profile_pic,
-			u.type,
-			u.store_state,
-			u.store_reg
-		    FROM users u
-		    WHERE u.id
+			$userFollowers = "SELECT u.id AS user_id, u.username, u.slug,
+			u.profile_pic, u.type, u.store_state, u.store_reg
+			FROM users u
+		  WHERE u.id
 			IN(SELECT follower_id FROM relationships WHERE following_id=:userId)";
 			$statement = $this->pdo->prepare($userFollowers);
 			$statement->bindValue(':userId',$userId,PDO::PARAM_INT);
@@ -973,7 +967,7 @@
 		public function getUserFollowerCount($userId){
 			$followerCount = "SELECT COUNT(*)
 			FROM users u
-			WHERE u.id
+			WHERE u.id 
 			IN(SELECT follower_id FROM relationships WHERE following_id=:userId)";
 			$statement = $this->pdo->prepare($followerCount);
 			$statement->bindValue(':userId',$userId,PDO::PARAM_INT);

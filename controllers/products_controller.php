@@ -66,9 +66,9 @@
 			$followerCount = $this->ProductModel->generateTotalFollowers($id);
 
 			$this->Views->generateProdCountBar($url,$feedclass,$feedCount,
-											   $photoclass,$photoCount,
-											   $videoclass,$videoCount,
-											   $followerclass,$followerCount);
+											   								$photoclass,$photoCount,
+											   								$videoclass,$videoCount,
+											   								$followerclass,$followerCount);
 		}
 
 		public function getSimilarProds($tags,$name){
@@ -79,8 +79,8 @@
 			$tagFour = $tagArray[3] ? $tagArray[3] : '';
 			$tagFive = 'none';
 			$similarProducts = $this->ProductModel->findSimilarProds($tagOne,$tagTwo,
-																     $tagThree,$tagFour,
-																     $tagFive,$name);
+																     													$tagThree,$tagFour,
+																     													$tagFive,$name);
 			return $similarProducts;
 		}
 
@@ -142,4 +142,46 @@
 			$removeFollowing = $this->ProductModel->deleteProductFollowing($unfollowId,$userId);
 			return $removeFollowing;
 		}
+
+		public function generateProdPhotos($id,$alt=''){
+			$results = $this->ProductModel->getAjaxProdPhotos($id,$alt);
+			if($results){
+			   $ajaxPhotos = $this->Views->generatePhotos($results,true);
+			   return $ajaxPhotos;
+		    } else {
+			   return false;
+			}
+		}
+
+		public function generateProdVideos($id,$alt=''){
+			$results = $this->ProductModel->getAjaxProdVideos($id,$alt);
+			if($results){
+			    $ajaxVideos = $this->Views->generateVideos($results,true);
+					return $ajaxVideos;
+					exit();
+		    } else {
+					return false;
+					exit();
+		    }
+		}
+
+		public function getProdFollowers($prodId){
+			$prodFollowers = $this->ProductModel->findProdFollowers($prodId);
+			if($prodFollowers){
+				return $prodFollowers;
+			} else {
+				return false;
+			}
+		}
+
+		public function getProdFollowersCount($prodId){
+			$followerCount = $this->ProductModel->findProdFollowerCount($prodId);
+			return $followerCount;
+		}
+
+		public function getRecentUserPics($userId,$limit=2){
+			$pics = $this->ProductModel->findRecentUserPics($userId,$limit);
+			return $pics;
+		}
+
 	}

@@ -353,9 +353,9 @@ class ApplicationViews{
 		}
 
 		public function generateProdCountBar($url,$feedclass,$feedCount,
-											 $photoclass,$photoCount,
-											 $videoclass,$videoCount,
-											 $followerclass,$followerCount){
+											 									$photoclass,$photoCount,
+											 									$videoclass,$videoCount,
+											 									$followerclass,$followerCount){
 			echo '<div class="infoBarWrap clearfix">';
 			echo 	'<a href="'.$url.'">
 						<div class="feedInfo '.$feedclass.' clearfix">
