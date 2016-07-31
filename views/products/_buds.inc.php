@@ -26,12 +26,11 @@
 					foreach($recentPics as $pic){
 						$recentPic = $pic['pic'];
 						$recentCommId = $pic['comm_id'];
-						$recentPicLink = __LOCATION__ . '/user-images/'
-						                 .$recentCommId.'/small-'.$recentPic;
+						$recentPicLink = __LOCATION__ . '/assets/user-images/'.$recentCommId.'/small-'.$recentPic;
 						echo 	'<img src="'.$recentPicLink.'" alt="'.$budName.'\'s recent post">';
 					}
 				}
-		echo        '</div>';
+		echo     '</div>';
 		echo '</div>';
 		$i++;
 	}
